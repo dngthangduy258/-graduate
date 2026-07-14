@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý Khách mời · Thiệp mời Tốt nghiệp 2026</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230e0920'/><path d='M20 50 L50 30 L80 50 L50 70 Z' fill='%23c8a96e' opacity='0.8'/></svg>">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="header-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2L22 7v5c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V7l10-5z"/></svg>
+    </div>
+    <span class="brand-title">Quản lý Khách mời · Tốt nghiệp 2026</span>
+  </div>
+  <a href="index.html" target="_blank" class="header-link" aria-label="Xem thiệp mời">
+    <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    Xem thiệp mời
+  </a>
+</header>
+
+<main class="admin-main">
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total">0</div>
+      <div class="stat-label">Tổng khách</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-attended">0</div>
+      <div class="stat-label">Tham dự</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-pending">0</div>
+      <div class="stat-label">Chờ xác nhận</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-declined">0</div>
+      <div class="stat-label">Vắng mặt</div>
+    </div>
+  </div>
+
+  <div class="admin-layout">
+
+    <!-- Left: Form -->
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Thêm khách mời</div></div>
+      <div class="panel-body">
+        <!-- Preset chips -->
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>Chọn nhanh</label>
+          <div class="presets" id="presets-container"></div>
+        </div>
+
+        <form id="add-guest-form">
+          <div class="form-group">
+            <label for="salutation-select">Cách xưng hô / Vai vế</label>
+            <select id="salutation-select"></select>
+          </div>
+
+          <div class="form-group" id="custom-row" style="display:none;">
+            <label for="custom-salutation">Nhập cách xưng hô tùy chỉnh</label>
+            <input type="text" id="custom-salutation" placeholder="Kính mời PGS.TS Nguyễn Văn A">
+          </div>
+
+          <div class="form-group">
+            <label for="guest-name-input">Họ và tên khách mời</label>
+            <input type="text" id="guest-name-input" placeholder="Nguyễn Văn A" autocomplete="off" required>
+          </div>
+
+          <div class="form-group">
+            <label for="guest-note">Ghi chú</label>
+            <input type="text" id="guest-note" placeholder="Giáo viên chủ nhiệm, bạn cùng phòng...">
+          </div>
+
+          <button type="submit" class="btn-add">Thêm vào danh sách</button>
+        </form>
+
+        <div class="hint-box">
+          <div class="hint-title">Hướng dẫn</div>
+          <ol class="hint-list">
+            <li>Chọn vai vế phù hợp với mối quan hệ</li>
+            <li>Nhập họ tên đầy đủ của khách mời</li>
+            <li>Nhấn Copy link và gửi qua Zalo / Facebook</li>
+            <li>Cập nhật trạng thái khi khách xác nhận</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Guest List -->
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Danh sách khách mời</div></div>
+      <div class="panel-body">
+        <div class="list-toolbar">
+          <input type="search" class="search-box" id="search-input" placeholder="Tìm kiếm theo tên...">
+          <button class="btn-sm" id="export-btn">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Xuất CSV
+          </button>
+          <button class="btn-sm" onclick="copyAllLinks()">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy tất cả
+          </button>
+        </div>
+
+        <div class="guest-list" id="guest-list-container"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="admin-footer">
+    Dữ liệu được lưu trong trình duyệt &nbsp;·&nbsp; Xuất CSV để sao lưu &nbsp;·&nbsp; Đại học Sài Gòn 2026
+  </div>
+
+</main>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

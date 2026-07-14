@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Thư Mời Lễ Tốt Nghiệp | Nguyễn Thị Xuân Mai</title>
+<meta name="description" content="Trân trọng kính mời Quý vị đến dự Lễ Tốt nghiệp Đại học Sài Gòn.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<canvas class="fx" id="cx-conf"></canvas>
+
+<!-- Preloader -->
+<div id="loader">
+  <div class="ld-logo">D</div>
+  <div class="ld-line"></div>
+  <div class="ld-txt">Đang chuẩn bị...</div>
+</div>
+
+<!-- Controls -->
+<div class="ui-tl">
+  <button class="ctrl-btn" id="btn-music" aria-label="Bật/Tắt nhạc">
+    <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13M9 9l12-2M5 21a3 3 0 100-6 3 3 0 000 6zm12-2a3 3 0 100-6 3 3 0 000 6z"/></svg>
+  </button>
+</div>
+
+<audio id="bg-music" loop preload="auto">
+  <source src="assets/music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Envelope Screen -->
+<div id="env-screen">
+  <div class="env-scene">
+    <div class="env-crown">
+      <div class="env-crown-gem sm"></div>
+      <div class="env-crown-gem"></div>
+      <div class="env-crown-line"></div>
+      <div class="env-crown-text">Trân trọng kính mời</div>
+      <div class="env-crown-line r"></div>
+      <div class="env-crown-gem"></div>
+      <div class="env-crown-gem sm"></div>
+    </div>
+
+    <div class="env-3d">
+      <div class="env-card" id="env-card" role="button" tabindex="0">
+        <svg class="env-svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
+          <path d="M0,0 L600,0 L600,400 L0,400 Z" fill="#E8E2D2" />
+          <path d="M0,400 L300,180 L600,400 Z" fill="#F4EFE1" stroke="#C5A059" stroke-width="1" />
+          <path d="M0,0 L300,180 L0,400 Z" fill="#FDFBF7" stroke="#C5A059" stroke-width="1"/>
+          <path d="M600,0 L300,180 L600,400 Z" fill="#FDFBF7" stroke="#C5A059" stroke-width="1"/>
+          <g class="env-flap-g">
+            <path d="M0,0 L300,220 L600,0 Z" fill="#F9F6F0" stroke="#C5A059" stroke-width="2"/>
+          </g>
+        </svg>
+        <div class="env-seal">
+          <div class="env-seal-inner">
+            <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="env-shadow"></div>
+    </div>
+
+    <div class="env-caption">
+      <div class="env-cap-eyebrow" id="env-guest">Dành riêng cho Quý Khách</div>
+      <div class="env-cap-title">Thiệp mời Tốt nghiệp</div>
+      <div class="env-hint">
+        <svg viewBox="0 0 24 24" class="hint-icon"><path d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"/></svg>
+        <span>Nhấn vào phong bì để mở</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN FLIPBOOK ═══════════════ -->
+<main id="main">
+  <div class="desk-surface">
+    <div class="book-layout">
+
+      <!-- LEFT SIDE INFO PANEL -->
+      <div class="side-panel left-panel" id="left-panel">
+        <div class="sp-inner">
+          <div class="sp-arrow">‹</div>
+          <div class="sp-label" id="sp-prev-label">Trang trước</div>
+          <div class="sp-title" id="sp-prev-title"></div>
+        </div>
+      </div>
+
+      <!-- THE BOOK -->
+      <div class="book-wrapper">
+        <div class="book-spine"></div>
+        <div class="book" id="book">
+
+          <!-- PAGE 1: HERO / COVER (Graduate Name & Dust) -->
+          <div class="page current" data-page="1" data-title="Bìa Thiệp">
+            <div class="page-paper">
+              <div class="page-corner tl"></div>
+              <div class="page-corner tr"></div>
+              <div class="page-corner bl"></div>
+              <div class="page-corner br"></div>
+              <div class="page-content">
+                <div class="hero-tag">Lễ Tốt Nghiệp Cử Nhân</div>
+                <div class="name-block" style="margin-top: 40px;">
+                  <div class="name-honor">Đại học Sài Gòn</div>
+                  <div class="grad-nm-wrap" style="position:relative; display:inline-block; min-width:280px; min-height:80px; margin-top:10px;">
+                    <h1 class="grad-name">Nguyễn Thị Xuân Mai</h1>
+                    <!-- Dust overlay for graduate name -->
+                    <canvas class="dust-layer scratch-card" id="dust-canvas"></canvas>
+                  </div>
+                  <div class="dust-hint" id="dust-hint" style="position:absolute; bottom:-30px; left:50%; transform:translateX(-50%); width:100%;">
+                    <span>✨ Phủi lớp bụi thời gian ✨</span>
+                  </div>
+                </div>
+                <div class="ornament" style="margin-top: 60px;">
+                  <svg viewBox="0 0 120 20"><path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none" stroke-width="1"/></svg>
+                </div>
+                <div class="chips" style="margin-top: 40px;">
+                  <div class="chip" data-fact="major"><div class="chip-dot"></div>Tâm lý học</div>
+                  <div class="chip" data-fact="class"><div class="chip-dot"></div>Niên khoá 2022-2026</div>
+                  <div class="chip" data-fact="gpa"><div class="chip-dot"></div>Loại Giỏi</div>
+                </div>
+              </div>
+            </div>
+            <div class="page-curl"></div>
+          </div>
+
+          <!-- PAGE 2: INVITATION (Guest Name) -->
+          <div class="page future" data-page="2" data-title="Lời Mời">
+            <div class="page-paper">
+              <div class="page-corner tl"></div>
+              <div class="page-corner tr"></div>
+              <div class="page-corner bl"></div>
+              <div class="page-corner br"></div>
+              <div class="page-content">
+                <div class="guest-block">
+                  <div class="guest-sal">Trân trọng kính mời</div>
+                  <div class="guest-nm" id="guest-name">Quý Khách</div>
+                </div>
+                <div class="ornament">
+                  <svg viewBox="0 0 120 20"><path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none" stroke-width="1"/></svg>
+                </div>
+                <div class="hero-sub" style="margin-top: 20px; font-size: 1.05rem;">
+                  Đến chung vui và ghi lại những khoảnh khắc<br>
+                  đáng nhớ nhất trong Lễ Tốt nghiệp<br>
+                  Cử nhân ngành Tâm lý học.
+                </div>
+                <div class="hero-sub" style="margin-top: 20px; color: var(--gold-d);">
+                  "Sự hiện diện của Quý vị là niềm vinh hạnh<br>
+                  và là món quà quý giá nhất<br>trong ngày lễ đặc biệt này."
+                </div>
+              </div>
+            </div>
+            <div class="page-curl"></div>
+          </div>
+
+          <!-- PAGE 3: EVENT DETAILS -->
+          <div class="page future" data-page="3" data-title="Thông Tin Sự Kiện">
+            <div class="page-paper">
+              <div class="page-corner tl"></div>
+              <div class="page-corner tr"></div>
+              <div class="page-corner bl"></div>
+              <div class="page-corner br"></div>
+              <div class="page-content">
+                <div class="eyebrow">
+                  <div class="ey-l"></div><div class="ey-txt">Thời gian & Địa điểm</div><div class="ey-r"></div>
+                </div>
+                <h2 class="sec-h">Thông tin<br><em>Sự kiện</em></h2>
+                <div class="sep"><div class="sp-l"></div><div class="sp-d sm"></div><div class="sp-d"></div><div class="sp-d sm"></div><div class="sp-r"></div></div>
+                <div class="ev-grid">
+                  <div class="ev-cell">
+                    <div class="ev-icon"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                    <div class="ev-lbl">Thời gian</div>
+                    <div class="ev-val">08:00 Sáng</div>
+                    <div class="ev-sub">Thứ Bảy, 15/08/2026</div>
+                  </div>
+                  <div class="ev-cell">
+                    <div class="ev-icon"><svg viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+                    <div class="ev-lbl">Địa điểm</div>
+                    <div class="ev-val">Hội trường A</div>
+                    <div class="ev-sub">Đại học Sài Gòn</div>
+                  </div>
+                </div>
+                <div class="addr-box">
+                  <div class="ev-lbl">Địa chỉ chi tiết</div>
+                  <div class="addr-text">273 An Dương Vương, Phường 3, Quận 5, TP.HCM</div>
+                  <a href="https://maps.google.com" target="_blank" class="map-link">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Xem bản đồ
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="page-curl"></div>
+          </div>
+
+          <!-- PAGE 4: COUNTDOWN -->
+          <div class="page future" data-page="4" data-title="Đếm Ngược">
+            <div class="page-paper">
+              <div class="page-corner tl"></div>
+              <div class="page-corner tr"></div>
+              <div class="page-corner bl"></div>
+              <div class="page-corner br"></div>
+              <div class="page-content">
+                <div class="eyebrow">
+                  <div class="ey-l"></div><div class="ey-txt">Đếm ngược</div><div class="ey-r"></div>
+                </div>
+                <h2 class="sec-h">Khoảnh khắc<br><em>Mong chờ</em></h2>
+                <div class="sep"><div class="sp-l"></div><div class="sp-d sm"></div><div class="sp-d"></div><div class="sp-d sm"></div><div class="sp-r"></div></div>
+                <div class="cd-row">
+                  <div class="cd-unit">
+                    <div class="cd-card"><span class="cd-num" id="cd-d">00</span></div>
+                    <div class="cd-lbl">Ngày</div>
+                  </div>
+                  <div class="cd-sep">:</div>
+                  <div class="cd-unit">
+                    <div class="cd-card"><span class="cd-num" id="cd-h">00</span></div>
+                    <div class="cd-lbl">Giờ</div>
+                  </div>
+                  <div class="cd-sep">:</div>
+                  <div class="cd-unit">
+                    <div class="cd-card"><span class="cd-num" id="cd-m">00</span></div>
+                    <div class="cd-lbl">Phút</div>
+                  </div>
+                  <div class="cd-sep">:</div>
+                  <div class="cd-unit">
+                    <div class="cd-card"><span class="cd-num" id="cd-s">00</span></div>
+                    <div class="cd-lbl">Giây</div>
+                  </div>
+                </div>
+                <div class="emotional-text" style="margin-top: 35px; text-align: center; color: var(--muted); font-family: 'Playfair Display', serif; font-style: italic; line-height: 1.8; font-size: 0.95rem; max-width: 80%;">
+                  "Một hành trình thanh xuân rực rỡ với biết bao nỗ lực, buồn vui và những kỷ niệm không thể nào quên sắp khép lại. Chỉ còn chút thời gian ngắn ngủi nữa thôi, chúng ta sẽ cùng nhau chứng kiến khoảnh khắc trưởng thành đáng tự hào này..."
+                </div>
+              </div>
+            </div>
+            <div class="page-curl"></div>
+          </div>
+
+          <!-- PAGE 5: TIMELINE -->
+          <div class="page future" data-page="5" data-title="Lịch Trình">
+            <div class="page-paper">
+              <div class="page-corner tl"></div>
+              <div class="page-corner tr"></div>
+              <div class="page-corner bl"></div>
+              <div class="page-corner br"></div>
+              <div class="page-content" style="justify-content: flex-start; padding-top:30px;">
+                <div class="eyebrow">
+                  <div class="ey-l"></div><div class="ey-txt">Chương trình</div><div class="ey-r"></div>
+                </div>
+                <h2 class="sec-h">Lịch trình<br><em>Buổi lễ</em></h2>
+                <div class="sep"><div class="sp-l"></div><div class="sp-d sm"></div><div class="sp-d"></div><div class="sp-d sm"></div><div class="sp-r"></div></div>
+                <div class="tl">
+                  <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-t">07:30</div>
+                    <div class="tl-body">
+                      <div class="tl-title">Đón khách</div>
+                      <div class="tl-desc">Đại biểu và gia đình chụp ảnh lưu niệm.</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-t">08:00</div>
+                    <div class="tl-body">
+                      <div class="tl-title">Khai mạc</div>
+                      <div class="tl-desc">Văn nghệ và diễn văn khai mạc từ BGH.</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-t">09:00</div>
+                    <div class="tl-body">
+                      <div class="tl-title">Trao bằng</div>
+                      <div class="tl-desc">Nghi thức trao bằng cho Tân Cử nhân.</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-t">11:00</div>
+                    <div class="tl-body">
+                      <div class="tl-title">Bế mạc</div>
+                      <div class="tl-desc">Kết thúc buổi lễ. Kính mời dự tiệc trà.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="page-curl"></div>
+          </div>
+
+          <!-- PAGE 6: RSVP -->
+          <div class="page future" data-page="6" data-title="Xác Nhận Tham Dự">
+            <div class="page-paper">
+              <div class="page-corner tl"></div>
+              <div class="page-corner tr"></div>
+              <div class="page-corner bl"></div>
+              <div class="page-corner br"></div>
+              <div class="page-content" style="justify-content: flex-start; padding-top:30px;">
+                <div class="eyebrow">
+                  <div class="ey-l"></div><div class="ey-txt">Xác nhận tham dự</div><div class="ey-r"></div>
+                </div>
+                <h2 class="sec-h">Phản hồi<br><em>Khách mời</em></h2>
+                <div class="sep"><div class="sp-l"></div><div class="sp-d sm"></div><div class="sp-d"></div><div class="sp-d sm"></div><div class="sp-r"></div></div>
+                <div class="card-form">
+                  <form id="rsvp-form">
+                    <div class="ro-wrap">
+                      <div class="ro">
+                        <input type="radio" name="attend" id="at-yes" value="yes" checked>
+                        <label for="at-yes">
+                          <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Sẽ đến
+                        </label>
+                      </div>
+                      <div class="ro">
+                        <input type="radio" name="attend" id="at-no" value="no">
+                        <label for="at-no">
+                          <svg viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg> Bận rồi
+                        </label>
+                      </div>
+                    </div>
+                    <div class="fg">
+                      <label>Tên của bạn</label>
+                      <input type="text" id="r-name" placeholder="Vui lòng nhập tên...">
+                    </div>
+                    <div class="fg">
+                      <label>Lời chúc</label>
+                      <textarea id="r-msg" placeholder="Nhập lời chúc..."></textarea>
+                    </div>
+                    <button type="submit" class="rsvp-btn">Gửi Xác Nhận</button>
+                  </form>
+                  <div id="rsvp-ok" class="rsvp-ok">
+                    <div class="rok-icon">✦</div>
+                    <div class="rok-title">Trân trọng cảm ơn!</div>
+                    <div class="rok-txt">Phản hồi của bạn đã được ghi nhận.<br>Rất mong được đón tiếp bạn.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="page-curl"></div>
+          </div>
+
+          <!-- PAGE 7: CLOSING -->
+          <div class="page future" data-page="7" data-title="Lời Cảm Ơn">
+            <div class="page-paper">
+              <div class="page-corner tl"></div>
+              <div class="page-corner tr"></div>
+              <div class="page-corner bl"></div>
+              <div class="page-corner br"></div>
+              <div class="page-content">
+                <div class="ornament"><svg viewBox="0 0 120 20"><path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none" stroke-width="1"/></svg></div>
+                <div class="quote-txt">
+                  "Học vấn do người siêng năng đạt được,<br>
+                  tài sản do người tinh tế sở hữu,<br>
+                  quyền lợi do người dũng cảm nắm giữ,<br>
+                  thiên đường do người lương thiện xây dựng."
+                </div>
+                <div class="ornament" style="transform:scaleY(-1)"><svg viewBox="0 0 120 20"><path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none" stroke-width="1"/></svg></div>
+                <div class="sig-block">
+                  <div class="sig-from">Thân mời,</div>
+                  <div class="sig-name">Nguyễn Thị Xuân Mai</div>
+                </div>
+                <div class="act-row">
+                  <button class="act-btn" id="btn-save" aria-label="Lưu lịch">
+                    <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5zm4 5h5v5H9z"/></svg>
+                    Lưu vào lịch
+                  </button>
+                  <button class="act-btn" id="btn-copy" aria-label="Copy link">
+                    <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                    Sao chép link
+                  </button>
+                </div>
+                <div class="footer-txt">&copy; 2026 Nguyễn Thị Xuân Mai. Lễ Tốt Nghiệp Cử Nhân.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Page edges (stacked pages visible on right side) -->
+        <div class="page-edges" id="page-edges">
+          <div class="pe"></div><div class="pe"></div><div class="pe"></div><div class="pe"></div><div class="pe"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE INFO PANEL -->
+      <div class="side-panel right-panel" id="right-panel">
+        <div class="sp-inner">
+          <div class="sp-label" id="sp-next-label">Trang kế tiếp</div>
+          <div class="sp-title" id="sp-next-title"></div>
+          <div class="sp-arrow">›</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast">Đã lưu thành công!</div>
+
+<div class="fact-modal" id="fact-modal">
+  <div class="fact-box">
+    <div class="fact-badge">Thông tin</div>
+    <div class="fact-q" id="fact-q"></div>
+    <div class="fact-a" id="fact-a"></div>
+    <button class="fact-close" id="fact-close">Đóng</button>
+  </div>
+</div>
+
+<script src="js/invitation.js"></script>
+</body>
+</html>
