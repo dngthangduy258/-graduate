@@ -134,30 +134,30 @@ function initFlipbook() {
       // Stop glowing
       hiddenKey.classList.remove('key-glow');
       
-      // Fly to lock (slower, 1s)
-      hiddenKey.style.transition = 'transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease-in 0.5s';
+      // Fly to lock (even slower, 1.5s)
+      hiddenKey.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease-in 1s';
       hiddenKey.style.transform = `translate(${tx}px, ${ty}px) scale(0.6) rotate(-90deg)`;
       hiddenKey.style.opacity = '0';
       
-      // After flying (1s), unlock the lock and drop chains
+      // After flying (1.5s), unlock the lock and drop chains
       setTimeout(() => {
         if (lockIcon) {
           // Open lock shackle SVG
           lockIcon.innerHTML = '<rect x="4" y="10" width="16" height="12" rx="3" ry="3"/><path d="M7 10V5a5 5 0 0110 0"/><circle cx="12" cy="16" r="1.5"/>';
         }
         
-        // Wait for unlock animation to be seen clearly (800ms), then drop chains
+        // Wait for unlock animation to be seen VERY clearly (1.5s), then drop chains
         setTimeout(() => {
           document.body.classList.add('cover-unlocked');
           
-          // Wait for chains to finish sliding away before removing blur
+          // Wait for chains to finish sliding away (they will take ~4s now) before removing blur
           setTimeout(() => {
             const page1 = document.querySelector('.page[data-page="1"]');
             if (page1) page1.classList.remove('cover-locked');
-          }, 1500);
+          }, 3500);
           
-        }, 800);
-      }, 1000);
+        }, 1500);
+      }, 1500);
     });
   }
 
