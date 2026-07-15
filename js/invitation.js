@@ -106,19 +106,35 @@ function initEnvelope() {
     box.addEventListener("touchstart", requestMotionPermission, { once: true, passive: true });
     box.addEventListener("click", requestMotionPermission, { once: true });
 
+    let hasOrientation = false;
     window.addEventListener("deviceorientation", (e) => {
       if (typeof e.gamma !== 'number' || typeof e.beta !== 'number') return;
+      hasOrientation = true;
       
-      // gamma is left/right (-90 to 90)
-      // beta is front/back (-180 to 180)
-      let dx = e.gamma / 30; // increased sensitivity
-      let dy = (e.beta - 45) / 30; 
-      dx = Math.max(-2, Math.min(2, dx));
-      dy = Math.max(-2, Math.min(2, dy));
+      let dx = e.gamma / 15; // highly sensitive
+      let dy = (e.beta - 45) / 15; 
+      dx = Math.max(-2.5, Math.min(2.5, dx));
+      dy = Math.max(-2.5, Math.min(2.5, dy));
       
-      // Update shine and tilt with higher rotation angle (15deg max instead of 8)
       if (card.classList.contains("opening")) return;
-      const shine = 50 + (dx * 50); // Map to percentage
+      const shine = 50 + (dx * 40); 
+      card.style.setProperty('--shine-pos', `${shine}%`);
+      card.style.transform = `rotateX(${-dy * 15}deg) rotateY(${dx * 15}deg)`;
+    });
+
+    // Fallback for browsers that block deviceorientation but allow devicemotion
+    window.addEventListener("devicemotion", (e) => {
+      if (hasOrientation || card.classList.contains("opening")) return;
+      const accel = e.accelerationIncludingGravity;
+      if (!accel || typeof accel.x !== 'number') return;
+      
+      // accel.x is roughly -9.8 to 9.8
+      let dx = -(accel.x / 3); 
+      let dy = (accel.y / 3);
+      dx = Math.max(-2.5, Math.min(2.5, dx));
+      dy = Math.max(-2.5, Math.min(2.5, dy));
+      
+      const shine = 50 + (dx * 40);
       card.style.setProperty('--shine-pos', `${shine}%`);
       card.style.transform = `rotateX(${-dy * 15}deg) rotateY(${dx * 15}deg)`;
     });
