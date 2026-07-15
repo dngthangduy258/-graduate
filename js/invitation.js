@@ -112,6 +112,28 @@ function initFlipbook() {
   let curr = 1;
   const total = pages.length;
   let isAnimating = false;
+  let isUnlocked = false; // Cover page lock
+
+  // Handle key click
+  const hiddenKey = document.getElementById('hidden-key');
+  const coverLock = document.getElementById('cover-lock');
+  const lockIcon = document.getElementById('lock-icon');
+  const lockHint = document.getElementById('lock-hint');
+  
+  if (hiddenKey) {
+    hiddenKey.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isUnlocked = true;
+      hiddenKey.style.transform = 'scale(1.5) rotate(-20deg)';
+      hiddenKey.style.opacity = '0';
+      if (lockIcon) {
+        // Change to unlocked padlock SVG path
+        lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 019.9-1"/>';
+      }
+      if (lockHint) lockHint.textContent = 'Đã mở khóa. Vuốt để xem';
+      if (coverLock) coverLock.style.color = 'var(--gold)';
+    });
+  }
 
   const updateSidePanels = () => {
     if (curr > 1) {
@@ -196,6 +218,7 @@ function initFlipbook() {
   };
 
   const goNext = () => {
+    if (curr === 1 && !isUnlocked) return;
     if (curr >= total || isAnimating) return;
     curr++;
     applyPageStates('forward');
@@ -250,6 +273,7 @@ function initFlipbook() {
 
   window.addEventListener('touchstart', (e) => {
     if (!$('main')?.classList.contains('show') || isAnimating) return;
+    if (curr === 1 && !isUnlocked) return; // Locked on cover
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
     isDragging = true;
@@ -259,6 +283,10 @@ function initFlipbook() {
 
   window.addEventListener('touchmove', (e) => {
     if (!isDragging || isAnimating) return;
+    if (curr === 1 && !isUnlocked) {
+      isDragging = false;
+      return;
+    }
     const dx = e.changedTouches[0].screenX - touchStartX;
     const dy = e.changedTouches[0].screenY - touchStartY;
     
@@ -317,6 +345,8 @@ function initFlipbook() {
   window.addEventListener('touchend', (e) => {
     if (!isDragging || isAnimating) return;
     isDragging = false;
+    
+    if (curr === 1 && !isUnlocked) return;
     
     const dx = e.changedTouches[0].screenX - touchStartX;
     
