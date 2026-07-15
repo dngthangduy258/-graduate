@@ -652,13 +652,13 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
 .cover-chain {
   position: absolute;
   width: 150%;
-  height: 18px;
-  /* Elegant interlocking oval links */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 18' width='32' height='18'%3E%3Crect x='0' y='3' width='18' height='12' rx='6' fill='none' stroke='%23C5A059' stroke-width='2'/%3E%3Crect x='15' y='1' width='6' height='16' rx='3' fill='%23C5A059'/%3E%3C/svg%3E");
+  height: 24px;
+  /* Seamless interlocking chain links */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20' width='30' height='20'%3E%3Cpath d='M 0,5 L 10,5 A 5,5 0 0,1 15,10 A 5,5 0 0,1 10,15 L 0,15' fill='none' stroke='%23d4af37' stroke-width='2.5'/%3E%3Cpath d='M 30,5 L 20,5 A 5,5 0 0,0 15,10 A 5,5 0 0,0 20,15 L 30,15' fill='none' stroke='%23d4af37' stroke-width='2.5'/%3E%3Crect x='11' y='2' width='8' height='16' rx='4' fill='%23b28b22' stroke='%238a6a16' stroke-width='1'/%3E%3C/svg%3E");
   background-repeat: repeat-x;
-  background-size: 32px 18px;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-  transition: transform 1.5s cubic-bezier(0.5, 0, 0.2, 1), opacity 1s ease;
+  background-size: 36px 24px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+  transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s ease;
 }
 
 .chain-tl-br {
@@ -674,20 +674,20 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
   z-index: 21;
   color: #1a1a1a;
   pointer-events: auto;
-  transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease;
+  transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1.5s ease;
 }
 
 /* Unlocked state - Chains slide out diagonally sequentially */
 body.cover-unlocked #cover-overlay .chain-tl-br {
   transform: rotate(45deg) translateX(150%);
   opacity: 0;
-  transition-delay: 0.1s;
+  transition-delay: 0.2s;
 }
 
 body.cover-unlocked #cover-overlay .chain-tr-bl {
   transform: rotate(-45deg) translateX(-150%);
   opacity: 0;
-  transition-delay: 0.3s;
+  transition-delay: 1.2s;
 }
 
 body.cover-unlocked #cover-overlay #cover-padlock {
