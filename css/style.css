@@ -632,10 +632,14 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
   filter: blur(8px);
   opacity: 0.3;
   pointer-events: none;
+  will-change: filter, opacity;
+  transform: translateZ(0);
 }
 
 .hero-tag, .ornament, .chips {
   transition: filter 1.5s ease, opacity 1.5s ease;
+  will-change: filter, opacity;
+  transform: translateZ(0);
 }
 
 #cover-overlay {
@@ -659,6 +663,8 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
   background-size: 16px 20px;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
   transition: transform 4s cubic-bezier(0.3, 0, 0.2, 1), opacity 3s ease 1s;
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .chain-tl-br {
@@ -675,6 +681,8 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
   color: #1a1a1a;
   pointer-events: auto;
   transition: transform 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 2.5s ease;
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 /* Unlocked state - Chains slide out diagonally sequentially */
@@ -706,6 +714,7 @@ body.cover-unlocked #cover-overlay #cover-padlock {
 }
 .key-glow {
   animation: keyGlow 1.5s infinite ease-in-out;
+  will-change: filter, transform, color;
 }
 
 .dust-hint.hidden{display:none;}
