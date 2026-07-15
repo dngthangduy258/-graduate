@@ -325,7 +325,7 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
 .page.current .page-curl{opacity:1;}
 
 .page-content{
-  padding:50px 40px 40px;
+  padding: clamp(20px, 6vw, 50px) clamp(15px, 5vw, 40px) clamp(20px, 6vw, 40px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   min-height:100%;
   position:relative;z-index:2;
@@ -369,8 +369,10 @@ body.book-closing #cover-overlay {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 400px;
-  height: 250px;
+  width: 90vw;
+  max-width: 400px;
+  aspect-ratio: 1.6; /* 400 / 250 */
+  height: auto;
   transform: translate(-50%, -50%) scale(0.9);
   z-index: 100;
   pointer-events: none;
@@ -398,17 +400,19 @@ body.book-closing #cover-overlay {
 .wing {
   position: absolute;
   top: 50%;
-  width: 200px;
-  height: 250px;
+  width: 50%; /* scale relative to envelope width */
+  max-width: 200px;
+  aspect-ratio: 0.8; /* 200 / 250 */
+  height: auto;
 }
 .wing svg { width: 100%; height: 100%; }
 .wing-left {
-  right: 180px;
+  right: 45%;
   transform-origin: center right;
   transform: translateY(-50%) rotateY(0deg);
 }
 .wing-right {
-  left: 180px;
+  left: 45%;
   transform-origin: center left;
   transform: translateY(-50%) rotateY(0deg);
 }
@@ -497,7 +501,7 @@ body.envelope-flying .goodbye-msg {
 }
 .guest-block{margin-bottom:20px;}
 .guest-sal{font-family:'Playfair Display',serif;font-size:1.25rem;font-style:italic;color:var(--muted);margin-bottom:6px;}
-.guest-nm{font-family:'Dancing Script',cursive;font-size:2.6rem;font-weight:700;color:var(--ink);line-height:1.2;}
+.guest-nm{font-family:'Dancing Script',cursive;font-size:clamp(1.8rem, 6vw, 2.6rem);font-weight:700;color:var(--ink);line-height:1.2;}
 .guest-nm:empty{display:none}
 
 .ornament{color:var(--gold);margin:14px 0;opacity:0.4;}
@@ -506,7 +510,7 @@ body.envelope-flying .goodbye-msg {
 .name-block{margin-bottom:14px;text-align:center;}
 .name-honor{font-family:'Inter',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
 .grad-name{
-  font-family:'Dancing Script',cursive;font-size:4.2rem;line-height:1.1;
+  font-family:'Dancing Script',cursive;font-size:clamp(2.5rem, 10vw, 4.2rem);line-height:1.1;
   display:block;color:var(--ink);font-weight:700;
 }
 .hero-sub{
@@ -529,11 +533,11 @@ body.envelope-flying .goodbye-msg {
 .ey-txt{font-family:'Inter',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-d);text-align:center;white-space:nowrap;}
 
 .sec-h{
-  font-family:'Dancing Script',cursive;font-size:2.8rem;font-weight:700;
+  font-family:'Dancing Script',cursive;font-size:clamp(2rem, 7vw, 2.8rem);font-weight:700;
   color:var(--ink);text-align:center;line-height:1.1;width:100%;
 }
 .sec-h em{
-  font-family:'Playfair Display',serif;font-style:italic;font-size:1.6rem;
+  font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.2rem, 4vw, 1.6rem);
   color:var(--gold-d);font-weight:600;display:block;margin-top:4px;
 }
 
@@ -694,12 +698,14 @@ body.envelope-flying .goodbye-msg {
   pointer-events: auto;
 }
 .sig-box {
-  background: #fff;
-  padding: 20px;
+  background: var(--paper);
+  padding: clamp(15px, 5vw, 30px);
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  width: 280px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 1px solid var(--gold);
+  width: 90%;
+  max-width: 320px;
 }
 .sig-box-title {
   font-size: 1.1rem;
@@ -757,6 +763,30 @@ body.envelope-flying .goodbye-msg {
 .rok-txt{font-family:'Playfair Display',serif;font-size:.95rem;font-style:italic;color:var(--muted);line-height:1.6;}
 
 /* Footer */
+.hero-tag{
+  font-family:'Inter',sans-serif;font-size:clamp(0.6rem, 2vw, 0.75rem);
+  font-weight:600;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold-d);margin-bottom:15px;text-align:center;
+}
+.name-title{
+  font-family:'Playfair Display',serif;font-size:clamp(0.8rem, 3vw, 1.1rem);
+  font-style:italic;color:var(--gold);margin-top:10px;text-align:center;
+}
+.page-title{
+  font-family:'Dancing Script',cursive;font-size:clamp(1.8rem, 6vw, 2.5rem);
+  font-weight:700;color:var(--gold);margin-bottom:20px;text-align:center;
+  line-height:1.2;
+}
+.page-text{
+  font-family:'Playfair Display',serif;font-size:clamp(0.95rem, 3vw, 1.1rem);
+  line-height:1.8;color:var(--ink-l);text-align:center;
+}
+.page-text.small{font-size:clamp(0.8rem, 2.5vw, 0.95rem);}
+
+.date-big{
+  font-family:'Playfair Display',serif;font-size:clamp(2rem, 8vw, 3rem);
+  font-weight:700;color:var(--ink);
+}
 .quote-txt{
   font-family:'Playfair Display',serif;font-size:.95rem;font-style:italic;
   color:var(--ink-l);line-height:1.8;text-align:center;margin-bottom:20px;
