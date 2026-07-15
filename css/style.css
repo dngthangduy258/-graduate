@@ -481,6 +481,125 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
 .fg textarea{min-height:65px;resize:vertical;}
 .fg input:focus,.fg textarea:focus{border-color:var(--border-s);}
 .fg input::placeholder,.fg textarea::placeholder{color:rgba(122,110,93,0.4);font-style:italic;}
+.fact-close {
+  width: 100%;
+  padding: 10px;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.fact-close:hover {
+  background: var(--gold-d);
+}
+
+/* SIGNATURE BOOK */
+.sig-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  cursor: crosshair;
+  overflow: hidden;
+}
+.sig-item {
+  position: absolute;
+  pointer-events: none;
+  transform-origin: center;
+}
+.sig-text {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.2rem;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  animation: sigDraw 0.6s ease forwards;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+@keyframes sigDraw {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 0.9; transform: scale(1); }
+}
+.sig-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--muted);
+  font-style: italic;
+  pointer-events: none;
+  text-align: center;
+  transition: opacity 0.5s;
+  z-index: 1;
+}
+.sig-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.sig-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.sig-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  width: 280px;
+}
+.sig-box-title {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #333;
+}
+.sig-colors {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.sig-color {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #ddd;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.sig-color:hover {
+  transform: scale(1.1);
+}
+.sig-color.active {
+  border-color: #333;
+  transform: scale(1.1);
+}
+.sig-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.sig-btn:hover {
+  background: var(--gold-d);
+}
+
 .rsvp-btn{
   width:100%;padding:11px;background:var(--gold-d);border:none;
   font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;

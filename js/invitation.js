@@ -668,6 +668,124 @@ function initDustEffect() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   SIGNATURE BOOK
+   ═══════════════════════════════════════════════════════════════ */
+function initSignatureBook() {
+  const canvas = document.getElementById('sig-canvas');
+  const modal = document.getElementById('sig-modal');
+  const colors = document.querySelectorAll('.sig-color');
+  const btnConfirm = document.getElementById('sig-btn-confirm');
+  const hint = document.getElementById('sig-hint');
+  
+  if (!canvas || !modal) return;
+  
+  // Get guest name from URL or use a default
+  const p = new URLSearchParams(window.location.search);
+  let guestName = p.get('guest') || p.get('n');
+  if (guestName) {
+    if (guestName.includes('-')) {
+      guestName = guestName.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
+  } else {
+    guestName = "Khách mời";
+  }
+  
+  let currentX = 0;
+  let currentY = 0;
+  let selectedColor = '#1a1a1a';
+  
+  // Load existing signatures from localStorage
+  const loadSignatures = () => {
+    try {
+      const saved = localStorage.getItem('guest_signatures');
+      if (saved) {
+        const sigs = JSON.parse(saved);
+        sigs.forEach(s => renderSignature(s.x, s.y, s.color, s.name, s.rotation, false));
+        if (sigs.length > 0 && hint) hint.style.opacity = '0';
+      }
+    } catch (e) { console.error(e); }
+  };
+  
+  const saveSignature = (sig) => {
+    try {
+      const saved = localStorage.getItem('guest_signatures');
+      const sigs = saved ? JSON.parse(saved) : [];
+      sigs.push(sig);
+      localStorage.setItem('guest_signatures', JSON.stringify(sigs));
+    } catch (e) { console.error(e); }
+  };
+  
+  const renderSignature = (x, y, color, name, rotation, animate = true) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'sig-item';
+    wrapper.style.left = x + '%';
+    wrapper.style.top = y + '%';
+    wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+    wrapper.style.color = color;
+    
+    const textEl = document.createElement('div');
+    textEl.className = 'sig-text';
+    textEl.textContent = name;
+    
+    if (animate) {
+      textEl.style.animation = 'sigDraw 0.6s ease forwards';
+    } else {
+      textEl.style.opacity = '0.9';
+      textEl.style.transform = 'scale(1)';
+      textEl.style.animation = 'none';
+    }
+    
+    wrapper.appendChild(textEl);
+    canvas.appendChild(wrapper);
+  };
+  
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    // Calculate percentage position
+    currentX = ((e.clientX - rect.left) / rect.width) * 100;
+    currentY = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    // Show color picker modal
+    modal.classList.add('show');
+  });
+  
+  colors.forEach(c => {
+    c.addEventListener('click', () => {
+      colors.forEach(el => el.classList.remove('active'));
+      c.classList.add('active');
+      selectedColor = c.getAttribute('data-color');
+    });
+  });
+  
+  btnConfirm.addEventListener('click', () => {
+    modal.classList.remove('show');
+    if (hint) hint.style.opacity = '0';
+    
+    const rotation = Math.random() * 30 - 15; // -15 to 15 degrees
+    
+    const sig = {
+      x: currentX,
+      y: currentY,
+      color: selectedColor,
+      name: guestName,
+      rotation: rotation
+    };
+    
+    renderSignature(sig.x, sig.y, sig.color, sig.name, sig.rotation, true);
+    saveSignature(sig);
+  });
+  
+  // Close modal if clicked outside box
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('show');
+    }
+  });
+  
+  loadSignatures();
+}
+
+/* ═══════════════════════════════════════════════════════════════
    BOOTSTRAP
    ═══════════════════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", () => {
@@ -681,4 +799,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initActions();
   initFacts();
   initDustEffect();
+  initSignatureBook();
 });

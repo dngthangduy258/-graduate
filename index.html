@@ -355,8 +355,23 @@
             <div class="page-curl"></div>
           </div>
 
-          <!-- PAGE 7: CLOSING -->
-          <div class="page future" data-page="7" data-title="Lời Cảm Ơn">
+          <!-- PAGE 7: SIGNATURE BOOK -->
+          <div class="page future" data-page="7" data-title="Sổ Ký Tên">
+            <div class="page-paper">
+              <div class="page-corner tl"></div>
+              <div class="page-corner tr"></div>
+              <div class="page-corner bl"></div>
+              <div class="page-corner br"></div>
+              <div class="page-content" style="padding: 0;">
+                <div class="sig-hint" id="sig-hint">Chạm vào bất kỳ đâu trên mặt giấy<br>để lưu lại chữ ký của bạn</div>
+                <div class="sig-canvas" id="sig-canvas"></div>
+              </div>
+            </div>
+            <div class="page-curl"></div>
+          </div>
+
+          <!-- PAGE 8: CLOSING -->
+          <div class="page future" data-page="8" data-title="Lời Cảm Ơn">
             <div class="page-paper">
               <div class="page-corner tl"></div>
               <div class="page-corner tr"></div>
@@ -418,6 +433,20 @@
     <div class="fact-q" id="fact-q"></div>
     <div class="fact-a" id="fact-a"></div>
     <button class="fact-close" id="fact-close">Đóng</button>
+  </div>
+</div>
+
+<!-- Signature Color Picker Modal -->
+<div class="sig-modal" id="sig-modal">
+  <div class="sig-box">
+    <div class="sig-box-title">Chọn màu chữ ký của bạn</div>
+    <div class="sig-colors" id="sig-colors">
+      <div class="sig-color active" style="background-color: #1a1a1a;" data-color="#1a1a1a"></div>
+      <div class="sig-color" style="background-color: #1b3b6f;" data-color="#1b3b6f"></div>
+      <div class="sig-color" style="background-color: #8c2727;" data-color="#8c2727"></div>
+      <div class="sig-color" style="background-color: #c5a059;" data-color="#c5a059"></div>
+    </div>
+    <button class="sig-btn" id="sig-btn-confirm">Ký tên</button>
   </div>
 </div>
 
