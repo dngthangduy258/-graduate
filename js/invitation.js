@@ -241,34 +241,105 @@ function initFlipbook() {
     else if (e.deltaY < 0) goPrev();
   }, { passive: true });
 
-  // Touch Swipe
+  // Interactive Touch Swipe (Page Flip effect)
   let touchStartX = 0, touchStartY = 0;
+  let isDragging = false;
+  let dragDirection = null; // 'next' or 'prev'
+  let dragPage = null; // The DOM element being dragged
+  const SWIPE_THRESHOLD = 60; // Pixels needed to trigger page turn
+
   window.addEventListener('touchstart', (e) => {
+    if (!$('main')?.classList.contains('show') || isAnimating) return;
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
+    isDragging = true;
+    dragDirection = null;
+    dragPage = null;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || isAnimating) return;
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    
+    // Ignore vertical scrolling if user is trying to scroll the page
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+      if (dragPage) dragPage.style.transform = '';
+      isDragging = false;
+      return;
+    }
+
+    // Determine direction once we move past a small threshold
+    if (!dragDirection && Math.abs(dx) > 10) {
+      dragDirection = dx < 0 ? 'next' : 'prev';
+      
+      if (dragDirection === 'next' && curr < total) {
+        dragPage = document.querySelector(`.page[data-page="${curr}"]`);
+        if (dragPage) {
+          dragPage.style.transition = 'none'; // Disable CSS transition for instant drag
+          dragPage.style.zIndex = 200; // Bring above others
+        }
+      } else if (dragDirection === 'prev' && curr > 1) {
+        dragPage = document.querySelector(`.page[data-page="${curr - 1}"]`);
+        if (dragPage) {
+          dragPage.style.transition = 'none';
+          dragPage.style.zIndex = 200;
+          dragPage.classList.add('current'); // Make visible
+          dragPage.classList.remove('past');
+        }
+      } else {
+        isDragging = false; // Cannot turn in this direction
+      }
+    }
+
+    if (dragPage) {
+       // Screen width roughly corresponds to 180deg flip
+       let progress = Math.abs(dx) / (window.innerWidth || 400);
+       if (progress > 1) progress = 1;
+       
+       let angle = 0;
+       if (dragDirection === 'next') {
+         angle = -180 * progress;
+       } else if (dragDirection === 'prev') {
+         angle = -180 + (180 * progress);
+       }
+       dragPage.style.transform = `rotateY(${angle}deg)`;
+    }
   }, { passive: true });
 
   window.addEventListener('touchend', (e) => {
-    if (!$('main')?.classList.contains('show') || isAnimating) return;
-    const dx = touchStartX - e.changedTouches[0].screenX;
-    const dy = touchStartY - e.changedTouches[0].screenY;
-
-    if (Math.abs(dx) > Math.abs(dy) + 20) {
-      if (dx > 50) goNext();
-      if (dx < -50) goPrev();
+    if (!isDragging || isAnimating) return;
+    isDragging = false;
+    
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    
+    if (dragPage) {
+       dragPage.style.transition = ''; // Restore CSS transition
+       dragPage.style.transform = ''; // Remove inline transform so CSS takes over
+       
+       if (dragDirection === 'next') {
+         if (dx < -SWIPE_THRESHOLD) {
+           goNext();
+         } else {
+           // Cancel swipe, page falls back
+           dragPage.style.zIndex = '';
+         }
+       } else if (dragDirection === 'prev') {
+         if (dx > SWIPE_THRESHOLD) {
+           goPrev();
+         } else {
+           // Cancel swipe, page falls forward
+           dragPage.classList.remove('current');
+           dragPage.classList.add('past');
+           dragPage.style.zIndex = '';
+         }
+       }
     } else {
-      const currPageEl = document.querySelector('.page.current');
-      if (currPageEl) {
-        const isScrollable = currPageEl.scrollHeight > currPageEl.clientHeight + 4;
-        if (isScrollable) {
-          const isAtBottom = Math.ceil(currPageEl.scrollTop + currPageEl.clientHeight) >= currPageEl.scrollHeight - 6;
-          const isAtTop = currPageEl.scrollTop <= 6;
-          if (dy > 0 && !isAtBottom) return;
-          if (dy < 0 && !isAtTop) return;
-        }
-      }
-      if (dy > 60) goNext();
-      if (dy < -60) goPrev();
+       // Fallback for very quick swipes where touchmove didn't trigger logic
+       if (Math.abs(dx) > SWIPE_THRESHOLD) {
+         if (dx < 0) goNext();
+         else goPrev();
+       }
     }
   }, { passive: true });
 

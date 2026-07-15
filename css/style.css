@@ -448,11 +448,10 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
 .tl-item{display:grid;grid-template-columns:52px 1fr;gap:0 20px;position:relative;padding-bottom:20px;}
 .tl-item:last-child{padding-bottom:0}
 .tl-dot{
-  position:absolute;left:55px;top:7px;
-  width:9px;height:9px;border:1px solid var(--gold-d);
-  background:var(--paper);transform:rotate(45deg);z-index:2;
+  position:absolute;left:62px;top:6px;transform:translateX(-50%) rotate(45deg);
+  width:8px;height:8px;background:var(--gold-d);
 }
-.tl-t{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:600;font-style:italic;color:var(--gold-d);text-align:right;padding-top:1px;}
+.tl-t{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold-d);text-align:right;padding-top:1px;}
 .tl-body{padding-left:18px;}
 .tl-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;color:var(--ink);margin-bottom:2px;}
 .tl-desc{font-size:.82rem;color:var(--muted);line-height:1.5;}
