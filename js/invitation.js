@@ -418,26 +418,26 @@ function initDustEffect() {
     canvas.height = rect.height;
     totalArea = canvas.width * canvas.height;
 
-    // Base foil/dust layer — warm brownish gold
-    ctx.fillStyle = '#D4AF37'; // Gold base
+    // Base dust layer
+    ctx.fillStyle = '#b8a68b'; 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Add noise texture for scratch card feel
-    for (let i = 0; i < 500; i++) {
+    // Add heavy noise texture for real dust feel
+    for (let i = 0; i < 3000; i++) {
       const x = Math.random() * canvas.width;
       const y = Math.random() * canvas.height;
-      const w = Math.random() * 2;
-      const bright = Math.random() > 0.5;
-      ctx.fillStyle = bright ? 'rgba(255, 255, 255, 0.4)' : 'rgba(139, 105, 20, 0.4)';
-      ctx.fillRect(x, y, w, w);
+      const w = Math.random() * 1.5;
+      ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255, 255, 255, 0.25)' : 'rgba(40, 30, 20, 0.35)';
+      ctx.beginPath();
+      ctx.arc(x, y, w, 0, Math.PI * 2);
+      ctx.fill();
     }
     
-    // Add a shiny glare
-    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    grad.addColorStop(0, 'rgba(255,255,255,0)');
-    grad.addColorStop(0.3, 'rgba(255,255,255,0.4)');
-    grad.addColorStop(0.7, 'rgba(255,255,255,0)');
-    ctx.fillStyle = grad;
+    // Add subtle vignette
+    const vig = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 10, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/1.5);
+    vig.addColorStop(0, "rgba(0,0,0,0)");
+    vig.addColorStop(1, "rgba(30,25,15,0.5)");
+    ctx.fillStyle = vig;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     isActive = true;
