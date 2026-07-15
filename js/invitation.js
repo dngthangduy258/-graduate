@@ -676,18 +676,25 @@ function initSignatureBook() {
   const colors = document.querySelectorAll('.sig-color');
   const btnConfirm = document.getElementById('sig-btn-confirm');
   const hint = document.getElementById('sig-hint');
+  const inputName = document.getElementById('sig-name-field');
+  const groupName = document.getElementById('sig-name-group');
   
   if (!canvas || !modal) return;
   
-  // Get guest name from URL or use a default
+  // Get guest name from URL or use empty
   const p = new URLSearchParams(window.location.search);
-  let guestName = p.get('guest') || p.get('n');
-  if (guestName) {
-    if (guestName.includes('-')) {
-      guestName = guestName.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    }
-  } else {
-    guestName = "Khách mời";
+  let urlGuestName = p.get('guest') || p.get('n') || '';
+  if (urlGuestName && urlGuestName.includes('-')) {
+    urlGuestName = urlGuestName.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
+  
+  if (inputName) {
+    inputName.value = urlGuestName;
+  }
+  
+  if (urlGuestName && groupName) {
+    // If they already have a name from URL, we can hide the input or just leave it pre-filled
+    // We will leave it visible so they can change it if they want.
   }
   
   let currentX = 0;
@@ -758,6 +765,13 @@ function initSignatureBook() {
   });
   
   btnConfirm.addEventListener('click', () => {
+    let finalName = inputName ? inputName.value.trim() : urlGuestName;
+    if (!finalName) {
+      alert('Vui lòng nhập tên của bạn để lưu lại chữ ký nhé!');
+      if (inputName) inputName.focus();
+      return;
+    }
+    
     modal.classList.remove('show');
     if (hint) hint.style.opacity = '0';
     
@@ -767,7 +781,7 @@ function initSignatureBook() {
       x: currentX,
       y: currentY,
       color: selectedColor,
-      name: guestName,
+      name: finalName,
       rotation: rotation
     };
     

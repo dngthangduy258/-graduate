@@ -503,6 +503,7 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
   z-index: 5;
   cursor: crosshair;
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.001); /* Fix iOS click bug */
 }
 .sig-item {
   position: absolute;
