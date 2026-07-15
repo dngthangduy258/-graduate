@@ -293,21 +293,23 @@ function initFlipbook() {
     }
 
     if (dragPage) {
-       // Screen width roughly corresponds to 180deg flip
-       let progress = Math.abs(dx) / (window.innerWidth || 400);
-       if (progress > 1) progress = 1;
+       const W = window.innerWidth || 400;
+       let clientX = e.changedTouches[0].clientX;
+       // Clamp between 0 and W
+       clientX = Math.max(0, Math.min(clientX, W));
        
-       let angle = 0;
+       // Absolute tracking: right edge of screen (1) = 0deg, left edge (0) = -150deg
+       let progress = clientX / W;
+       let angle = -150 * (1 - progress);
+       
+       // Add slight curl effect
        let rotateZ = 0;
        if (dragDirection === 'next') {
-         angle = -180 * progress;
-         rotateZ = -4 * Math.sin(progress * Math.PI); // slight paper curl tilt
+         rotateZ = -4 * Math.sin(progress * Math.PI);
        } else if (dragDirection === 'prev') {
-         // Eased progress so it comes into view faster from the left edge
-         let easedProgress = Math.pow(progress, 0.6);
-         angle = -180 + (180 * easedProgress);
-         rotateZ = 4 * Math.sin(easedProgress * Math.PI);
+         rotateZ = 4 * Math.sin(progress * Math.PI);
        }
+       
        dragPage.style.transform = `perspective(1200px) rotateY(${angle}deg) rotateZ(${rotateZ}deg)`;
     }
   }, { passive: true });
