@@ -61,12 +61,15 @@ function initEnvelope() {
   });
 
   // Easter Egg Foil Animation Logic
+  let rAF = null;
   const updateShine = (dx, dy) => {
     if (card.classList.contains("opening")) return;
-    // Map dx/dy (-1 to 1) to background-position-x (0% to 100%)
-    const shine = 50 + (dx * 150); // -1 -> -100%, 1 -> 200%
-    card.style.setProperty('--shine-pos', `${shine}%`);
-    card.style.transform = `rotateX(${-dy * 8}deg) rotateY(${dx * 8}deg)`;
+    if (rAF) cancelAnimationFrame(rAF);
+    rAF = requestAnimationFrame(() => {
+      const shine = 50 + (dx * 150); 
+      card.style.setProperty('--shine-pos', `${shine}%`);
+      card.style.transform = `rotateX(${-dy * 8}deg) rotateY(${dx * 8}deg)`;
+    });
   };
 
   const box = $("env-screen");
@@ -110,36 +113,42 @@ function initEnvelope() {
     box.addEventListener("click", requestMotionPermission, { once: true });
 
     let hasOrientation = false;
+    let orientRAF = null;
     window.addEventListener("deviceorientation", (e) => {
       if (typeof e.gamma !== 'number' || typeof e.beta !== 'number') return;
       hasOrientation = true;
       
-      let dx = e.gamma / 15; // highly sensitive
+      let dx = e.gamma / 15; 
       let dy = (e.beta - 45) / 15; 
       dx = Math.max(-2.5, Math.min(2.5, dx));
       dy = Math.max(-2.5, Math.min(2.5, dy));
       
       if (card.classList.contains("opening")) return;
-      const shine = 50 + (dx * 40); 
-      card.style.setProperty('--shine-pos', `${shine}%`);
-      card.style.transform = `rotateX(${-dy * 15}deg) rotateY(${dx * 15}deg)`;
+      if (orientRAF) cancelAnimationFrame(orientRAF);
+      orientRAF = requestAnimationFrame(() => {
+        const shine = 50 + (dx * 40); 
+        card.style.setProperty('--shine-pos', `${shine}%`);
+        card.style.transform = `rotateX(${-dy * 15}deg) rotateY(${dx * 15}deg)`;
+      });
     });
 
-    // Fallback for browsers that block deviceorientation but allow devicemotion
+    let motionRAF = null;
     window.addEventListener("devicemotion", (e) => {
       if (hasOrientation || card.classList.contains("opening")) return;
       const accel = e.accelerationIncludingGravity;
       if (!accel || typeof accel.x !== 'number') return;
       
-      // accel.x is roughly -9.8 to 9.8
       let dx = -(accel.x / 3); 
       let dy = (accel.y / 3);
       dx = Math.max(-2.5, Math.min(2.5, dx));
       dy = Math.max(-2.5, Math.min(2.5, dy));
       
-      const shine = 50 + (dx * 40);
-      card.style.setProperty('--shine-pos', `${shine}%`);
-      card.style.transform = `rotateX(${-dy * 15}deg) rotateY(${dx * 15}deg)`;
+      if (motionRAF) cancelAnimationFrame(motionRAF);
+      motionRAF = requestAnimationFrame(() => {
+        const shine = 50 + (dx * 40);
+        card.style.setProperty('--shine-pos', `${shine}%`);
+        card.style.transform = `rotateX(${-dy * 15}deg) rotateY(${dx * 15}deg)`;
+      });
     });
   }
 }
