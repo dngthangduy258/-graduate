@@ -101,7 +101,7 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
 .env-crown-gem.sm{width:4px;height:4px;background:rgba(197,160,89,0.4);}
 .env-crown-text{font-family:'Inter',sans-serif;font-size:clamp(0.6rem, 2vw, 0.8rem);font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);}
 .env-3d{perspective:1000px}
-.env-card{width:min(480px,80vw);position:relative;transform-style:preserve-3d;transition:transform .6s var(--ease);cursor:pointer;}
+.env-card{width:min(480px,80vw);position:relative;transform-style:preserve-3d;transition:transform .1s ease-out;cursor:pointer;}
 .env-shadow{position:absolute;bottom:-20px;left:5%;right:5%;height:20px;background:rgba(0,0,0,0.4);filter:blur(12px);transition:transform .6s var(--ease),opacity .6s;border-radius:50%;}
 .env-card:hover ~ .env-shadow{transform:translateY(5px) scaleX(.95);opacity:.2}
 .env-card:hover{transform:translateY(-5px);}
