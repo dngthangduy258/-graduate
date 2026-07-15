@@ -68,31 +68,28 @@ function initEnvelope() {
 
   const box = $("env-screen");
   if (box && card) {
-    box.addEventListener("mousemove", e => {
+    const handleMove = (x, y) => {
       const r = card.getBoundingClientRect();
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
-      const dx = (e.clientX - cx) / (r.width / 2);
-      const dy = (e.clientY - cy) / (r.height / 2);
+      let dx = (x - cx) / (r.width / 2);
+      let dy = (y - cy) / (r.height / 2);
+      dx = Math.max(-1.5, Math.min(1.5, dx));
+      dy = Math.max(-1.5, Math.min(1.5, dy));
       updateShine(dx, dy);
-    });
-    box.addEventListener("mouseleave", () => {
-      if (!card.classList.contains("opening")) card.style.transform = "rotateX(0) rotateY(0)";
-    });
-  }
+    };
 
-  // Mobile Device Orientation
-  if (window.DeviceOrientationEvent) {
-    window.addEventListener("deviceorientation", (e) => {
-      if (!e.gamma || !e.beta) return;
-      // gamma is left/right (-90 to 90)
-      // beta is front/back (-180 to 180)
-      let dx = e.gamma / 45; // roughly -1 to 1
-      let dy = (e.beta - 45) / 45; 
-      dx = Math.max(-1, Math.min(1, dx));
-      dy = Math.max(-1, Math.min(1, dy));
-      updateShine(dx, dy);
-    });
+    box.addEventListener("mousemove", e => handleMove(e.clientX, e.clientY));
+    box.addEventListener("touchmove", e => handleMove(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+
+    const resetTransform = () => {
+      if (!card.classList.contains("opening")) {
+        card.style.transform = "rotateX(0) rotateY(0)";
+        card.style.setProperty('--shine-pos', '200%');
+      }
+    };
+    box.addEventListener("mouseleave", resetTransform);
+    box.addEventListener("touchend", resetTransform);
   }
 }
 
