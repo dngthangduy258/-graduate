@@ -4,7 +4,8 @@
  */
 
 /* ── Config – phải khớp với invitation.js ─── */
-const BASE_URL = window.location.origin + window.location.pathname.replace("admin.html", "index.html");
+let basePath = window.location.pathname.replace(/\/admin(\.html)?\/?$/, '/');
+const BASE_URL = window.location.origin + basePath;
 
 const SALUTATIONS = [
   { slug: "kinh-moi-thay",  label: "Kính mời Thầy",               icon: "👨‍🏫" },
