@@ -813,28 +813,46 @@ function initSignatureBook() {
   let currentY = 0;
   let selectedColor = '#1a1a1a';
   
-  // Load existing signatures from localStorage
-  const loadSignatures = () => {
+  // Load existing signatures from Backend (or localStorage fallback)
+  const loadSignatures = async () => {
     try {
-      const saved = localStorage.getItem('guest_signatures');
-      if (saved) {
-        const sigs = JSON.parse(saved);
-        sigs.forEach(s => renderSignature(s.x, s.y, s.color, s.name, s.rotation, false));
-        if (sigs.length > 0) {
-          if (hint) hint.style.opacity = '0';
-          const successHint = document.getElementById('sig-success-hint');
-          if (successHint) successHint.classList.add('show');
+      let sigs = [];
+      try {
+        const res = await fetch('/api/signatures');
+        if (res.ok) {
+          sigs = await res.json();
+          // Cache to local storage
+          localStorage.setItem('guest_signatures', JSON.stringify(sigs));
         }
+      } catch (err) {
+        console.warn('API error, using localStorage fallback');
+        const saved = localStorage.getItem('guest_signatures');
+        if (saved) sigs = JSON.parse(saved);
+      }
+      
+      if (sigs && sigs.length > 0) {
+        sigs.forEach(s => renderSignature(s.x, s.y, s.color, s.name, s.rotation, false));
+        if (hint) hint.style.opacity = '0';
+        const successHint = document.getElementById('sig-success-hint');
+        if (successHint) successHint.classList.add('show');
       }
     } catch (e) { console.error(e); }
   };
   
-  const saveSignature = (sig) => {
+  const saveSignature = async (sig) => {
     try {
+      // Optimistic UI save to localStorage
       const saved = localStorage.getItem('guest_signatures');
       const sigs = saved ? JSON.parse(saved) : [];
       sigs.push(sig);
       localStorage.setItem('guest_signatures', JSON.stringify(sigs));
+      
+      // Save to Backend
+      fetch('/api/signatures', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sig)
+      }).catch(err => console.error("Failed to save to backend:", err));
     } catch (e) { console.error(e); }
   };
   

@@ -1,0 +1,23 @@
+{
+  "name": "totnghiep",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dngthangduy258/-graduate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dngthangduy258/-graduate/issues"
+  },
+  "homepage": "https://github.com/dngthangduy258/-graduate#readme",
+  "devDependencies": {
+    "wrangler": "^4.111.0"
+  }
+}
