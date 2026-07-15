@@ -58,26 +58,8 @@ function initEnvelope() {
   });
 
   // Easter Egg Foil Animation Logic
-  let autoShineInterval = null;
-  let shinePos = 200;
-
-  // Auto shine fallback if no interaction
-  const startAutoShine = () => {
-    autoShineInterval = setInterval(() => {
-      if (card.classList.contains("opening")) return clearInterval(autoShineInterval);
-      shinePos -= 5;
-      if (shinePos < -100) shinePos = 200;
-      card.style.setProperty('--shine-pos', `${shinePos}%`);
-    }, 50);
-  };
-  startAutoShine();
-
   const updateShine = (dx, dy) => {
     if (card.classList.contains("opening")) return;
-    if (autoShineInterval) {
-      clearInterval(autoShineInterval);
-      autoShineInterval = null;
-    }
     // Map dx/dy (-1 to 1) to background-position-x (0% to 100%)
     const shine = 50 + (dx * 150); // -1 -> -100%, 1 -> 200%
     card.style.setProperty('--shine-pos', `${shine}%`);
@@ -101,15 +83,6 @@ function initEnvelope() {
 
   // Mobile Device Orientation
   if (window.DeviceOrientationEvent) {
-    // Request permission on first interaction for iOS 13+
-    let permissionRequested = false;
-    document.addEventListener("click", () => {
-      if (!permissionRequested && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        permissionRequested = true;
-        DeviceOrientationEvent.requestPermission().catch(console.error);
-      }
-    }, { once: true });
-
     window.addEventListener("deviceorientation", (e) => {
       if (!e.gamma || !e.beta) return;
       // gamma is left/right (-90 to 90)
