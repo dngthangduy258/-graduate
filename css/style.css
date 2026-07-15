@@ -551,18 +551,40 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
 }
 @media(max-width:640px){
   .side-panel{display:none;}
-  .book-layout{padding:10px;gap:0;}
-  .book-wrapper{flex:1;max-width:none;height:calc(100vh - 20px);}
-  .page-content{padding:40px 22px 28px;}
-  .grad-name{font-size:3rem;}
-  .sec-h{font-size:2.2rem;}
-  .sec-h em{font-size:1.3rem;}
-  .guest-nm{font-size:2rem;}
-  .sig-name{font-size:2.8rem;}
+  .book-layout{padding:15px;gap:0;}
+  .book-wrapper{flex:1;max-width:none;height:calc(100vh - 30px);}
+  .page-content{padding:40px 20px 24px;}
+  .grad-name{font-size:2.6rem;}
+  .sec-h{font-size:2rem;}
+  .sec-h em{font-size:1.2rem;}
+  .guest-nm{font-size:1.8rem;}
+  .sig-name{font-size:2.5rem;}
   .book-spine{left:-10px;width:10px;}
   .page-edges{right:-5px;width:5px;}
-  .cd-card{width:46px;height:54px;}
-  .cd-num{font-size:1.5rem;}
+  .cd-card{width:40px;height:48px;}
+  .cd-num{font-size:1.3rem;}
+  
+  /* Swipe hint on mobile */
+  .page:not([data-page="7"]) .page-content::after {
+    content: '\2190   Vuốt để xem tiếp';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-d);
+    pointer-events: none;
+    white-space: nowrap;
+    animation: swipeHintPulse 2s infinite ease-in-out;
+  }
+}
+@keyframes swipeHintPulse {
+  0%, 100% { opacity: 0.2; transform: translateX(-50%); }
+  50% { opacity: 0.6; transform: translateX(calc(-50% - 5px)); }
 }
 
 /* ═══════════════════════════════════════
