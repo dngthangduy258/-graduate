@@ -116,9 +116,7 @@ function initFlipbook() {
 
   // Handle key click
   const hiddenKey = document.getElementById('hidden-key');
-  const coverLock = document.getElementById('cover-lock');
   const lockIcon = document.getElementById('lock-icon');
-  const lockHint = document.getElementById('lock-hint');
   
   if (hiddenKey) {
     hiddenKey.addEventListener('click', (e) => {
@@ -130,8 +128,11 @@ function initFlipbook() {
         // Change to unlocked padlock SVG path
         lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 019.9-1"/>';
       }
-      if (lockHint) lockHint.textContent = 'Đã mở khóa. Vuốt để xem';
-      if (coverLock) coverLock.style.color = 'var(--gold)';
+      
+      // Trigger animations
+      document.body.classList.add('cover-unlocked');
+      const page1 = document.querySelector('.page[data-page="1"]');
+      if (page1) page1.classList.remove('cover-locked');
     });
   }
 
