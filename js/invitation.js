@@ -121,18 +121,38 @@ function initFlipbook() {
   if (hiddenKey) {
     hiddenKey.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (isUnlocked) return;
       isUnlocked = true;
-      hiddenKey.style.transform = 'scale(1.5) rotate(-20deg)';
-      hiddenKey.style.opacity = '0';
-      if (lockIcon) {
-        // Change to unlocked padlock SVG path (thin stroke)
-        lockIcon.innerHTML = '<rect x="5" y="11" width="14" height="10" rx="2" ry="2"/><path d="M8 11V7a4 4 0 017.5-1"/><circle cx="12" cy="16" r="1"/>';
-      }
       
-      // Trigger animations
-      document.body.classList.add('cover-unlocked');
-      const page1 = document.querySelector('.page[data-page="1"]');
-      if (page1) page1.classList.remove('cover-locked');
+      const keyRect = hiddenKey.getBoundingClientRect();
+      const lockRect = lockIcon.getBoundingClientRect();
+      
+      // Calculate translation to the center of the lock
+      const tx = lockRect.left + lockRect.width / 2 - (keyRect.left + keyRect.width / 2);
+      const ty = lockRect.top + lockRect.height / 2 - (keyRect.top + keyRect.height / 2);
+      
+      // Stop glowing
+      hiddenKey.classList.remove('key-glow');
+      
+      // Fly to lock
+      hiddenKey.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease-in 0.3s';
+      hiddenKey.style.transform = `translate(${tx}px, ${ty}px) scale(0.6) rotate(-90deg)`;
+      hiddenKey.style.opacity = '0';
+      
+      // After flying, unlock the lock and drop chains
+      setTimeout(() => {
+        if (lockIcon) {
+          // Open lock shackle SVG
+          lockIcon.innerHTML = '<rect x="4" y="10" width="16" height="12" rx="3" ry="3"/><path d="M7 10V5a5 5 0 0110 0"/><circle cx="12" cy="16" r="1.5"/>';
+        }
+        
+        // Wait a tiny bit for unlock animation to register visually, then drop chains
+        setTimeout(() => {
+          document.body.classList.add('cover-unlocked');
+          const page1 = document.querySelector('.page[data-page="1"]');
+          if (page1) page1.classList.remove('cover-locked');
+        }, 400);
+      }, 600);
     });
   }
 
