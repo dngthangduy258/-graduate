@@ -708,7 +708,11 @@ function initSignatureBook() {
       if (saved) {
         const sigs = JSON.parse(saved);
         sigs.forEach(s => renderSignature(s.x, s.y, s.color, s.name, s.rotation, false));
-        if (sigs.length > 0 && hint) hint.style.opacity = '0';
+        if (sigs.length > 0) {
+          if (hint) hint.style.opacity = '0';
+          const successHint = document.getElementById('sig-success-hint');
+          if (successHint) successHint.classList.add('show');
+        }
       }
     } catch (e) { console.error(e); }
   };
@@ -774,6 +778,8 @@ function initSignatureBook() {
     
     modal.classList.remove('show');
     if (hint) hint.style.opacity = '0';
+    const successHint = document.getElementById('sig-success-hint');
+    if (successHint) successHint.classList.add('show');
     
     const rotation = Math.random() * 30 - 15; // -15 to 15 degrees
     
