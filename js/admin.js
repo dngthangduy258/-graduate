@@ -152,34 +152,34 @@ function buildGuestCard(guest) {
   const shortUrl = url.length > 55 ? url.slice(0, 55) + "..." : url;
   const avatar = getInitials(guest.name);
   const statusMap = {
-    pending:  { cls: "status-pending",  label: "⏳ Chờ xác nhận" },
-    attended: { cls: "status-attended", label: "✅ Tham dự" },
-    declined: { cls: "status-declined", label: "❌ Vắng mặt" },
+    pending:  { cls: "st-pending",  label: "⏳ Chờ xác nhận" },
+    attended: { cls: "st-attended", label: "✅ Tham dự" },
+    declined: { cls: "st-declined", label: "❌ Vắng mặt" },
   };
   const st = statusMap[guest.status] || statusMap.pending;
 
   return `
-  <div class="guest-card ${guest.status !== "pending" ? guest.status : ""}" data-id="${guest.id}">
-    <div class="guest-card-top">
-      <div class="guest-info">
-        <div class="guest-salutation">${salData.icon} ${salLabel}</div>
-        <div class="guest-fullname">${guest.name}</div>
-        ${guest.note ? `<div class="guest-note">📝 ${guest.note}</div>` : ""}
+  <div class="g-card ${guest.status !== "pending" ? guest.status : ""}" data-id="${guest.id}">
+    <div class="g-top">
+      <div class="g-info">
+        <div class="g-sal">${salData.icon} ${salLabel}</div>
+        <div class="g-name">${guest.name}</div>
+        ${guest.note ? `<div class="g-note">📝 ${guest.note}</div>` : ""}
       </div>
-      <div class="guest-avatar">${avatar}</div>
+      <div class="g-avatar">${avatar}</div>
     </div>
-    <span class="guest-status ${st.cls}">${st.label}</span>
-    <div class="guest-link-row">
-      <span class="guest-link-text" title="${url}">${shortUrl}</span>
-      <button class="copy-btn" data-action="copy" data-id="${guest.id}" title="Sao chép link">
-        📋 Copy
+    <span class="g-status ${st.cls}">${st.label}</span>
+    <div class="g-link">
+      <span class="g-link-url" title="${url}">${shortUrl}</span>
+      <button class="btn-copy" data-action="copy" data-id="${guest.id}" title="Sao chép link">
+        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Copy
       </button>
     </div>
-    <div class="guest-actions">
-      <button class="action-btn attend" data-action="attend" data-id="${guest.id}">✅ Tham dự</button>
-      <button class="action-btn" data-action="decline" data-id="${guest.id}">❌ Vắng</button>
-      <button class="action-btn" data-action="preview" data-id="${guest.id}">👁 Xem</button>
-      <button class="action-btn delete" data-action="delete" data-id="${guest.id}">🗑</button>
+    <div class="g-actions">
+      <button class="g-act att" data-action="attend" data-id="${guest.id}"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Tham dự</button>
+      <button class="g-act del" data-action="decline" data-id="${guest.id}"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Vắng</button>
+      <button class="g-act" data-action="preview" data-id="${guest.id}"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Xem</button>
+      <button class="g-act del" data-action="delete" data-id="${guest.id}"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
     </div>
   </div>`;
 }
