@@ -276,13 +276,13 @@ function initFlipbook() {
       if (dragDirection === 'next' && curr < total) {
         dragPage = document.querySelector(`.page[data-page="${curr}"]`);
         if (dragPage) {
-          dragPage.style.transition = 'none'; // Disable CSS transition for instant drag
+          dragPage.style.transition = 'transform 0.1s ease-out'; // Fast smoothing transition
           dragPage.style.zIndex = 200; // Bring above others
         }
       } else if (dragDirection === 'prev' && curr > 1) {
         dragPage = document.querySelector(`.page[data-page="${curr - 1}"]`);
         if (dragPage) {
-          dragPage.style.transition = 'none';
+          dragPage.style.transition = 'transform 0.1s ease-out';
           dragPage.style.zIndex = 200;
           dragPage.classList.add('current'); // Make visible
           dragPage.classList.remove('past');
@@ -298,12 +298,17 @@ function initFlipbook() {
        if (progress > 1) progress = 1;
        
        let angle = 0;
+       let rotateZ = 0;
        if (dragDirection === 'next') {
          angle = -180 * progress;
+         rotateZ = -4 * Math.sin(progress * Math.PI); // slight paper curl tilt
        } else if (dragDirection === 'prev') {
-         angle = -180 + (180 * progress);
+         // Eased progress so it comes into view faster from the left edge
+         let easedProgress = Math.pow(progress, 0.6);
+         angle = -180 + (180 * easedProgress);
+         rotateZ = 4 * Math.sin(easedProgress * Math.PI);
        }
-       dragPage.style.transform = `perspective(1200px) rotateY(${angle}deg)`;
+       dragPage.style.transform = `perspective(1200px) rotateY(${angle}deg) rotateZ(${rotateZ}deg)`;
     }
   }, { passive: true });
 

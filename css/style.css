@@ -244,7 +244,7 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
   transition:
     transform 1.1s var(--flip),
     box-shadow 1.1s var(--flip);
-  backface-visibility:hidden;
+  backface-visibility:visible;
   /* Soft paper edges */
   border-radius:0 4px 4px 0;
   /* ALL pages always opacity:1 — 3D rotation handles visibility */
