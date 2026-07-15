@@ -334,8 +334,14 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
 /* ═══════════════════════════════════════
    PAGE STATES — Pure 3D, No Opacity Pop
    ═══════════════════════════════════════ */
+.page.past{
+  transform:perspective(1200px) rotateY(-180deg);
+  opacity:0;visibility:hidden;
+  box-shadow:none;
+}
+
 .page.current{
-  transform:rotateY(0deg);
+  transform:perspective(1200px) rotateY(0deg);
   /* Soft, diffuse shadow — like paper resting on desk */
   box-shadow:
     2px 0 8px rgba(0,0,0,0.06),
@@ -343,13 +349,8 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
     0 8px 30px rgba(0,0,0,0.1);
 }
 
-.page.past{
-  transform:rotateY(-180deg);
-  box-shadow:none;
-}
-
 .page.future{
-  transform:rotateY(0deg);
+  transform:perspective(1200px) rotateY(0deg);
   box-shadow:none;
 }
 

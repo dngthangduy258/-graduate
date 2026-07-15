@@ -303,7 +303,7 @@ function initFlipbook() {
        } else if (dragDirection === 'prev') {
          angle = -180 + (180 * progress);
        }
-       dragPage.style.transform = `rotateY(${angle}deg)`;
+       dragPage.style.transform = `perspective(1200px) rotateY(${angle}deg)`;
     }
   }, { passive: true });
 
