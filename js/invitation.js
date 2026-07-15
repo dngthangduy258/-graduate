@@ -95,7 +95,8 @@ function initEnvelope() {
   // Mobile Device Orientation
   if (window.DeviceOrientationEvent) {
     window.addEventListener("deviceorientation", (e) => {
-      if (e.gamma === null || e.beta === null) return;
+      if (typeof e.gamma !== 'number' || typeof e.beta !== 'number') return;
+      
       // gamma is left/right (-90 to 90)
       // beta is front/back (-180 to 180)
       let dx = e.gamma / 30; // increased sensitivity
