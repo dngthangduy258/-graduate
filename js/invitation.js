@@ -245,9 +245,33 @@ function initFlipbook() {
 
   const goNext = () => {
     if (curr === 1 && !isUnlocked) return;
-    if (curr >= total || isAnimating) return;
+    if (isAnimating) return;
+    
+    if (curr >= total) {
+      // Trigger closing animation on last page
+      closeAndFlyAway();
+      return;
+    }
+    
     curr++;
     applyPageStates('forward');
+  };
+
+  const closeAndFlyAway = () => {
+    if (document.body.classList.contains('book-closing')) return;
+    
+    // 1. Close book
+    document.body.classList.add('book-closing');
+    
+    // Hide side panels
+    if (leftPanel) leftPanel.style.display = 'none';
+    if (rightPanel) rightPanel.style.display = 'none';
+    if (pageEdges) pageEdges.style.display = 'none';
+    
+    // 2. Fly away after book finishes closing (1.5s)
+    setTimeout(() => {
+      document.body.classList.add('envelope-flying');
+    }, 1500);
   };
 
   const goPrev = () => {
@@ -327,11 +351,13 @@ function initFlipbook() {
     if (!dragDirection && Math.abs(dx) > 10) {
       dragDirection = dx < 0 ? 'next' : 'prev';
       
-      if (dragDirection === 'next' && curr < total) {
-        dragPage = document.querySelector(`.page[data-page="${curr}"]`);
-        if (dragPage) {
-          dragPage.style.transition = 'transform 0.1s ease-out'; // Fast smoothing transition
-          dragPage.style.zIndex = 200; // Bring above others
+      if (dragDirection === 'next') {
+        if (curr < total) {
+          dragPage = document.querySelector(`.page[data-page="${curr}"]`);
+          if (dragPage) {
+            dragPage.style.transition = 'transform 0.1s ease-out';
+            dragPage.style.zIndex = 200;
+          }
         }
       } else if (dragDirection === 'prev' && curr > 1) {
         dragPage = document.querySelector(`.page[data-page="${curr - 1}"]`);
@@ -384,7 +410,11 @@ function initFlipbook() {
        if (dragDirection === 'next') {
          if (dx < -SWIPE_THRESHOLD) {
            pageToClean.style.transform = 'perspective(1200px) rotateY(-180deg) rotateZ(0deg)';
-           goNext();
+           if (curr >= total) {
+             closeAndFlyAway();
+           } else {
+             goNext();
+           }
          } else {
            // Cancel swipe, page falls back
            pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
@@ -412,7 +442,10 @@ function initFlipbook() {
     } else {
        // Fallback for very quick swipes where touchmove didn't trigger logic
        if (Math.abs(dx) > SWIPE_THRESHOLD) {
-         if (dx < 0) goNext();
+         if (dx < 0) {
+           if (curr >= total) closeAndFlyAway();
+           else goNext();
+         }
          else goPrev();
        }
     }
