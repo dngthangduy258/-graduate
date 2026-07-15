@@ -253,11 +253,81 @@ function setHTML(id, val) {
   if (el) el.textContent = val;
 }
 
-/* ── Export ───────────────────────────────── */
+/* ── Export & Import ──────────────────────── */
 function initExport() {
   const btn = document.getElementById("export-btn");
-  if (!btn) return;
-  btn.addEventListener("click", exportCSV);
+  if (btn) btn.addEventListener("click", exportCSV);
+
+  const importBtn = document.getElementById("import-btn");
+  const importInput = document.getElementById("excel-import-input");
+  
+  if (importBtn && importInput) {
+    importBtn.addEventListener("click", () => importInput.click());
+    
+    importInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      try {
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data);
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        
+        const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        let count = 0;
+        
+        let startIndex = 0;
+        if (rows.length > 0 && typeof rows[0][0] === 'string' && (rows[0][0].toLowerCase().includes("vai") || rows[0][0].toLowerCase().includes("họ"))) {
+          startIndex = 1; // Skip header
+        }
+
+        for (let i = startIndex; i < rows.length; i++) {
+          const row = rows[i];
+          if (!row || row.length < 2) continue;
+          
+          let salutationText = (row[0] || "").toString().trim();
+          let guestName = (row[1] || "").toString().trim();
+          
+          if (!salutationText || !guestName) continue;
+          
+          let salutationSlug = "custom";
+          let customSalute = salutationText;
+          
+          const matched = SALUTATIONS.find(s => s.label.toLowerCase() === salutationText.toLowerCase());
+          if (matched && matched.slug !== "custom") {
+            salutationSlug = matched.slug;
+            customSalute = "";
+          }
+          
+          guests.unshift({
+            id: Date.now() + i,
+            salutationSlug,
+            customSalute,
+            name: guestName,
+            note: "Nhập từ Excel",
+            status: "pending",
+            createdAt: new Date().toISOString(),
+          });
+          count++;
+        }
+        
+        if (count > 0) {
+          save();
+          renderGuests();
+          updateStats();
+          showToast(`✅ Đã nhập thành công ${count} khách!`);
+        } else {
+          showToast("❗ Không tìm thấy dữ liệu hợp lệ trong file.", "error");
+        }
+      } catch (err) {
+        console.error(err);
+        showToast("❗ Lỗi khi đọc file Excel!", "error");
+      }
+      
+      importInput.value = "";
+    });
+  }
 }
 
 function exportCSV() {
