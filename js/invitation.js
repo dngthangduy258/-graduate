@@ -125,8 +125,8 @@ function initFlipbook() {
       hiddenKey.style.transform = 'scale(1.5) rotate(-20deg)';
       hiddenKey.style.opacity = '0';
       if (lockIcon) {
-        // Change to unlocked padlock SVG path
-        lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 019.9-1"/>';
+        // Change to unlocked padlock SVG path (thin stroke)
+        lockIcon.innerHTML = '<rect x="5" y="11" width="14" height="10" rx="2" ry="2"/><path d="M8 11V7a4 4 0 017.5-1"/><circle cx="12" cy="16" r="1"/>';
       }
       
       // Trigger animations
@@ -589,6 +589,11 @@ function initDustEffect() {
     isActive = false;
     canvas.classList.add('cleared');
     if (hint) hint.classList.add('hidden');
+    
+    // Make the hidden key glow to attract attention
+    const key = document.getElementById('hidden-key');
+    if (key) key.classList.add('key-glow');
+    
     setTimeout(() => {
       canvas.remove();
       hint?.remove();
