@@ -95,14 +95,19 @@ function initEnvelope() {
   // Mobile Device Orientation
   if (window.DeviceOrientationEvent) {
     window.addEventListener("deviceorientation", (e) => {
-      if (!e.gamma || !e.beta) return;
+      if (e.gamma === null || e.beta === null) return;
       // gamma is left/right (-90 to 90)
       // beta is front/back (-180 to 180)
-      let dx = e.gamma / 45; // roughly -1 to 1
-      let dy = (e.beta - 45) / 45; 
-      dx = Math.max(-1.5, Math.min(1.5, dx));
-      dy = Math.max(-1.5, Math.min(1.5, dy));
-      updateShine(dx, dy);
+      let dx = e.gamma / 30; // increased sensitivity
+      let dy = (e.beta - 45) / 30; 
+      dx = Math.max(-2, Math.min(2, dx));
+      dy = Math.max(-2, Math.min(2, dy));
+      
+      // Update shine and tilt with higher rotation angle (15deg max instead of 8)
+      if (card.classList.contains("opening")) return;
+      const shine = 50 + (dx * 50); // Map to percentage
+      card.style.setProperty('--shine-pos', `${shine}%`);
+      card.style.transform = `rotateX(${-dy * 15}deg) rotateY(${dx * 15}deg)`;
     });
   }
 }
