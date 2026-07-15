@@ -268,10 +268,10 @@ function initFlipbook() {
     if (rightPanel) rightPanel.style.display = 'none';
     if (pageEdges) pageEdges.style.display = 'none';
     
-    // 2. Fly away after book finishes closing (1.5s)
+    // 2. Magical transformation: Envelope appears and flies away (1.8s)
     setTimeout(() => {
       document.body.classList.add('envelope-flying');
-    }, 1500);
+    }, 1800);
   };
 
   const goPrev = () => {

@@ -364,7 +364,27 @@ body.book-closing #cover-overlay {
   transition: opacity 1.5s;
 }
 
-/* WINGS & FLYING */
+/* MAGICAL TRANSFORMATION */
+.magical-envelope {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 250px;
+  transform: translate(-50%, -50%) scale(0.9);
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+}
+.env-glow {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  filter: drop-shadow(0 0 20px rgba(255, 223, 137, 0.8));
+}
+.env-glow svg { width: 100%; height: 100%; }
+
+/* WINGS */
 .book-wings {
   position: absolute;
   top: 50%;
@@ -374,52 +394,58 @@ body.book-closing #cover-overlay {
   transform: translate(-50%, -50%);
   z-index: -1;
   pointer-events: none;
-  opacity: 0;
 }
 .wing {
   position: absolute;
   top: 50%;
-  width: 150px;
-  height: 200px;
+  width: 200px;
+  height: 250px;
 }
 .wing svg { width: 100%; height: 100%; }
 .wing-left {
-  right: 0;
+  right: 180px;
   transform-origin: center right;
   transform: translateY(-50%) rotateY(0deg);
 }
 .wing-right {
-  left: 0;
+  left: 180px;
   transform-origin: center left;
   transform: translateY(-50%) rotateY(0deg);
 }
 
-body.envelope-flying .book-wrapper {
-  animation: flyAway 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+/* ANIMATION STATES */
+body.book-closing .book {
+  animation: bookGlow 2.5s ease forwards;
 }
-body.envelope-flying .book-wings {
-  opacity: 1;
-  transition: opacity 1s;
+@keyframes bookGlow {
+  0% { filter: brightness(1) drop-shadow(0 0 0 rgba(255,255,255,0)); opacity: 1; }
+  50% { filter: brightness(1.5) drop-shadow(0 0 50px rgba(255,255,255,1)); opacity: 1; }
+  100% { filter: brightness(2) drop-shadow(0 0 100px rgba(255,255,255,1)); opacity: 0; }
 }
+
+body.envelope-flying .magical-envelope {
+  animation: flyAwayMagical 5s cubic-bezier(0.3, 0, 0.1, 1) forwards;
+}
+@keyframes flyAwayMagical {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotateX(0deg) rotateZ(0deg); filter: brightness(2); }
+  10% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotateX(20deg) rotateZ(5deg); filter: brightness(1); }
+  100% { opacity: 0; transform: translate(-50%, -150vh) scale(0.2) rotateX(60deg) rotateZ(15deg); filter: brightness(1.5); }
+}
+
 body.envelope-flying .wing-left {
-  animation: flapLeft 0.5s ease-in-out infinite alternate;
+  animation: flapLeft 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
 }
 body.envelope-flying .wing-right {
-  animation: flapRight 0.5s ease-in-out infinite alternate;
+  animation: flapRight 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
 }
 
 @keyframes flapLeft {
-  0% { transform: translateY(-50%) rotateY(10deg); }
-  100% { transform: translateY(-50%) rotateY(70deg); }
+  0%, 100% { transform: translateY(-50%) rotateY(10deg); }
+  40% { transform: translateY(-50%) rotateY(75deg); }
 }
 @keyframes flapRight {
-  0% { transform: translateY(-50%) rotateY(-10deg); }
-  100% { transform: translateY(-50%) rotateY(-70deg); }
-}
-@keyframes flyAway {
-  0% { transform: scale(1) translateY(0); opacity: 1; }
-  20% { transform: scale(1.05) translateY(-20px); opacity: 1; }
-  100% { transform: scale(0.2) translateY(-150vh); opacity: 0; }
+  0%, 100% { transform: translateY(-50%) rotateY(-10deg); }
+  40% { transform: translateY(-50%) rotateY(-75deg); }
 }
 
 /* GOODBYE MESSAGE */
