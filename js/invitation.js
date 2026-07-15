@@ -24,6 +24,9 @@ function initUrlParams() {
   }
 }
 
+// Disable right click globally
+document.addEventListener('contextmenu', e => e.preventDefault());
+
 /* ═══════════════════════════════════════════════════════════════
    PRELOADER
    ═══════════════════════════════════════════════════════════════ */

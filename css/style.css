@@ -5,12 +5,17 @@
 /* ── Reset ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+input, textarea { -webkit-user-select:auto; -moz-user-select:auto; -ms-user-select:auto; user-select:auto; }
 
 body{
   font-family:'Inter',sans-serif;
   min-height:100vh;
   overflow:hidden;
   line-height:1.6;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
   /* Warm mahogany desk */
   background: #3A2218;
   background-image:
@@ -125,13 +130,13 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
   /* Foil gradient */
   background: linear-gradient(
     110deg,
-    transparent 0%,
-    transparent 45%,
+    rgba(197, 160, 89, 0.15) 0%,
+    rgba(197, 160, 89, 0.15) 45%,
     rgba(197, 160, 89, 0.8) 48%,
     rgba(255, 255, 255, 1) 50%,
     rgba(197, 160, 89, 0.8) 52%,
-    transparent 55%,
-    transparent 100%
+    rgba(197, 160, 89, 0.15) 55%,
+    rgba(197, 160, 89, 0.15) 100%
   );
   background-size: 200% 100%;
   background-position-x: var(--shine-pos, 200%);
