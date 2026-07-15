@@ -94,6 +94,18 @@ function initEnvelope() {
 
   // Mobile Device Orientation
   if (window.DeviceOrientationEvent) {
+    // iOS 13+ requires explicit permission via user interaction
+    let permissionRequested = false;
+    const requestMotionPermission = () => {
+      if (!permissionRequested && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        permissionRequested = true;
+        DeviceOrientationEvent.requestPermission().catch(console.error);
+      }
+    };
+    // Bind to the first touch/click on the envelope screen
+    box.addEventListener("touchstart", requestMotionPermission, { once: true, passive: true });
+    box.addEventListener("click", requestMotionPermission, { once: true });
+
     window.addEventListener("deviceorientation", (e) => {
       if (typeof e.gamma !== 'number' || typeof e.beta !== 'number') return;
       
