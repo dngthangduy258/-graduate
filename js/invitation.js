@@ -351,26 +351,38 @@ function initFlipbook() {
     const dx = e.changedTouches[0].screenX - touchStartX;
     
     if (dragPage) {
-       dragPage.style.transition = ''; // Restore CSS transition
-       dragPage.style.transform = ''; // Remove inline transform so CSS takes over
+       const pageToClean = dragPage;
+       // Smoothly transition from the current drag angle to the final state
+       pageToClean.style.transition = 'transform 1.1s cubic-bezier(0.645, 0.045, 0.355, 1)';
        
        if (dragDirection === 'next') {
          if (dx < -SWIPE_THRESHOLD) {
+           pageToClean.style.transform = 'perspective(1200px) rotateY(-180deg) rotateZ(0deg)';
            goNext();
          } else {
            // Cancel swipe, page falls back
-           dragPage.style.zIndex = '';
+           pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
+           pageToClean.style.zIndex = '';
          }
        } else if (dragDirection === 'prev') {
          if (dx > SWIPE_THRESHOLD) {
+           pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
            goPrev();
          } else {
            // Cancel swipe, page falls forward
-           dragPage.classList.remove('current');
-           dragPage.classList.add('past');
-           dragPage.style.zIndex = '';
+           pageToClean.style.transform = 'perspective(1200px) rotateY(-180deg) rotateZ(0deg)';
+           pageToClean.classList.remove('current');
+           pageToClean.classList.add('past');
+           pageToClean.style.zIndex = '';
          }
        }
+       
+       // Clean up inline styles after animation finishes
+       setTimeout(() => {
+         pageToClean.style.transition = '';
+         pageToClean.style.transform = '';
+       }, 1150);
+       
     } else {
        // Fallback for very quick swipes where touchmove didn't trigger logic
        if (Math.abs(dx) > SWIPE_THRESHOLD) {
