@@ -57,19 +57,68 @@ function initEnvelope() {
     }, 900);
   });
 
+  // Easter Egg Foil Animation Logic
+  let autoShineInterval = null;
+  let shinePos = 200;
+
+  // Auto shine fallback if no interaction
+  const startAutoShine = () => {
+    autoShineInterval = setInterval(() => {
+      if (card.classList.contains("opening")) return clearInterval(autoShineInterval);
+      shinePos -= 5;
+      if (shinePos < -100) shinePos = 200;
+      card.style.setProperty('--shine-pos', `${shinePos}%`);
+    }, 50);
+  };
+  startAutoShine();
+
+  const updateShine = (dx, dy) => {
+    if (card.classList.contains("opening")) return;
+    if (autoShineInterval) {
+      clearInterval(autoShineInterval);
+      autoShineInterval = null;
+    }
+    // Map dx/dy (-1 to 1) to background-position-x (0% to 100%)
+    const shine = 50 + (dx * 150); // -1 -> -100%, 1 -> 200%
+    card.style.setProperty('--shine-pos', `${shine}%`);
+    card.style.transform = `rotateX(${-dy * 8}deg) rotateY(${dx * 8}deg)`;
+  };
+
   const box = $("env-screen");
   if (box && card) {
     box.addEventListener("mousemove", e => {
-      if (card.classList.contains("opening")) return;
       const r = card.getBoundingClientRect();
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
       const dx = (e.clientX - cx) / (r.width / 2);
       const dy = (e.clientY - cy) / (r.height / 2);
-      card.style.transform = `rotateX(${-dy * 8}deg) rotateY(${dx * 8}deg)`;
+      updateShine(dx, dy);
     });
     box.addEventListener("mouseleave", () => {
       if (!card.classList.contains("opening")) card.style.transform = "rotateX(0) rotateY(0)";
+    });
+  }
+
+  // Mobile Device Orientation
+  if (window.DeviceOrientationEvent) {
+    // Request permission on first interaction for iOS 13+
+    let permissionRequested = false;
+    document.addEventListener("click", () => {
+      if (!permissionRequested && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        permissionRequested = true;
+        DeviceOrientationEvent.requestPermission().catch(console.error);
+      }
+    }, { once: true });
+
+    window.addEventListener("deviceorientation", (e) => {
+      if (!e.gamma || !e.beta) return;
+      // gamma is left/right (-90 to 90)
+      // beta is front/back (-180 to 180)
+      let dx = e.gamma / 45; // roughly -1 to 1
+      let dy = (e.beta - 45) / 45; 
+      dx = Math.max(-1, Math.min(1, dx));
+      dy = Math.max(-1, Math.min(1, dy));
+      updateShine(dx, dy);
     });
   }
 }
