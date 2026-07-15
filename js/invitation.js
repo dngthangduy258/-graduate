@@ -91,6 +91,20 @@ function initEnvelope() {
     box.addEventListener("mouseleave", resetTransform);
     box.addEventListener("touchend", resetTransform);
   }
+
+  // Mobile Device Orientation
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener("deviceorientation", (e) => {
+      if (!e.gamma || !e.beta) return;
+      // gamma is left/right (-90 to 90)
+      // beta is front/back (-180 to 180)
+      let dx = e.gamma / 45; // roughly -1 to 1
+      let dy = (e.beta - 45) / 45; 
+      dx = Math.max(-1.5, Math.min(1.5, dx));
+      dy = Math.max(-1.5, Math.min(1.5, dy));
+      updateShine(dx, dy);
+    });
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
