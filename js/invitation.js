@@ -812,16 +812,17 @@ function initSignatureBook() {
   let currentX = 0;
   let currentY = 0;
   let selectedColor = '#1a1a1a';
-  let selectedFont = "'Dancing Script', cursive";
   
-  const fonts = document.querySelectorAll('.sig-font');
+  const fontsList = [
+    "'Dancing Script', cursive",
+    "'Great Vibes', cursive",
+    "'Pacifico', cursive",
+    "'Alex Brush', cursive",
+    "'Sacramento', cursive",
+    "'Allura', cursive"
+  ];
   
   if (inputName) {
-    inputName.addEventListener('input', (e) => {
-      const val = e.target.value.trim() || 'Mai';
-      fonts.forEach(f => f.textContent = val);
-    });
-  }
   
   // Load existing signatures from Backend (or localStorage fallback)
   const loadSignatures = async () => {
@@ -916,14 +917,6 @@ function initSignatureBook() {
       selectedColor = c.getAttribute('data-color');
     });
   });
-
-  fonts.forEach(f => {
-    f.addEventListener('click', () => {
-      fonts.forEach(el => el.classList.remove('active'));
-      f.classList.add('active');
-      selectedFont = f.getAttribute('data-font');
-    });
-  });
   
   btnConfirm.addEventListener('click', () => {
     let finalName = inputName ? inputName.value.trim() : urlGuestName;
@@ -939,11 +932,12 @@ function initSignatureBook() {
     if (successHint) successHint.classList.add('show');
     
     const rotation = Math.random() * 30 - 15; // -15 to 15 degrees
+    const randomFont = fontsList[Math.floor(Math.random() * fontsList.length)];
     
     const sig = {
       x: currentX,
       y: currentY,
-      color: selectedColor + '|||' + selectedFont,
+      color: selectedColor + '|||' + randomFont,
       name: finalName,
       rotation: rotation
     };
@@ -977,4 +971,32 @@ document.addEventListener("DOMContentLoaded", () => {
   initFacts();
   initDustEffect();
   initSignatureBook();
+  initBookScale();
 });
+
+/* ═══════════════════════════════════════════════════════════════
+   DYNAMIC BOOK SCALING
+   ═══════════════════════════════════════════════════════════════ */
+function initBookScale() {
+  const wrapper = document.getElementById('book-wrapper');
+  if (!wrapper) return;
+  
+  function updateScale() {
+    const isMobile = window.innerWidth <= 768;
+    const baseW = 500;
+    const baseH = 760;
+    
+    const availW = window.innerWidth - (isMobile ? 0 : 160);
+    const availH = window.innerHeight - (isMobile ? 20 : 40);
+    
+    const scaleW = availW / baseW;
+    const scaleH = availH / baseH;
+    let scale = Math.min(scaleW, scaleH, 1);
+    
+    wrapper.style.transform = `scale(${scale})`;
+    wrapper.style.transformOrigin = 'center center';
+  }
+  
+  window.addEventListener('resize', updateScale);
+  updateScale();
+}

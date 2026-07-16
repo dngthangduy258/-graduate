@@ -218,10 +218,23 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
    BOOK
    ═══════════════════════════════════════ */
 .book-wrapper{
-  flex:0 1 500px;
-  height:calc(100vh - 60px);max-height:760px;
+  width:100%; max-width:500px;
+  height:760px;
   position:relative;
   perspective:2000px;
+}
+
+@media (max-height: 800px) {
+  .book-layout { transform: scale(0.9); }
+}
+@media (max-height: 700px) {
+  .book-layout { transform: scale(0.8); }
+}
+@media (max-height: 600px) {
+  .book-layout { transform: scale(0.7); }
+}
+@media (max-height: 500px) {
+  .book-layout { transform: scale(0.6); }
 }
 
 /* Leather Spine */
