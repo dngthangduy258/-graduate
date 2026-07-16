@@ -812,6 +812,16 @@ function initSignatureBook() {
   let currentX = 0;
   let currentY = 0;
   let selectedColor = '#1a1a1a';
+  let selectedFont = "'Dancing Script', cursive";
+  
+  const fonts = document.querySelectorAll('.sig-font');
+  
+  if (inputName) {
+    inputName.addEventListener('input', (e) => {
+      const val = e.target.value.trim() || 'Mai';
+      fonts.forEach(f => f.textContent = val);
+    });
+  }
   
   // Load existing signatures from Backend (or localStorage fallback)
   const loadSignatures = async () => {
@@ -856,7 +866,15 @@ function initSignatureBook() {
     } catch (e) { console.error(e); }
   };
   
-  const renderSignature = (x, y, color, name, rotation, animate = true) => {
+  const renderSignature = (x, y, colorData, name, rotation, animate = true) => {
+    let color = colorData;
+    let font = "'Dancing Script', cursive";
+    if (colorData && colorData.includes('|||')) {
+      const parts = colorData.split('|||');
+      color = parts[0];
+      font = parts[1];
+    }
+
     const wrapper = document.createElement('div');
     wrapper.className = 'sig-item';
     wrapper.style.left = x + '%';
@@ -867,6 +885,7 @@ function initSignatureBook() {
     const textEl = document.createElement('div');
     textEl.className = 'sig-text';
     textEl.textContent = name;
+    textEl.style.fontFamily = font;
     
     if (animate) {
       textEl.style.animation = 'sigDraw 0.6s ease forwards';
@@ -897,6 +916,14 @@ function initSignatureBook() {
       selectedColor = c.getAttribute('data-color');
     });
   });
+
+  fonts.forEach(f => {
+    f.addEventListener('click', () => {
+      fonts.forEach(el => el.classList.remove('active'));
+      f.classList.add('active');
+      selectedFont = f.getAttribute('data-font');
+    });
+  });
   
   btnConfirm.addEventListener('click', () => {
     let finalName = inputName ? inputName.value.trim() : urlGuestName;
@@ -916,7 +943,7 @@ function initSignatureBook() {
     const sig = {
       x: currentX,
       y: currentY,
-      color: selectedColor,
+      color: selectedColor + '|||' + selectedFont,
       name: finalName,
       rotation: rotation
     };
