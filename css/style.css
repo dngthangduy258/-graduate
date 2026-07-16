@@ -218,23 +218,10 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
    BOOK
    ═══════════════════════════════════════ */
 .book-wrapper{
-  width:100%; max-width:500px;
-  height:760px;
+  flex:0 1 500px;
+  height:calc(100vh - 60px);max-height:760px;
   position:relative;
   perspective:2000px;
-}
-
-@media (max-height: 800px) {
-  .book-layout { transform: scale(0.9); }
-}
-@media (max-height: 700px) {
-  .book-layout { transform: scale(0.8); }
-}
-@media (max-height: 600px) {
-  .book-layout { transform: scale(0.7); }
-}
-@media (max-height: 500px) {
-  .book-layout { transform: scale(0.6); }
 }
 
 /* Leather Spine */
@@ -900,6 +887,59 @@ body.envelope-flying .goodbye-msg {
 /* ═══════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════ */
+@media (max-width: 600px) {
+  .hero-tag { font-size: 0.65rem; padding: 6px 12px; }
+  .ev-grid { flex-direction: column; }
+}
+
+/* ═══════════════════════════════════════
+   VERTICAL COMPRESSION FOR SHORT SCREENS
+   ═══════════════════════════════════════ */
+@media (max-height: 760px) {
+  .page-content { padding: 15px; }
+  .sec-h { font-size: 1.8rem !important; }
+  .sec-h em { font-size: 1.1rem !important; margin-top: 2px !important; }
+  .ev-grid { gap: 8px; }
+  .ev-cell { padding: 12px; }
+  .addr-box { padding: 12px; margin-top: 8px; }
+  .ev-icon { margin-bottom: 4px; }
+  .ev-lbl { margin-bottom: 2px; }
+  .map-link { margin-top: 8px; padding: 5px 10px; }
+  .tl-item { padding-bottom: 12px; }
+  .fg { margin-bottom: 10px; }
+  .fg input, .fg textarea { padding: 8px 12px; }
+  .ro label { padding: 6px; }
+  .hero-sub { margin-bottom: 12px; }
+  .guest-block { margin-bottom: 12px; }
+  .guest-sal { margin-bottom: 2px; }
+  .guest-nm { font-size: 2rem !important; }
+  .grad-name { font-size: 2.2rem !important; }
+  .name-honor { margin-bottom: 4px; }
+  .chips { margin-top: 15px !important; }
+  .chip { padding: 4px 8px; font-size: 0.7rem; }
+  .cd-row { gap: 6px; }
+  .cd-card { width: 48px; height: 54px; }
+  .cd-num { font-size: 1.5rem; }
+  .quote-txt { font-size: 0.9rem; margin: 15px 0; }
+  .sig-block { margin-bottom: 15px; }
+  .eyebrow { margin-bottom: 8px; }
+  .sep { padding: 8px 0 12px; }
+  .ornament { margin: 8px 0; }
+}
+
+@media (max-height: 600px) {
+  .page-content { padding: 10px; }
+  .sec-h { font-size: 1.5rem !important; }
+  .sec-h em { font-size: 1rem !important; }
+  .ev-grid { gap: 6px; }
+  .ev-cell { padding: 8px; }
+  .addr-box { padding: 8px; margin-top: 6px; }
+  .tl-item { padding-bottom: 8px; }
+  .guest-nm { font-size: 1.8rem !important; }
+  .grad-name { font-size: 1.8rem !important; }
+  .cd-card { width: 42px; height: 48px; }
+  .cd-num { font-size: 1.2rem; }
+}
 @media(max-width:900px){
   .side-panel{flex:0 0 80px;}
   .sp-title{font-size:0.9rem;}

@@ -971,32 +971,4 @@ document.addEventListener("DOMContentLoaded", () => {
   initFacts();
   initDustEffect();
   initSignatureBook();
-  initBookScale();
 });
-
-/* ═══════════════════════════════════════════════════════════════
-   DYNAMIC BOOK SCALING
-   ═══════════════════════════════════════════════════════════════ */
-function initBookScale() {
-  const wrapper = document.getElementById('book-wrapper');
-  if (!wrapper) return;
-  
-  function updateScale() {
-    const isMobile = window.innerWidth <= 768;
-    const baseW = 500;
-    const baseH = 760;
-    
-    const availW = window.innerWidth - (isMobile ? 0 : 160);
-    const availH = window.innerHeight - (isMobile ? 20 : 40);
-    
-    const scaleW = availW / baseW;
-    const scaleH = availH / baseH;
-    let scale = Math.min(scaleW, scaleH, 1);
-    
-    wrapper.style.transform = `scale(${scale})`;
-    wrapper.style.transformOrigin = 'center center';
-  }
-  
-  window.addEventListener('resize', updateScale);
-  updateScale();
-}
