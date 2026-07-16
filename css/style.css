@@ -375,10 +375,12 @@ canvas.fx{position:fixed;inset:0;pointer-events:none;z-index:9000;}
   min-height:100%;
   position:relative;z-index:2;
 }
-.page-content::before,
+.page-content::before {
+  content: none;
+}
 .page-content::after {
   content: '';
-  margin: auto;
+  margin-top: auto;
 }
 
 /* ═══════════════════════════════════════
@@ -693,7 +695,7 @@ body.envelope-flying .goodbye-msg {
 }
 .sig-text {
   font-family: 'Dancing Script', cursive;
-  font-size: 2.2rem;
+  font-size: 1.6rem;
   line-height: 1;
   white-space: nowrap;
   opacity: 0;
