@@ -854,7 +854,7 @@ function initSignatureBook() {
             setTimeout(() => {
               if (hint) hint.style.opacity = '0';
               canvas.classList.remove('hide-sigs');
-            }, 2500); // 2.5s delay to show hint first
+            }, 4500); // 4.5s delay to show hint first
           }
         };
         
