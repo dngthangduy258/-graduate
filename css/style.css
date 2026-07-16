@@ -12,6 +12,8 @@ body{
   min-height:100vh;
   overflow:hidden;
   line-height:1.6;
+  text-wrap: pretty;
+  -webkit-font-smoothing:antialiased;
   -webkit-user-select:none;
   -moz-user-select:none;
   -ms-user-select:none;
@@ -632,7 +634,7 @@ body.envelope-flying .goodbye-msg {
 .tl-item{display:grid;grid-template-columns:52px 1fr;gap:0 20px;position:relative;padding-bottom:20px;}
 .tl-item:last-child{padding-bottom:0}
 .tl-dot{
-  position:absolute;left:62px;top:6px;transform:translateX(-50%) rotate(45deg);
+  position:absolute;left:52px;top:6px;transform:translateX(-50%) rotate(45deg);
   width:8px;height:8px;background:var(--gold-d);
 }
 .tl-t{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold-d);text-align:right;padding-top:1px;}
