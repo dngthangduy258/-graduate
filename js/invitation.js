@@ -822,7 +822,7 @@ function initSignatureBook() {
     "'Allura', cursive"
   ];
   
-  if (inputName) {
+
   
   // Load existing signatures from Backend (or localStorage fallback)
   const loadSignatures = async () => {
