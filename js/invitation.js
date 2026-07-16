@@ -842,10 +842,27 @@ function initSignatureBook() {
       }
       
       if (sigs && sigs.length > 0) {
+        canvas.classList.add('hide-sigs');
         sigs.forEach(s => renderSignature(s.x, s.y, s.color, s.name, s.rotation, false));
-        if (hint) hint.style.opacity = '0';
-        const successHint = document.getElementById('sig-success-hint');
-        if (successHint) successHint.classList.add('show');
+        
+        const page7 = document.querySelector('.page[data-page="7"]');
+        let hasTriggered = false;
+        
+        const checkPage7 = () => {
+          if (page7 && page7.classList.contains('current') && !hasTriggered) {
+            hasTriggered = true;
+            setTimeout(() => {
+              if (hint) hint.style.opacity = '0';
+              canvas.classList.remove('hide-sigs');
+            }, 2500); // 2.5s delay to show hint first
+          }
+        };
+        
+        if (page7) {
+          const observer = new MutationObserver(checkPage7);
+          observer.observe(page7, { attributes: true, attributeFilter: ['class'] });
+          checkPage7(); // Check immediately in case already active
+        }
       }
     } catch (e) { console.error(e); }
   };

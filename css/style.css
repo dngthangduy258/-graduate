@@ -694,6 +694,10 @@ body.envelope-flying .goodbye-msg {
   position: absolute;
   pointer-events: none;
   transform-origin: center;
+  transition: opacity 1s ease;
+}
+.hide-sigs .sig-item {
+  opacity: 0 !important;
 }
 .sig-text {
   font-family: 'Dancing Script', cursive;
