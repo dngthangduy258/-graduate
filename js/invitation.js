@@ -583,11 +583,10 @@ function initActions() {
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 3000);
   };
-  $("btn-save")?.addEventListener("click", () => showToast("Đã lưu sự kiện vào lịch!"));
-  $("btn-copy")?.addEventListener("click", () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      showToast("Đã sao chép liên kết thiệp!");
-    }).catch(() => {});
+  $("btn-gallery")?.addEventListener("click", () => showToast("Album Kỷ Yếu sẽ sớm được cập nhật!"));
+  $("btn-replay")?.addEventListener("click", () => {
+    // Reload the page to watch the invitation from the beginning
+    window.location.reload();
   });
 }
 
