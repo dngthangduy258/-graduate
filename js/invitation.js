@@ -583,11 +583,6 @@ function initActions() {
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 3000);
   };
-  $("btn-gallery")?.addEventListener("click", () => showToast("Album Kỷ Yếu sẽ sớm được cập nhật!"));
-  $("btn-replay")?.addEventListener("click", () => {
-    // Reload the page to watch the invitation from the beginning
-    window.location.reload();
-  });
 }
 
 function initFacts() {
