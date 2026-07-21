@@ -203,20 +203,14 @@ function initEnvelope() {
    AUDIO
    ═══════════════════════════════════════════════════════════════ */
 function initAudio() {
-  const bgm = $("bg-music"), btn = $("btn-music");
-  if (!bgm || !btn) return;
+  const bgm = $("bg-music");
+  if (!bgm) return;
   let isPlaying = false;
 
-  const toggle = () => {
-    if (isPlaying) { bgm.pause(); btn.classList.add("off"); }
-    else { bgm.play().catch(() => {}); btn.classList.remove("off"); }
-    isPlaying = !isPlaying;
-  };
-
-  btn.addEventListener("click", toggle);
   $("env-card")?.addEventListener("click", () => {
-    if (!isPlaying) {
-      bgm.play().then(() => { isPlaying = true; btn.classList.remove("off"); }).catch(() => {});
+    // Only try to play if envelope is actually unlocked and opening
+    if (!isPlaying && document.body.classList.contains('cover-unlocked')) {
+      bgm.play().then(() => { isPlaying = true; }).catch(() => {});
     }
   });
 }
@@ -321,7 +315,6 @@ function initFlipbook() {
   };
 
   const goNext = () => {
-    if (curr === 1 && !isUnlocked) return;
     if (isAnimating) return;
     
     if (curr >= total) {
