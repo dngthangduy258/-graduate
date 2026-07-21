@@ -637,26 +637,27 @@ function initDustEffect() {
   let rect = cv.getBoundingClientRect();
   let isDrawing = false;
 
+  let wipedArea = 0;
+  let totalArea = 0;
+
   const scratch = (x, y) => {
     ctx.beginPath();
-    ctx.arc(x, y, 20, 0, Math.PI * 2);
+    ctx.arc(x, y, 40, 0, Math.PI * 2);
     ctx.fill();
     
-    // Check coverage
-    const pixels = ctx.getImageData(0, 0, cv.width, cv.height).data;
-    let count = 0;
-    for (let i = 3; i < pixels.length; i += 4) { if (pixels[i] < 50) count++; }
-    if (count > (cv.width * cv.height) * 0.4) {
+    wipedArea += Math.PI * 40 * 40 * 0.25;
+    
+    if (wipedArea > totalArea * 0.5) {
       cv.style.display = 'none';
       if (dustHint) dustHint.style.opacity = '0';
       if (key) key.classList.add('key-glow');
-      window.isUnlocked = true;
     }
   };
 
   const setupCanvas = () => {
     cv.width = cv.offsetWidth;
     cv.height = cv.offsetHeight;
+    totalArea = cv.width * cv.height;
     if (cv.style.display === 'none' || (dustHint && dustHint.style.opacity === '0')) return;
     ctx.fillStyle = 'rgba(232, 226, 210, 0.9)';
     ctx.fillRect(0, 0, cv.width, cv.height);
