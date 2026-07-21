@@ -631,34 +631,38 @@ function initDustEffect() {
   const cv = $('dust-canvas');
   if (!cv) return;
   const ctx = cv.getContext('2d', { willReadFrequently: true });
-  const envCard = $('env-card');
   const dustHint = $('dust-hint');
   const key = $('hidden-key');
-  let rect = cv.getBoundingClientRect();
-  let isDrawing = false;
+  let clickCount = 0;
 
-  let wipedArea = 0;
-  let totalArea = 0;
+  const handleTap = (e) => {
+    e.stopPropagation();
+    if (clickCount >= 3) return;
+    clickCount++;
 
-  const scratch = (x, y) => {
-    ctx.beginPath();
-    ctx.arc(x, y, 40, 0, Math.PI * 2);
-    ctx.fill();
-    
-    wipedArea += Math.PI * 40 * 40 * 0.25;
-    
-    if (wipedArea > totalArea * 0.5) {
-      cv.style.display = 'none';
-      if (dustHint) dustHint.style.opacity = '0';
-      if (key) key.classList.add('key-glow');
+    // Fade out based on clicks
+    if (clickCount === 1) {
+      cv.style.opacity = '0.6';
+    } else if (clickCount === 2) {
+      cv.style.opacity = '0.3';
+    } else if (clickCount === 3) {
+      cv.style.opacity = '0';
+      setTimeout(() => {
+        cv.style.display = 'none';
+        if (dustHint) dustHint.style.opacity = '0';
+        if (key) key.classList.add('key-glow');
+      }, 500); // Wait for transition
     }
   };
 
   const setupCanvas = () => {
     cv.width = cv.offsetWidth;
     cv.height = cv.offsetHeight;
-    totalArea = cv.width * cv.height;
     if (cv.style.display === 'none' || (dustHint && dustHint.style.opacity === '0')) return;
+    
+    // Add smooth transition for opacity
+    cv.style.transition = 'opacity 0.5s ease-out';
+    
     ctx.fillStyle = 'rgba(232, 226, 210, 0.9)';
     ctx.fillRect(0, 0, cv.width, cv.height);
     const imgData = ctx.getImageData(0, 0, cv.width, cv.height);
@@ -667,26 +671,15 @@ function initDustEffect() {
       imgData.data[i] += noise; imgData.data[i+1] += noise; imgData.data[i+2] += noise;
     }
     ctx.putImageData(imgData, 0, 0);
-    ctx.globalCompositeOperation = 'destination-out';
   };
 
-  const handleTouch = (e) => {
-    e.preventDefault(); e.stopPropagation();
-    const touch = e.touches[0];
-    const rect = cv.getBoundingClientRect();
-    scratch(touch.clientX - rect.left, touch.clientY - rect.top);
-  };
-
-  cv.addEventListener('mousedown', (e) => {
-    e.stopPropagation();
-    isDrawing = true;
-    const rect = cv.getBoundingClientRect();
-    scratch(e.clientX - rect.left, e.clientY - rect.top);
-  });
-  cv.addEventListener('mousemove', (e) => { if (isDrawing) { const rect = cv.getBoundingClientRect(); scratch(e.clientX - rect.left, e.clientY - rect.top); }});
-  window.addEventListener('mouseup', () => { isDrawing = false; });
-  cv.addEventListener('touchstart', handleTouch, { passive: false });
-  cv.addEventListener('touchmove', handleTouch, { passive: false });
+  // Only listen to clicks/taps now
+  cv.addEventListener('click', handleTap);
+  cv.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // prevent double firing with click
+    handleTap(e);
+  }, { passive: false });
+  
   setupCanvas();
 }
 
