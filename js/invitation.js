@@ -634,33 +634,44 @@ function initDustEffect() {
   const dustHint = $('dust-hint');
   const key = $('hidden-key');
   let isDrawing = false;
-  let wipedArea = 0;
-  let totalArea = 0;
+  let isCleared = false;
 
   const scratch = (x, y) => {
+    if (isCleared) return;
     ctx.beginPath();
     ctx.arc(x, y, 25, 0, Math.PI * 2);
     ctx.fill();
+  };
+
+  const checkCoverage = () => {
+    if (isCleared || !isDrawing) return;
+    const pixels = ctx.getImageData(0, 0, cv.width, cv.height).data;
+    let count = 0;
+    // Check every 32nd pixel (stride of 128 bytes) for blazing fast performance
+    for (let i = 3; i < pixels.length; i += 128) {
+      if (pixels[i] < 50) count++;
+    }
+    const totalPixelsChecked = pixels.length / 128;
     
-    // Add swept area (very rough estimation)
-    wipedArea += 1200; // Increased increment to make it easy to clear despite small brush
-    
-    if (wipedArea > totalArea * 0.4) {
-      cv.style.transition = 'opacity 0.5s ease-out';
+    // Require 70% cleared
+    if (count > totalPixelsChecked * 0.70) {
+      isCleared = true;
+      cv.style.transition = 'opacity 0.8s ease-out';
       cv.style.opacity = '0';
       setTimeout(() => {
         cv.style.display = 'none';
         const hint = document.getElementById('dust-hint');
-        if (hint) hint.innerHTML = '<span>✨ Phủi lớp bụi thời gian để tìm chìa khóa ✨</span>';
+        if (hint) hint.style.opacity = '0';
         if (key) key.classList.add('key-glow');
-      }, 500);
+      }, 800);
     }
   };
+
+  setInterval(checkCoverage, 500);
 
   const setupCanvas = () => {
     cv.width = cv.offsetWidth;
     cv.height = cv.offsetHeight;
-    totalArea = cv.width * cv.height;
     if (cv.style.display === 'none' || (dustHint && dustHint.style.opacity === '0')) return;
     
     ctx.fillStyle = 'rgba(232, 226, 210, 0.9)';
