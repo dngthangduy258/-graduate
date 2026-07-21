@@ -51,53 +51,7 @@ function initPreloader() {
 function initEnvelope() {
   const screen = $("env-screen"), main = $("main"), card = $("env-card");
   if (!card) return;
-  
-  let isUnlocked = false; // Envelope is locked initially
-
-  // Handle key click
-  const hiddenKey = document.getElementById('hidden-key');
-  const lockIcon = document.getElementById('lock-icon');
-  
-  if (hiddenKey) {
-    hiddenKey.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (isUnlocked) return;
-      isUnlocked = true;
-      
-      const keyRect = hiddenKey.getBoundingClientRect();
-      const lockRect = lockIcon.getBoundingClientRect();
-      
-      const tx = lockRect.left + lockRect.width / 2 - (keyRect.left + keyRect.width / 2);
-      const ty = lockRect.top + lockRect.height / 2 - (keyRect.top + keyRect.height / 2);
-      
-      hiddenKey.classList.remove('key-glow');
-      hiddenKey.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease-in 1s';
-      hiddenKey.style.transform = `translate(${tx}px, ${ty}px) scale(0.6) rotate(-90deg)`;
-      hiddenKey.style.opacity = '0';
-      
-      setTimeout(() => {
-        if (lockIcon) {
-          lockIcon.innerHTML = '<rect x="4" y="10" width="16" height="12" rx="3" ry="3"/><path d="M7 10V5a5 5 0 0110 0"/><circle cx="12" cy="16" r="1.5"/>';
-        }
-        setTimeout(() => {
-          document.body.classList.add('cover-unlocked');
-          // Allow click to open envelope now
-        }, 1500);
-      }, 1500);
-    });
-  }
-
   card.addEventListener("click", () => {
-    if (!isUnlocked) {
-      // It's locked, maybe vibrate or show hint
-      const lockOverlay = document.getElementById('cover-overlay');
-      if (lockOverlay) {
-        lockOverlay.style.animation = 'none';
-        lockOverlay.offsetHeight; /* trigger reflow */
-        lockOverlay.style.animation = 'hintBounce 0.5s ease-in-out';
-      }
-      return;
-    }
     card.classList.add("opening");
     setTimeout(() => {
       screen?.classList.add("gone");
@@ -203,14 +157,20 @@ function initEnvelope() {
    AUDIO
    ═══════════════════════════════════════════════════════════════ */
 function initAudio() {
-  const bgm = $("bg-music");
-  if (!bgm) return;
+  const bgm = $("bg-music"), btn = $("btn-music");
+  if (!bgm || !btn) return;
   let isPlaying = false;
 
+  const toggle = () => {
+    if (isPlaying) { bgm.pause(); btn.classList.add("off"); }
+    else { bgm.play().catch(() => {}); btn.classList.remove("off"); }
+    isPlaying = !isPlaying;
+  };
+
+  btn.addEventListener("click", toggle);
   $("env-card")?.addEventListener("click", () => {
-    // Only try to play if envelope is actually unlocked and opening
-    if (!isPlaying && document.body.classList.contains('cover-unlocked')) {
-      bgm.play().then(() => { isPlaying = true; }).catch(() => {});
+    if (!isPlaying) {
+      bgm.play().then(() => { isPlaying = true; btn.classList.remove("off"); }).catch(() => {});
     }
   });
 }
@@ -231,6 +191,54 @@ function initFlipbook() {
   let curr = 1;
   const total = pages.length;
   let isAnimating = false;
+  let isUnlocked = false; // Cover page lock
+
+  // Handle key click
+  const hiddenKey = document.getElementById('hidden-key');
+  const lockIcon = document.getElementById('lock-icon');
+  
+  if (hiddenKey) {
+    hiddenKey.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isUnlocked) return;
+      isUnlocked = true;
+      
+      const keyRect = hiddenKey.getBoundingClientRect();
+      const lockRect = lockIcon.getBoundingClientRect();
+      
+      // Calculate translation to the center of the lock
+      const tx = lockRect.left + lockRect.width / 2 - (keyRect.left + keyRect.width / 2);
+      const ty = lockRect.top + lockRect.height / 2 - (keyRect.top + keyRect.height / 2);
+      
+      // Stop glowing
+      hiddenKey.classList.remove('key-glow');
+      
+      // Fly to lock (even slower, 1.5s)
+      hiddenKey.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease-in 1s';
+      hiddenKey.style.transform = `translate(${tx}px, ${ty}px) scale(0.6) rotate(-90deg)`;
+      hiddenKey.style.opacity = '0';
+      
+      // After flying (1.5s), unlock the lock and drop chains
+      setTimeout(() => {
+        if (lockIcon) {
+          // Open lock shackle SVG
+          lockIcon.innerHTML = '<rect x="4" y="10" width="16" height="12" rx="3" ry="3"/><path d="M7 10V5a5 5 0 0110 0"/><circle cx="12" cy="16" r="1.5"/>';
+        }
+        
+        // Wait for unlock animation to be seen VERY clearly (1.5s), then drop chains
+        setTimeout(() => {
+          document.body.classList.add('cover-unlocked');
+          
+          // Wait for chains to finish sliding away (they will take ~4s now) before removing blur
+          setTimeout(() => {
+            const page1 = document.querySelector('.page[data-page="1"]');
+            if (page1) page1.classList.remove('cover-locked');
+          }, 3500);
+          
+        }, 1500);
+      }, 1500);
+    });
+  }
 
   const updateSidePanels = () => {
     if (curr > 1) {
@@ -315,6 +323,7 @@ function initFlipbook() {
   };
 
   const goNext = () => {
+    if (curr === 1 && !isUnlocked) return;
     if (isAnimating) return;
     
     if (curr >= total) {
@@ -350,15 +359,18 @@ function initFlipbook() {
     applyPageStates('backward');
   };
 
+  // Side panel clicks
   leftPanel?.addEventListener('click', goPrev);
   rightPanel?.addEventListener('click', goNext);
 
+  // Keyboard
   window.addEventListener('keydown', (e) => {
     if (!$('main')?.classList.contains('show')) return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goNext(); }
     else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); goPrev(); }
   });
 
+  // Mouse Wheel (with cooldown & scroll boundary detection)
   let wheelCooldown = false;
   window.addEventListener('wheel', (e) => {
     if (!$('main')?.classList.contains('show') || isAnimating || wheelCooldown) return;
@@ -381,14 +393,16 @@ function initFlipbook() {
     else if (e.deltaY < 0) goPrev();
   }, { passive: true });
 
+  // Interactive Touch Swipe (Page Flip effect)
   let touchStartX = 0, touchStartY = 0;
   let isDragging = false;
-  let dragDirection = null; 
-  let dragPage = null; 
-  const SWIPE_THRESHOLD = 60; 
+  let dragDirection = null; // 'next' or 'prev'
+  let dragPage = null; // The DOM element being dragged
+  const SWIPE_THRESHOLD = 60; // Pixels needed to trigger page turn
 
   window.addEventListener('touchstart', (e) => {
     if (!$('main')?.classList.contains('show') || isAnimating) return;
+    if (curr === 1 && !isUnlocked) return; // Locked on cover
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
     isDragging = true;
@@ -398,16 +412,21 @@ function initFlipbook() {
 
   window.addEventListener('touchmove', (e) => {
     if (!isDragging || isAnimating) return;
+    if (curr === 1 && !isUnlocked) {
+      isDragging = false;
+      return;
+    }
     const dx = e.changedTouches[0].screenX - touchStartX;
     const dy = e.changedTouches[0].screenY - touchStartY;
     
-    // Ignore purely vertical scrolling if user is trying to scroll the page
-    if (Math.abs(dy) > Math.abs(dx) * 1.5 && Math.abs(dy) > 30) {
+    // Ignore vertical scrolling if user is trying to scroll the page
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
       if (dragPage) dragPage.style.transform = '';
       isDragging = false;
       return;
     }
 
+    // Determine direction once we move past a small threshold
     if (!dragDirection && Math.abs(dx) > 10) {
       dragDirection = dx < 0 ? 'next' : 'prev';
       
@@ -424,22 +443,25 @@ function initFlipbook() {
         if (dragPage) {
           dragPage.style.transition = 'transform 0.1s ease-out';
           dragPage.style.zIndex = 200;
-          dragPage.classList.add('current'); 
+          dragPage.classList.add('current'); // Make visible
           dragPage.classList.remove('past');
         }
       } else {
-        isDragging = false; 
+        isDragging = false; // Cannot turn in this direction
       }
     }
 
     if (dragPage) {
        const W = window.innerWidth || 400;
        let clientX = e.changedTouches[0].clientX;
+       // Clamp between 0 and W
        clientX = Math.max(0, Math.min(clientX, W));
        
+       // Absolute tracking: right edge of screen (1) = 0deg, left edge (0) = -150deg
        let progress = clientX / W;
        let angle = -150 * (1 - progress);
        
+       // Add slight curl effect
        let rotateZ = 0;
        if (dragDirection === 'next') {
          rotateZ = -4 * Math.sin(progress * Math.PI);
@@ -455,10 +477,13 @@ function initFlipbook() {
     if (!isDragging || isAnimating) return;
     isDragging = false;
     
+    if (curr === 1 && !isUnlocked) return;
+    
     const dx = e.changedTouches[0].screenX - touchStartX;
     
     if (dragPage) {
        const pageToClean = dragPage;
+       // Smoothly transition from the current drag angle to the final state
        pageToClean.style.transition = 'transform 1.1s cubic-bezier(0.645, 0.045, 0.355, 1)';
        
        if (dragDirection === 'next') {
@@ -470,6 +495,7 @@ function initFlipbook() {
              goNext();
            }
          } else {
+           // Cancel swipe, page falls back
            pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
            pageToClean.style.zIndex = '';
          }
@@ -478,6 +504,7 @@ function initFlipbook() {
            pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
            goPrev();
          } else {
+           // Cancel swipe, page falls forward
            pageToClean.style.transform = 'perspective(1200px) rotateY(-180deg) rotateZ(0deg)';
            pageToClean.classList.remove('current');
            pageToClean.classList.add('past');
@@ -485,12 +512,14 @@ function initFlipbook() {
          }
        }
        
+       // Clean up inline styles after animation finishes
        setTimeout(() => {
          pageToClean.style.transition = '';
          pageToClean.style.transform = '';
        }, 1150);
        
     } else {
+       // Fallback for very quick swipes where touchmove didn't trigger logic
        if (Math.abs(dx) > SWIPE_THRESHOLD) {
          if (dx < 0) {
            if (curr >= total) closeAndFlyAway();
@@ -501,6 +530,7 @@ function initFlipbook() {
     }
   }, { passive: true });
 
+  // Initial state
   applyPageStates('none');
 }
 
@@ -619,109 +649,128 @@ function fireConfetti() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DUST WIPE EFFECT (Scratch Card over Envelope)
+   DUST WIPE EFFECT (Scratch Card over Guest Name)
    ═══════════════════════════════════════════════════════════════ */
 function initDustEffect() {
-  const cv = $('dust-canvas');
-  if (!cv) return;
-  const ctx = cv.getContext('2d', { willReadFrequently: true });
-  const dustHint = $('dust-hint');
-  const key = $('hidden-key');
-  let isDrawing = false;
-  let isCleared = false;
+  const canvas = $('dust-canvas');
+  const hint = $('dust-hint');
+  const targetWrap = document.querySelector('.grad-nm-wrap');
+  if (!canvas || !targetWrap) return;
 
-  const scratch = (x, y) => {
-    if (isCleared) return;
-    ctx.beginPath();
-    ctx.arc(x, y, 25, 0, Math.PI * 2);
-    ctx.fill();
+  const ctx = canvas.getContext('2d');
+  let isActive = false;
+  let totalArea = 0;
+  let wipedArea = 0;
+  const BRUSH = 15;
+  let hintRemoved = false;
+
+  const drawDust = () => {
+    const rect = targetWrap.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    totalArea = canvas.width * canvas.height;
+
+    // Base dust layer
+    ctx.fillStyle = '#b8a68b'; 
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Add heavy noise texture for real dust feel
+    for (let i = 0; i < 3000; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const w = Math.random() * 1.5;
+      ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255, 255, 255, 0.25)' : 'rgba(40, 30, 20, 0.35)';
+      ctx.beginPath();
+      ctx.arc(x, y, w, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    // Add subtle vignette
+    const vig = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 10, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/1.5);
+    vig.addColorStop(0, "rgba(0,0,0,0)");
+    vig.addColorStop(1, "rgba(30,25,15,0.5)");
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    isActive = true;
   };
 
-  const checkCoverage = () => {
-    if (isCleared || !isDrawing) return;
-    const pixels = ctx.getImageData(0, 0, cv.width, cv.height).data;
-    let count = 0;
-    // Check every 32nd pixel (stride of 128 bytes) for blazing fast performance
-    for (let i = 3; i < pixels.length; i += 128) {
-      if (pixels[i] < 50) count++;
-    }
-    const totalPixelsChecked = pixels.length / 128;
-    
-    // Require 70% cleared
-    if (count > totalPixelsChecked * 0.70) {
-      isCleared = true;
-      cv.style.transition = 'opacity 0.8s ease-out';
-      cv.style.opacity = '0';
-      setTimeout(() => {
-        cv.style.display = 'none';
-        const hint = document.getElementById('dust-hint');
-        if (hint) hint.style.opacity = '0';
-        if (key) key.classList.add('key-glow');
-      }, 800);
-    }
-  };
+  const wipe = (x, y) => {
+    if (!isActive) return;
 
-  setInterval(checkCoverage, 500);
-
-  const setupCanvas = () => {
-    cv.width = cv.offsetWidth;
-    cv.height = cv.offsetHeight;
-    if (cv.style.display === 'none' || (dustHint && dustHint.style.opacity === '0')) return;
-    
-    ctx.fillStyle = 'rgba(232, 226, 210, 0.9)';
-    ctx.fillRect(0, 0, cv.width, cv.height);
-    const imgData = ctx.getImageData(0, 0, cv.width, cv.height);
-    for (let i = 0; i < imgData.data.length; i += 4) {
-      const noise = Math.random() * 40 - 20;
-      imgData.data[i] += noise; imgData.data[i+1] += noise; imgData.data[i+2] += noise;
-    }
-    ctx.putImageData(imgData, 0, 0);
     ctx.globalCompositeOperation = 'destination-out';
-  };
 
-  const handleTouch = (e) => {
-    e.preventDefault(); 
-    e.stopPropagation();
-    const touch = e.touches[0];
-    const rect = cv.getBoundingClientRect();
-    scratch(touch.clientX - rect.left, touch.clientY - rect.top);
-  };
+    // Harder edge for scratch card
+    ctx.beginPath();
+    ctx.arc(x, y, BRUSH, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fill();
 
-  cv.addEventListener('mousedown', (e) => {
-    e.preventDefault(); // Prevent text selection/drag start
-    e.stopPropagation();
-    isDrawing = true;
-    const rect = cv.getBoundingClientRect();
-    scratch(e.clientX - rect.left, e.clientY - rect.top);
-  });
-  
-  cv.addEventListener('mousemove', (e) => {
-    if (isDrawing) { 
-      e.preventDefault();
-      e.stopPropagation();
-      const rect = cv.getBoundingClientRect(); 
-      scratch(e.clientX - rect.left, e.clientY - rect.top); 
+    ctx.globalCompositeOperation = 'source-over';
+
+    // Estimate wiped area (accounts for overlap)
+    wipedArea += Math.PI * BRUSH * BRUSH * 0.25;
+
+    if (wipedArea > totalArea * 0.55) {
+      autoClear();
     }
+  };
+
+  const autoClear = () => {
+    isActive = false;
+    canvas.classList.add('cleared');
+    if (hint) hint.classList.add('hidden');
+    
+    // Make the hidden key glow to attract attention
+    const key = document.getElementById('hidden-key');
+    if (key) key.classList.add('key-glow');
+    
+    setTimeout(() => {
+      canvas.remove();
+      hint?.remove();
+    }, 800);
+  };
+
+  const removeHint = () => {
+    if (!hintRemoved && hint) {
+      hint.classList.add('hidden');
+      hintRemoved = true;
+    }
+  };
+
+  // Mouse events
+  let isDown = false;
+  canvas.addEventListener('mousedown', (e) => {
+    isDown = true;
+    removeHint();
+    const r = canvas.getBoundingClientRect();
+    wipe(e.clientX - r.left, e.clientY - r.top);
   });
-  
-  window.addEventListener('mouseup', () => { isDrawing = false; });
-  
-  cv.addEventListener('click', (e) => {
-    e.stopPropagation(); // Stop click from triggering envelope open
+  canvas.addEventListener('mousemove', (e) => {
+    if (!isDown || !isActive) return;
+    const r = canvas.getBoundingClientRect();
+    wipe(e.clientX - r.left, e.clientY - r.top);
   });
-  
-  cv.addEventListener('touchstart', (e) => {
-    isDrawing = true;
-    handleTouch(e);
+  window.addEventListener('mouseup', () => { isDown = false; });
+
+  // Touch events
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    removeHint();
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    wipe(t.clientX - r.left, t.clientY - r.top);
   }, { passive: false });
-  
-  cv.addEventListener('touchmove', (e) => {
-    if (isDrawing) handleTouch(e);
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!isActive) return;
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    wipe(t.clientX - r.left, t.clientY - r.top);
   }, { passive: false });
-  
-  cv.addEventListener('touchend', () => { isDrawing = false; });
-  
-  setupCanvas();
+
+  // Draw early since it's just a small box, no need to wait for observer
+  setTimeout(drawDust, 100);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -738,6 +787,7 @@ function initSignatureBook() {
   
   if (!canvas || !modal) return;
   
+  // Get guest name from URL or use empty
   const p = new URLSearchParams(window.location.search);
   let urlGuestName = p.get('guest') || p.get('n') || '';
   if (urlGuestName && urlGuestName.includes('-')) {

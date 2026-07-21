@@ -1060,8 +1060,7 @@ body.envelope-flying .goodbye-msg {
 
 .cover-chain {
   position: absolute;
-  width: 200%;
-  left: -50%;
+  width: 150%;
   height: 20px;
   /* Simple overlapping ellipses */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20' width='16' height='20'%3E%3Cellipse cx='-8' cy='10' rx='12' ry='5' fill='none' stroke='%23d4af37' stroke-width='2'/%3E%3Cellipse cx='8' cy='10' rx='12' ry='5' fill='none' stroke='%23d4af37' stroke-width='2'/%3E%3Cellipse cx='24' cy='10' rx='12' ry='5' fill='none' stroke='%23d4af37' stroke-width='2'/%3E%3C/svg%3E");
@@ -1074,11 +1073,11 @@ body.envelope-flying .goodbye-msg {
 }
 
 .chain-tl-br {
-  transform: rotate(37deg);
+  transform: rotate(45deg);
 }
 
 .chain-tr-bl {
-  transform: rotate(-37deg);
+  transform: rotate(-45deg);
 }
 
 #cover-padlock {
@@ -1093,13 +1092,13 @@ body.envelope-flying .goodbye-msg {
 
 /* Unlocked state - Chains slide out diagonally sequentially */
 body.cover-unlocked #cover-overlay .chain-tl-br {
-  transform: rotate(37deg) translateX(150%);
+  transform: rotate(45deg) translateX(150%);
   opacity: 0;
   transition-delay: 0.5s;
 }
 
 body.cover-unlocked #cover-overlay .chain-tr-bl {
-  transform: rotate(-37deg) translateX(-150%);
+  transform: rotate(-45deg) translateX(-150%);
   opacity: 0;
   transition-delay: 2s;
 }
