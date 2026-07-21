@@ -633,35 +633,35 @@ function initDustEffect() {
   const ctx = cv.getContext('2d', { willReadFrequently: true });
   const dustHint = $('dust-hint');
   const key = $('hidden-key');
-  let clickCount = 0;
+  let isDrawing = false;
+  let wipedArea = 0;
+  let totalArea = 0;
 
-  const handleTap = (e) => {
-    e.stopPropagation();
-    if (clickCount >= 3) return;
-    clickCount++;
-
-    // Fade out based on clicks
-    if (clickCount === 1) {
-      cv.style.opacity = '0.6';
-    } else if (clickCount === 2) {
-      cv.style.opacity = '0.3';
-    } else if (clickCount === 3) {
+  const scratch = (x, y) => {
+    ctx.beginPath();
+    ctx.arc(x, y, 50, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Add swept area (very rough estimation to avoid performance issues)
+    wipedArea += Math.PI * 50 * 50 * 0.15;
+    
+    if (wipedArea > totalArea * 0.4) {
+      cv.style.transition = 'opacity 0.5s ease-out';
       cv.style.opacity = '0';
       setTimeout(() => {
         cv.style.display = 'none';
-        if (dustHint) dustHint.style.opacity = '0';
+        const hint = document.getElementById('dust-hint');
+        if (hint) hint.innerHTML = '<span>✨ Phủi lớp bụi thời gian để tìm chìa khóa ✨</span>';
         if (key) key.classList.add('key-glow');
-      }, 500); // Wait for transition
+      }, 500);
     }
   };
 
   const setupCanvas = () => {
     cv.width = cv.offsetWidth;
     cv.height = cv.offsetHeight;
+    totalArea = cv.width * cv.height;
     if (cv.style.display === 'none' || (dustHint && dustHint.style.opacity === '0')) return;
-    
-    // Add smooth transition for opacity
-    cv.style.transition = 'opacity 0.5s ease-out';
     
     ctx.fillStyle = 'rgba(232, 226, 210, 0.9)';
     ctx.fillRect(0, 0, cv.width, cv.height);
@@ -671,14 +671,45 @@ function initDustEffect() {
       imgData.data[i] += noise; imgData.data[i+1] += noise; imgData.data[i+2] += noise;
     }
     ctx.putImageData(imgData, 0, 0);
+    ctx.globalCompositeOperation = 'destination-out';
   };
 
-  // Only listen to clicks/taps now
-  cv.addEventListener('click', handleTap);
-  cv.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // prevent double firing with click
-    handleTap(e);
+  const handleTouch = (e) => {
+    e.preventDefault(); 
+    e.stopPropagation();
+    const touch = e.touches[0];
+    const rect = cv.getBoundingClientRect();
+    scratch(touch.clientX - rect.left, touch.clientY - rect.top);
+  };
+
+  cv.addEventListener('mousedown', (e) => {
+    e.preventDefault(); // Prevent text selection/drag start
+    e.stopPropagation();
+    isDrawing = true;
+    const rect = cv.getBoundingClientRect();
+    scratch(e.clientX - rect.left, e.clientY - rect.top);
+  });
+  
+  cv.addEventListener('mousemove', (e) => {
+    if (isDrawing) { 
+      e.preventDefault();
+      e.stopPropagation();
+      const rect = cv.getBoundingClientRect(); 
+      scratch(e.clientX - rect.left, e.clientY - rect.top); 
+    }
+  });
+  
+  window.addEventListener('mouseup', () => { isDrawing = false; });
+  
+  cv.addEventListener('click', (e) => {
+    e.stopPropagation(); // Stop click from triggering envelope open
+  });
+  
+  cv.addEventListener('touchstart', handleTouch, { passive: false });
+  cv.addEventListener('touchmove', (e) => {
+    if (isDrawing) handleTouch(e);
   }, { passive: false });
+  cv.addEventListener('touchend', () => { isDrawing = false; });
   
   setupCanvas();
 }
