@@ -408,7 +408,8 @@ function initFlipbook() {
     const dx = e.changedTouches[0].screenX - touchStartX;
     const dy = e.changedTouches[0].screenY - touchStartY;
     
-    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+    // Ignore purely vertical scrolling if user is trying to scroll the page
+    if (Math.abs(dy) > Math.abs(dx) * 1.5 && Math.abs(dy) > 30) {
       if (dragPage) dragPage.style.transform = '';
       isDragging = false;
       return;
