@@ -639,11 +639,11 @@ function initDustEffect() {
 
   const scratch = (x, y) => {
     ctx.beginPath();
-    ctx.arc(x, y, 50, 0, Math.PI * 2);
+    ctx.arc(x, y, 25, 0, Math.PI * 2);
     ctx.fill();
     
-    // Add swept area (very rough estimation to avoid performance issues)
-    wipedArea += Math.PI * 50 * 50 * 0.15;
+    // Add swept area (very rough estimation)
+    wipedArea += 1200; // Increased increment to make it easy to clear despite small brush
     
     if (wipedArea > totalArea * 0.4) {
       cv.style.transition = 'opacity 0.5s ease-out';
@@ -705,10 +705,15 @@ function initDustEffect() {
     e.stopPropagation(); // Stop click from triggering envelope open
   });
   
-  cv.addEventListener('touchstart', handleTouch, { passive: false });
+  cv.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    handleTouch(e);
+  }, { passive: false });
+  
   cv.addEventListener('touchmove', (e) => {
     if (isDrawing) handleTouch(e);
   }, { passive: false });
+  
   cv.addEventListener('touchend', () => { isDrawing = false; });
   
   setupCanvas();
