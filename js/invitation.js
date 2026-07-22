@@ -204,54 +204,7 @@ function initFlipbook() {
   let curr = 1;
   const total = pages.length;
   let isAnimating = false;
-  let isUnlocked = false; // Cover page lock
-
-  // Handle key click
-  const hiddenKey = document.getElementById('hidden-key');
-  const lockIcon = document.getElementById('lock-icon');
-  
-  if (hiddenKey) {
-    hiddenKey.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (isUnlocked) return;
-      isUnlocked = true;
-      
-      const keyRect = hiddenKey.getBoundingClientRect();
-      const lockRect = lockIcon.getBoundingClientRect();
-      
-      // Calculate translation to the center of the lock
-      const tx = lockRect.left + lockRect.width / 2 - (keyRect.left + keyRect.width / 2);
-      const ty = lockRect.top + lockRect.height / 2 - (keyRect.top + keyRect.height / 2);
-      
-      // Stop glowing
-      hiddenKey.classList.remove('key-glow');
-      
-      // Fly to lock (even slower, 1.5s)
-      hiddenKey.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease-in 1s';
-      hiddenKey.style.transform = `translate(${tx}px, ${ty}px) scale(0.6) rotate(-90deg)`;
-      hiddenKey.style.opacity = '0';
-      
-      // After flying (1.5s), unlock the lock and drop chains
-      setTimeout(() => {
-        if (lockIcon) {
-          // Open lock shackle SVG
-          lockIcon.innerHTML = '<rect x="4" y="10" width="16" height="12" rx="3" ry="3"/><path d="M7 10V5a5 5 0 0110 0"/><circle cx="12" cy="16" r="1.5"/>';
-        }
-        
-        // Wait for unlock animation to be seen VERY clearly (1.5s), then drop chains
-        setTimeout(() => {
-          document.body.classList.add('cover-unlocked');
-          
-          // Wait for chains to finish sliding away (they will take ~4s now) before removing blur
-          setTimeout(() => {
-            const page1 = document.querySelector('.page[data-page="1"]');
-            if (page1) page1.classList.remove('cover-locked');
-          }, 3500);
-          
-        }, 1500);
-      }, 1500);
-    });
-  }
+  // Lock logic removed
 
   const updateSidePanels = () => {
     if (curr > 1) {
@@ -336,7 +289,6 @@ function initFlipbook() {
   };
 
   const goNext = () => {
-    if (curr === 1 && !isUnlocked) return;
     if (isAnimating) return;
     
     if (curr >= total) {
@@ -415,7 +367,6 @@ function initFlipbook() {
 
   window.addEventListener('touchstart', (e) => {
     if (!$('main')?.classList.contains('show') || isAnimating) return;
-    if (curr === 1 && !isUnlocked) return; // Locked on cover
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
     isDragging = true;
@@ -425,10 +376,6 @@ function initFlipbook() {
 
   window.addEventListener('touchmove', (e) => {
     if (!isDragging || isAnimating) return;
-    if (curr === 1 && !isUnlocked) {
-      isDragging = false;
-      return;
-    }
     const dx = e.changedTouches[0].screenX - touchStartX;
     const dy = e.changedTouches[0].screenY - touchStartY;
     
@@ -489,8 +436,6 @@ function initFlipbook() {
   window.addEventListener('touchend', (e) => {
     if (!isDragging || isAnimating) return;
     isDragging = false;
-    
-    if (curr === 1 && !isUnlocked) return;
     
     const dx = e.changedTouches[0].screenX - touchStartX;
     
@@ -661,130 +606,6 @@ function fireConfetti() {
   draw();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   DUST WIPE EFFECT (Scratch Card over Guest Name)
-   ═══════════════════════════════════════════════════════════════ */
-function initDustEffect() {
-  const canvas = $('dust-canvas');
-  const hint = $('dust-hint');
-  const targetWrap = document.querySelector('.grad-nm-wrap');
-  if (!canvas || !targetWrap) return;
-
-  const ctx = canvas.getContext('2d');
-  let isActive = false;
-  let totalArea = 0;
-  let wipedArea = 0;
-  const BRUSH = 15;
-  let hintRemoved = false;
-
-  const drawDust = () => {
-    const rect = targetWrap.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-    totalArea = canvas.width * canvas.height;
-
-    // Base dust layer
-    ctx.fillStyle = '#b8a68b'; 
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Add heavy noise texture for real dust feel
-    for (let i = 0; i < 3000; i++) {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height;
-      const w = Math.random() * 1.5;
-      ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255, 255, 255, 0.25)' : 'rgba(40, 30, 20, 0.35)';
-      ctx.beginPath();
-      ctx.arc(x, y, w, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    
-    // Add subtle vignette
-    const vig = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 10, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/1.5);
-    vig.addColorStop(0, "rgba(0,0,0,0)");
-    vig.addColorStop(1, "rgba(30,25,15,0.5)");
-    ctx.fillStyle = vig;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    isActive = true;
-  };
-
-  const wipe = (x, y) => {
-    if (!isActive) return;
-
-    ctx.globalCompositeOperation = 'destination-out';
-
-    // Harder edge for scratch card
-    ctx.beginPath();
-    ctx.arc(x, y, BRUSH, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0,0,0,1)';
-    ctx.fill();
-
-    ctx.globalCompositeOperation = 'source-over';
-
-    // Estimate wiped area (accounts for overlap)
-    wipedArea += Math.PI * BRUSH * BRUSH * 0.25;
-
-    if (wipedArea > totalArea * 0.55) {
-      autoClear();
-    }
-  };
-
-  const autoClear = () => {
-    isActive = false;
-    canvas.classList.add('cleared');
-    if (hint) hint.classList.add('hidden');
-    
-    // Make the hidden key glow to attract attention
-    const key = document.getElementById('hidden-key');
-    if (key) key.classList.add('key-glow');
-    
-    setTimeout(() => {
-      canvas.remove();
-      hint?.remove();
-    }, 800);
-  };
-
-  const removeHint = () => {
-    if (!hintRemoved && hint) {
-      hint.classList.add('hidden');
-      hintRemoved = true;
-    }
-  };
-
-  // Mouse events
-  let isDown = false;
-  canvas.addEventListener('mousedown', (e) => {
-    isDown = true;
-    removeHint();
-    const r = canvas.getBoundingClientRect();
-    wipe(e.clientX - r.left, e.clientY - r.top);
-  });
-  canvas.addEventListener('mousemove', (e) => {
-    if (!isDown || !isActive) return;
-    const r = canvas.getBoundingClientRect();
-    wipe(e.clientX - r.left, e.clientY - r.top);
-  });
-  window.addEventListener('mouseup', () => { isDown = false; });
-
-  // Touch events
-  canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    removeHint();
-    const r = canvas.getBoundingClientRect();
-    const t = e.touches[0];
-    wipe(t.clientX - r.left, t.clientY - r.top);
-  }, { passive: false });
-  canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    if (!isActive) return;
-    const r = canvas.getBoundingClientRect();
-    const t = e.touches[0];
-    wipe(t.clientX - r.left, t.clientY - r.top);
-  }, { passive: false });
-
-  // Draw early since it's just a small box, no need to wait for observer
-  setTimeout(drawDust, 100);
-}
 
 /* ═══════════════════════════════════════════════════════════════
    SIGNATURE BOOK
@@ -993,6 +814,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initRSVP();
   initActions();
   initFacts();
-  initDustEffect();
   initSignatureBook();
 });
