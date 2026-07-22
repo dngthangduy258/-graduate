@@ -970,10 +970,10 @@ body.envelope-flying .goodbye-msg {
   .cd-num{font-size:1.3rem;}
   
   /* Swipe hint on mobile */
-  .page:not([data-page="7"]) .page-content::after {
+  .page:not([data-page="5"])::after {
     content: '\2190   Vuốt để xem tiếp';
     position: absolute;
-    bottom: 10px;
+    bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
     font-family: 'Inter', sans-serif;
@@ -985,6 +985,7 @@ body.envelope-flying .goodbye-msg {
     pointer-events: none;
     white-space: nowrap;
     animation: swipeHintPulse 2s infinite ease-in-out;
+    z-index: 20;
   }
 }
 @keyframes swipeHintPulse {
