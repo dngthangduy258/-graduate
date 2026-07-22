@@ -673,11 +673,11 @@ function initSignatureBook() {
         canvas.classList.add('hide-sigs');
         sigs.forEach(s => renderSignature(s.x, s.y, s.color, s.name, s.rotation, false));
         
-        const page7 = document.querySelector('.page[data-page="7"]');
+        const sigPage = canvas.closest('.page');
         let hasTriggered = false;
         
-        const checkPage7 = () => {
-          if (page7 && page7.classList.contains('current') && !hasTriggered) {
+        const checkSigPage = () => {
+          if (sigPage && sigPage.classList.contains('current') && !hasTriggered) {
             hasTriggered = true;
             setTimeout(() => {
               if (hint) hint.style.opacity = '0';
@@ -686,10 +686,10 @@ function initSignatureBook() {
           }
         };
         
-        if (page7) {
-          const observer = new MutationObserver(checkPage7);
-          observer.observe(page7, { attributes: true, attributeFilter: ['class'] });
-          checkPage7(); // Check immediately in case already active
+        if (sigPage) {
+          const observer = new MutationObserver(checkSigPage);
+          observer.observe(sigPage, { attributes: true, attributeFilter: ['class'] });
+          checkSigPage(); // Check immediately in case already active
         }
       }
     } catch (e) { console.error(e); }
