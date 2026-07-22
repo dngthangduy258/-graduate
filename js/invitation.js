@@ -722,37 +722,37 @@ function initSignatureBook() {
       if (sigs && sigs.length > 0) {
         canvas.classList.add('hide-sigs');
         sigs.forEach(s => renderSignature(s.x, s.y, s.color, s.name, s.rotation, false));
-        
-        const sigPage = canvas.closest('.page');
-        let hasTriggered = false;
-        
-        const checkSigPage = () => {
-          if (sigPage && sigPage.classList.contains('current') && !hasTriggered) {
-            hasTriggered = true;
-            let countdown = 5;
-            if (hint) {
-              hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
-              hint.style.opacity = '1';
-            }
-            
-            const interval = setInterval(() => {
-              countdown--;
-              if (countdown > 0) {
-                if (hint) hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
-              } else {
-                clearInterval(interval);
-                if (hint) hint.style.opacity = '0';
-                canvas.classList.remove('hide-sigs');
-              }
-            }, 1000);
+      }
+      
+      const sigPage = canvas.closest('.page');
+      let hasTriggered = false;
+      
+      const checkSigPage = () => {
+        if (sigPage && sigPage.classList.contains('current') && !hasTriggered) {
+          hasTriggered = true;
+          let countdown = 5;
+          if (hint) {
+            hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
+            hint.style.opacity = '1';
           }
-        };
-        
-        if (sigPage) {
-          const observer = new MutationObserver(checkSigPage);
-          observer.observe(sigPage, { attributes: true, attributeFilter: ['class'] });
-          checkSigPage(); // Check immediately in case already active
+          
+          const interval = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+              if (hint) hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
+            } else {
+              clearInterval(interval);
+              if (hint) hint.style.opacity = '0';
+              canvas.classList.remove('hide-sigs');
+            }
+          }, 1000);
         }
+      };
+      
+      if (sigPage) {
+        const observer = new MutationObserver(checkSigPage);
+        observer.observe(sigPage, { attributes: true, attributeFilter: ['class'] });
+        checkSigPage(); // Check immediately in case already active
       }
     } catch (e) { console.error(e); }
   };
