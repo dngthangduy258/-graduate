@@ -159,6 +159,8 @@ function initEnvelope() {
 function initAudio() {
   const bgm = $("bg-music"), btn = $("btn-music");
   if (!bgm || !btn) return;
+  
+  bgm.volume = 0.5; // Giảm 50% âm lượng
   let isPlaying = false;
 
   const toggle = () => {
@@ -168,6 +170,17 @@ function initAudio() {
   };
 
   btn.addEventListener("click", toggle);
+  
+  // Thử tự động phát nhạc khi tải trang
+  bgm.play().then(() => {
+    isPlaying = true;
+    btn.classList.remove("off");
+  }).catch(() => {
+    // Trình duyệt chặn autoplay, chờ tương tác của người dùng
+    btn.classList.add("off");
+  });
+
+  // Chơi nhạc khi người dùng tương tác mở thiệp
   $("env-card")?.addEventListener("click", () => {
     if (!isPlaying) {
       bgm.play().then(() => { isPlaying = true; btn.classList.remove("off"); }).catch(() => {});
