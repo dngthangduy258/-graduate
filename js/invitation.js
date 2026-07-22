@@ -160,7 +160,7 @@ function initAudio() {
   const bgm = $("bg-music"), btn = $("btn-music");
   if (!bgm || !btn) return;
   
-  bgm.volume = 0.5; // Giảm 50% âm lượng
+  bgm.volume = 0.2; // Giảm 80% âm lượng để nghe nhẹ nhàng hơn
   let isPlaying = false;
 
   const toggle = () => {
