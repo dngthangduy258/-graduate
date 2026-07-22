@@ -616,30 +616,80 @@ function initSignatureBook() {
   const colors = document.querySelectorAll('.sig-color');
   const btnConfirm = document.getElementById('sig-btn-confirm');
   const hint = document.getElementById('sig-hint');
-  const inputName = document.getElementById('sig-name-field');
-  const groupName = document.getElementById('sig-name-group');
+  const drawPad = document.getElementById('sig-draw-pad');
+  const btnClear = document.getElementById('sig-btn-clear');
   
   if (!canvas || !modal) return;
-  
-  // Get guest name from URL or use empty
-  const p = new URLSearchParams(window.location.search);
-  let urlGuestName = p.get('guest') || p.get('n') || '';
-  if (urlGuestName && urlGuestName.includes('-')) {
-    urlGuestName = urlGuestName.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-  }
-  
-  if (inputName) {
-    inputName.value = urlGuestName;
-  }
-  
-  if (urlGuestName && groupName) {
-    // If they already have a name from URL, we can hide the input or just leave it pre-filled
-    // We will leave it visible so they can change it if they want.
-  }
   
   let currentX = 0;
   let currentY = 0;
   let selectedColor = '#1a1a1a';
+  let isDrawing = false;
+  let hasDrawn = false;
+  let ctx = null;
+  
+  if (drawPad) {
+    ctx = drawPad.getContext('2d');
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = selectedColor;
+    
+    const getPos = (e) => {
+      const rect = drawPad.getBoundingClientRect();
+      const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+      const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    };
+    
+    const startDraw = (e) => {
+      e.preventDefault();
+      isDrawing = true;
+      hasDrawn = true;
+      const pos = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    };
+    
+    const draw = (e) => {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pos = getPos(e);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    };
+    
+    const endDraw = () => {
+      isDrawing = false;
+    };
+    
+    // Use pointer events for better support, fallback to touch/mouse
+    if (window.PointerEvent) {
+      drawPad.addEventListener('pointerdown', startDraw);
+      drawPad.addEventListener('pointermove', draw);
+      drawPad.addEventListener('pointerup', endDraw);
+      drawPad.addEventListener('pointerout', endDraw);
+      drawPad.addEventListener('pointercancel', endDraw);
+    } else {
+      drawPad.addEventListener('mousedown', startDraw);
+      drawPad.addEventListener('mousemove', draw);
+      drawPad.addEventListener('mouseup', endDraw);
+      drawPad.addEventListener('mouseleave', endDraw);
+      drawPad.addEventListener('touchstart', startDraw, {passive: false});
+      drawPad.addEventListener('touchmove', draw, {passive: false});
+      drawPad.addEventListener('touchend', endDraw);
+    }
+    
+    if (btnClear) {
+      btnClear.addEventListener('click', () => {
+        ctx.clearRect(0, 0, drawPad.width, drawPad.height);
+        hasDrawn = false;
+      });
+    }
+  }
   
   const fontsList = [
     "'Dancing Script', cursive",
@@ -728,20 +778,31 @@ function initSignatureBook() {
     wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
     wrapper.style.color = color;
     
-    const textEl = document.createElement('div');
-    textEl.className = 'sig-text';
-    textEl.textContent = name;
-    textEl.style.fontFamily = font;
-    
-    if (animate) {
-      textEl.style.animation = 'sigDraw 0.6s ease forwards';
+    let contentEl;
+    if (name && name.startsWith('data:image')) {
+      contentEl = document.createElement('img');
+      contentEl.src = name;
+      contentEl.className = 'sig-img';
+      contentEl.style.width = '120px'; // roughly scaled
+      contentEl.style.height = 'auto';
+      contentEl.style.pointerEvents = 'none';
+      contentEl.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))';
     } else {
-      textEl.style.opacity = '0.9';
-      textEl.style.transform = 'scale(1)';
-      textEl.style.animation = 'none';
+      contentEl = document.createElement('div');
+      contentEl.className = 'sig-text';
+      contentEl.textContent = name || 'Khách mời';
+      contentEl.style.fontFamily = font;
     }
     
-    wrapper.appendChild(textEl);
+    if (animate) {
+      contentEl.style.animation = 'sigDraw 0.6s ease forwards';
+    } else {
+      contentEl.style.opacity = '0.9';
+      contentEl.style.transform = 'scale(1)';
+      contentEl.style.animation = 'none';
+    }
+    
+    wrapper.appendChild(contentEl);
     canvas.appendChild(wrapper);
   };
   
@@ -760,16 +821,18 @@ function initSignatureBook() {
       colors.forEach(el => el.classList.remove('active'));
       c.classList.add('active');
       selectedColor = c.getAttribute('data-color');
+      if (ctx) ctx.strokeStyle = selectedColor;
     });
   });
   
   btnConfirm.addEventListener('click', () => {
-    let finalName = inputName ? inputName.value.trim() : urlGuestName;
-    if (!finalName) {
-      alert('Vui lòng nhập tên của bạn để lưu lại chữ ký nhé!');
-      if (inputName) inputName.focus();
+    if (!hasDrawn || !drawPad) {
+      alert('Vui lòng vẽ chữ ký của bạn trước khi lưu nhé!');
       return;
     }
+    
+    // Get base64 image from canvas
+    const imgData = drawPad.toDataURL('image/png');
     
     modal.classList.remove('show');
     if (hint) hint.style.opacity = '0';
@@ -777,18 +840,23 @@ function initSignatureBook() {
     if (successHint) successHint.classList.add('show');
     
     const rotation = Math.random() * 30 - 15; // -15 to 15 degrees
-    const randomFont = fontsList[Math.floor(Math.random() * fontsList.length)];
     
     const sig = {
       x: currentX,
       y: currentY,
-      color: selectedColor + '|||' + randomFont,
-      name: finalName,
+      color: selectedColor + '|||', // Font is no longer relevant for images
+      name: imgData,
       rotation: rotation
     };
     
     renderSignature(sig.x, sig.y, sig.color, sig.name, sig.rotation, true);
     saveSignature(sig);
+    
+    // Reset canvas for next time
+    if (ctx) {
+      ctx.clearRect(0, 0, drawPad.width, drawPad.height);
+      hasDrawn = false;
+    }
   });
   
   // Close modal if clicked outside box

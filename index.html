@@ -359,9 +359,14 @@
   <div class="sig-box">
     <div class="sig-box-title" style="margin-bottom: 10px;">Lưu lại chữ ký của bạn</div>
     
-    <div class="sig-name-input" id="sig-name-group" style="text-align: left; margin-bottom: 15px;">
-      <label style="font-size: 0.8rem; color: #666; margin-bottom: 5px; display: block; font-family: 'Lora', serif;">Tên hiển thị:</label>
-      <input type="text" id="sig-name-field" placeholder="Nhập tên của bạn..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Cormorant Garamond', serif; outline: none; font-size: 1.05rem; user-select: auto; -webkit-user-select: auto;">
+    <div class="sig-draw-group" style="text-align: center; margin-bottom: 15px;">
+      <label style="font-size: 0.8rem; color: #666; margin-bottom: 5px; display: block; font-family: 'Lora', serif; text-align: left;">Vẽ chữ ký của bạn:</label>
+      <div style="position: relative; border: 1px dashed #c5a059; border-radius: 4px; background: #faf9f5; overflow: hidden; touch-action: none;">
+        <canvas id="sig-draw-pad" width="280" height="150" style="display: block; cursor: crosshair; touch-action: none; width: 100%; height: 150px;"></canvas>
+      </div>
+      <div style="text-align: right; margin-top: 5px;">
+        <button id="sig-btn-clear" style="background: none; border: none; color: #999; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Xoá vẽ lại</button>
+      </div>
     </div>
 
     <div class="sig-box-title" style="font-size: 0.9rem; margin-bottom: 10px; color: #666;">Chọn màu mực:</div>
