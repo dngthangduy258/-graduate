@@ -370,16 +370,30 @@
     </div>
 
     <div class="sig-box-title" style="font-size: 0.9rem; margin-bottom: 10px; color: #666;">Chọn màu mực:</div>
-    <div class="sig-colors" id="sig-colors">
+    <div class="sig-colors" id="sig-colors" style="margin-bottom: 15px;">
       <div class="sig-color active" style="background-color: #1a1a1a;" data-color="#1a1a1a"></div>
       <div class="sig-color" style="background-color: #1b3b6f;" data-color="#1b3b6f"></div>
       <div class="sig-color" style="background-color: #8c2727;" data-color="#8c2727"></div>
       <div class="sig-color" style="background-color: #c5a059;" data-color="#c5a059"></div>
     </div>
+    
+    <div class="sig-msg-group" style="text-align: left; margin-bottom: 15px;">
+      <label style="font-size: 0.8rem; color: #666; margin-bottom: 5px; display: block; font-family: 'Lora', serif;">Lời nhắn (tuỳ chọn):</label>
+      <textarea id="sig-message-field" placeholder="Gửi gắm vài lời chúc..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Cormorant Garamond', serif; outline: none; font-size: 1.05rem; user-select: auto; -webkit-user-select: auto; resize: none; height: 60px;"></textarea>
+    </div>
+    
     <button class="sig-btn" id="sig-btn-confirm">Ký tên</button>
   </div>
 </div>
 
+<!-- Message Read Modal -->
+<div class="msg-read-modal" id="msg-read-modal">
+  <div class="msg-box">
+    <div class="msg-sig-display" id="msg-sig-display"></div>
+    <div class="msg-text-display" id="msg-text-display"></div>
+    <button class="msg-btn-close" id="msg-btn-close">Đóng</button>
+  </div>
+</div>
 <script src="js/invitation.js"></script>
 </body>
 </html>

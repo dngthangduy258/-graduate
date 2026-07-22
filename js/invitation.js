@@ -779,18 +779,56 @@ function initSignatureBook() {
     wrapper.style.color = color;
     
     let contentEl;
-    if (name && name.startsWith('data:image')) {
+    let imgData = name;
+    let message = '';
+    
+    if (name && name.includes('|||')) {
+      const parts = name.split('|||');
+      imgData = parts[0];
+      message = decodeURIComponent(parts[1] || '');
+    }
+    
+    if (imgData && imgData.startsWith('data:image')) {
       contentEl = document.createElement('img');
-      contentEl.src = name;
+      contentEl.src = imgData;
       contentEl.className = 'sig-img';
       contentEl.style.width = '120px'; // roughly scaled
       contentEl.style.height = 'auto';
       contentEl.style.pointerEvents = 'none';
       contentEl.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))';
+      
+      if (message) {
+        wrapper.style.cursor = 'pointer';
+        wrapper.title = "Nhấp để xem lời nhắn";
+        // Visual indicator that it has a message
+        const badge = document.createElement('div');
+        badge.style.position = 'absolute';
+        badge.style.bottom = '-5px';
+        badge.style.right = '-5px';
+        badge.style.width = '12px';
+        badge.style.height = '12px';
+        badge.style.background = 'var(--gold)';
+        badge.style.borderRadius = '50%';
+        badge.style.border = '2px solid #fff';
+        badge.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+        wrapper.appendChild(badge);
+        
+        wrapper.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const readModal = document.getElementById('msg-read-modal');
+          const sigDisplay = document.getElementById('msg-sig-display');
+          const textDisplay = document.getElementById('msg-text-display');
+          if (readModal && sigDisplay && textDisplay) {
+            sigDisplay.innerHTML = `<img src="${imgData}" style="max-width:200px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));">`;
+            textDisplay.textContent = message;
+            readModal.classList.add('show');
+          }
+        });
+      }
     } else {
       contentEl = document.createElement('div');
       contentEl.className = 'sig-text';
-      contentEl.textContent = name || 'Khách mời';
+      contentEl.textContent = imgData || 'Khách mời';
       contentEl.style.fontFamily = font;
     }
     
@@ -834,6 +872,11 @@ function initSignatureBook() {
     // Get base64 image from canvas
     const imgData = drawPad.toDataURL('image/png');
     
+    // Get message
+    const msgField = document.getElementById('sig-message-field');
+    const message = msgField ? msgField.value.trim() : '';
+    const finalNameData = message ? (imgData + '|||' + encodeURIComponent(message)) : imgData;
+    
     modal.classList.remove('show');
     if (hint) hint.style.opacity = '0';
     const successHint = document.getElementById('sig-success-hint');
@@ -845,7 +888,7 @@ function initSignatureBook() {
       x: currentX,
       y: currentY,
       color: selectedColor + '|||', // Font is no longer relevant for images
-      name: imgData,
+      name: finalNameData,
       rotation: rotation
     };
     
@@ -865,6 +908,18 @@ function initSignatureBook() {
       modal.classList.remove('show');
     }
   });
+  
+  // Setup close for message read modal
+  const readModal = document.getElementById('msg-read-modal');
+  const btnCloseMsg = document.getElementById('msg-btn-close');
+  if (readModal) {
+    readModal.addEventListener('click', (e) => {
+      if (e.target === readModal) readModal.classList.remove('show');
+    });
+    if (btnCloseMsg) {
+      btnCloseMsg.addEventListener('click', () => readModal.classList.remove('show'));
+    }
+  }
   
   loadSignatures();
 }
