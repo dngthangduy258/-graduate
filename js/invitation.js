@@ -729,10 +729,22 @@ function initSignatureBook() {
         const checkSigPage = () => {
           if (sigPage && sigPage.classList.contains('current') && !hasTriggered) {
             hasTriggered = true;
-            setTimeout(() => {
-              if (hint) hint.style.opacity = '0';
-              canvas.classList.remove('hide-sigs');
-            }, 4500); // 4.5s delay to show hint first
+            let countdown = 5;
+            if (hint) {
+              hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
+              hint.style.opacity = '1';
+            }
+            
+            const interval = setInterval(() => {
+              countdown--;
+              if (countdown > 0) {
+                if (hint) hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
+              } else {
+                clearInterval(interval);
+                if (hint) hint.style.opacity = '0';
+                canvas.classList.remove('hide-sigs');
+              }
+            }, 1000);
           }
         };
         
@@ -799,6 +811,7 @@ function initSignatureBook() {
       
       if (message) {
         wrapper.style.cursor = 'pointer';
+        wrapper.style.pointerEvents = 'auto'; // Fix bug: allow clicking on wrappers with messages
         wrapper.title = "Nhấp để xem lời nhắn";
         // Visual indicator that it has a message
         const badge = document.createElement('div');
