@@ -804,8 +804,11 @@ function initSignatureBook() {
       contentEl = document.createElement('img');
       contentEl.src = imgData;
       contentEl.className = 'sig-img';
-      contentEl.style.width = '120px'; // roughly scaled
+      contentEl.style.width = 'auto'; 
       contentEl.style.height = 'auto';
+      contentEl.onload = () => {
+        contentEl.style.width = (contentEl.naturalWidth * 0.6) + 'px';
+      };
       contentEl.style.pointerEvents = 'none';
       contentEl.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))';
       
