@@ -1,399 +1,475 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Thư Mời Lễ Tốt Nghiệp | Nguyễn Thị Xuân Mai</title>
-<meta name="description" content="Trân trọng kính mời Quý vị đến dự Lễ Tốt nghiệp Đại học Sài Gòn.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Pacifico&family=Alex+Brush&family=Sacramento&family=Allura&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Thư Mời Lễ Tốt Nghiệp | Nguyễn Thị Xuân Mai</title>
+  <meta name="description" content="Trân trọng kính mời Quý vị đến dự Lễ Tốt nghiệp Đại học Sài Gòn.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Pacifico&family=Alex+Brush&family=Sacramento&family=Allura&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<canvas class="fx" id="cx-conf"></canvas>
+  <canvas class="fx" id="cx-conf"></canvas>
 
-<!-- Preloader -->
-<div id="loader">
-  <div class="ld-line"></div>
-  <div class="ld-txt">Đang chuẩn bị....</div>
-</div>
-
-<!-- Controls -->
-<div class="ui-tl">
-  <button class="ctrl-btn" id="btn-music" aria-label="Bật/Tắt nhạc">
-    <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13M9 9l12-2M5 21a3 3 0 100-6 3 3 0 000 6zm12-2a3 3 0 100-6 3 3 0 000 6z"/></svg>
-  </button>
-</div>
-
-<audio id="bg-music" loop preload="auto">
-  <source src="assets/hai mươi hai (22).mp3" type="audio/mpeg">
-</audio>
-
-<!-- Envelope Screen -->
-<div id="env-screen">
-  <div class="env-scene">
-    <div class="env-crown">
-      <div class="env-crown-gem sm"></div>
-      <div class="env-crown-gem"></div>
-      <div class="env-crown-line"></div>
-      <div class="env-crown-text">Trân trọng kính mời</div>
-      <div class="env-crown-line r"></div>
-      <div class="env-crown-gem"></div>
-      <div class="env-crown-gem sm"></div>
-    </div>
-
-    <div class="env-3d">
-      <div class="env-card" id="env-card" role="button" tabindex="0">
-        <svg class="env-svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
-          <path d="M0,0 L600,0 L600,400 L0,400 Z" fill="#E8E2D2" />
-          <path d="M0,400 L300,180 L600,400 Z" fill="#F4EFE1" stroke="#C5A059" stroke-width="1" />
-          <path d="M0,0 L300,180 L0,400 Z" fill="#FDFBF7" stroke="#C5A059" stroke-width="1"/>
-          <path d="M600,0 L300,180 L600,400 Z" fill="#FDFBF7" stroke="#C5A059" stroke-width="1"/>
-          <g class="env-flap-g">
-            <path d="M0,0 L300,220 L600,0 Z" fill="#F9F6F0" stroke="#C5A059" stroke-width="2"/>
-          </g>
-        </svg>
-        <div class="env-easter-egg">Created by Duy Dng</div>
-        <div class="env-seal">
-          <div class="env-seal-inner">
-            <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
-          </div>
-        </div>
-      </div>
-      <div class="env-shadow"></div>
-    </div>
-
-    <div class="env-caption">
-      <div class="env-cap-eyebrow" id="env-guest">Dành riêng cho Quý Khách</div>
-      <div class="env-cap-title">Thiệp mời Tốt nghiệp</div>
-      <div class="env-hint">
-        <svg viewBox="0 0 24 24" class="hint-icon"><path d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"/></svg>
-        <span>Nhấn vào phong bì để mở</span>
-      </div>
-    </div>
+  <!-- Preloader -->
+  <div id="loader">
+    <div class="ld-line"></div>
+    <div class="ld-txt">Đang chuẩn bị....</div>
   </div>
-</div>
 
-<!-- ═══════════════ MAIN FLIPBOOK ═══════════════ -->
-<main id="main">
-  <div class="desk-surface">
-    <div class="book-layout">
+  <!-- Controls -->
+  <div class="ui-tl">
+    <button class="ctrl-btn" id="btn-music" aria-label="Bật/Tắt nhạc">
+      <svg viewBox="0 0 24 24">
+        <path d="M9 18V5l12-2v13M9 9l12-2M5 21a3 3 0 100-6 3 3 0 000 6zm12-2a3 3 0 100-6 3 3 0 000 6z" />
+      </svg>
+    </button>
+  </div>
 
-      <!-- LEFT SIDE INFO PANEL -->
-      <div class="side-panel left-panel" id="left-panel">
-        <div class="sp-inner">
-          <div class="sp-arrow">‹</div>
-          <div class="sp-label" id="sp-prev-label">Trang trước</div>
-          <div class="sp-title" id="sp-prev-title"></div>
-        </div>
+  <audio id="bg-music" loop preload="auto">
+    <source src="assets/hai mươi hai (22).mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Envelope Screen -->
+  <div id="env-screen">
+    <div class="env-scene">
+      <div class="env-crown">
+        <div class="env-crown-gem sm"></div>
+        <div class="env-crown-gem"></div>
+        <div class="env-crown-line"></div>
+        <div class="env-crown-text">Trân trọng kính mời</div>
+        <div class="env-crown-line r"></div>
+        <div class="env-crown-gem"></div>
+        <div class="env-crown-gem sm"></div>
       </div>
 
-      <!-- BOOK WRAPPER -->
-      <div class="book-wrapper" id="book-wrapper">
-        <div class="book-spine"></div>
-        
-        <!-- MAGICAL TRANSFORMATION: ENVELOPE & WINGS -->
-        <div class="magical-envelope" id="magical-envelope">
-          <div class="env-glow">
-            <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="envGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
-                  <stop offset="100%" stop-color="#ffdf89" stop-opacity="0.2"/>
-                </linearGradient>
-                <filter id="envGlow">
-                  <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-                  <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
-              <rect x="10" y="10" width="380" height="230" fill="rgba(255,255,255,0.05)" stroke="url(#envGrad)" stroke-width="4" rx="8" ry="8" filter="url(#envGlow)"/>
-              <path d="M 10 10 L 200 130 L 390 10" fill="none" stroke="url(#envGrad)" stroke-width="4" filter="url(#envGlow)"/>
-              <path d="M 10 240 L 150 140" fill="none" stroke="url(#envGrad)" stroke-width="4" filter="url(#envGlow)"/>
-              <path d="M 390 240 L 250 140" fill="none" stroke="url(#envGrad)" stroke-width="4" filter="url(#envGlow)"/>
-            </svg>
-          </div>
-          
-          <div class="book-wings" id="book-wings">
-            <div class="wing wing-left">
-              <svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="wingGradL" x1="100%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
-                    <stop offset="100%" stop-color="#ffdf89" stop-opacity="0"/>
-                  </linearGradient>
-                </defs>
-                <path d="M 100 100 Q 50 30 10 10 Q 30 60 20 100 Q 50 80 15 140 Q 40 110 25 170 Q 50 130 100 100 Z" fill="url(#wingGradL)" filter="drop-shadow(0 0 12px rgba(255,223,137,0.8))"/>
-                <path d="M 100 100 Q 60 50 20 40 Q 40 80 30 120 Q 60 100 25 150 Q 50 120 100 100 Z" fill="#fff" opacity="0.6"/>
-              </svg>
-            </div>
-            <div class="wing wing-right">
-              <svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="wingGradR" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
-                    <stop offset="100%" stop-color="#ffdf89" stop-opacity="0"/>
-                  </linearGradient>
-                </defs>
-                <path d="M 0 100 Q 50 30 90 10 Q 70 60 80 100 Q 50 80 85 140 Q 60 110 75 170 Q 50 130 0 100 Z" fill="url(#wingGradR)" filter="drop-shadow(0 0 12px rgba(255,223,137,0.8))"/>
-                <path d="M 0 100 Q 40 50 80 40 Q 60 80 70 120 Q 40 100 75 150 Q 50 120 0 100 Z" fill="#fff" opacity="0.6"/>
+      <div class="env-3d">
+        <div class="env-card" id="env-card" role="button" tabindex="0">
+          <svg class="env-svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
+            <path d="M0,0 L600,0 L600,400 L0,400 Z" fill="#E8E2D2" />
+            <path d="M0,400 L300,180 L600,400 Z" fill="#F4EFE1" stroke="#C5A059" stroke-width="1" />
+            <path d="M0,0 L300,180 L0,400 Z" fill="#FDFBF7" stroke="#C5A059" stroke-width="1" />
+            <path d="M600,0 L300,180 L600,400 Z" fill="#FDFBF7" stroke="#C5A059" stroke-width="1" />
+            <g class="env-flap-g">
+              <path d="M0,0 L300,220 L600,0 Z" fill="#F9F6F0" stroke="#C5A059" stroke-width="2" />
+            </g>
+          </svg>
+          <div class="env-easter-egg">Created by Duy Dng</div>
+          <div class="env-seal">
+            <div class="env-seal-inner">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
               </svg>
             </div>
           </div>
         </div>
+        <div class="env-shadow"></div>
+      </div>
 
-        <div class="book" id="book">
-
-          <!-- PAGE 1: HERO / COVER (Graduate Name & Dust) -->
-          <div class="page current" data-page="1" data-title="Bìa Thiệp">
-            <div class="page-paper">
-              <div class="page-corner tl"></div>
-              <div class="page-corner tr"></div>
-              <div class="page-corner bl"></div>
-              <div class="page-corner br"></div>
-
-              <div class="page-content">
-                <div class="hero-tag">Lễ Tốt Nghiệp Cử Nhân</div>
-                <div class="name-block" style="margin-top: 40px; position:relative; z-index:30;">
-                  <div class="name-honor">Đại học Sài Gòn</div>
-                  <div class="grad-nm-wrap" style="position:relative; display:inline-block; margin-top:10px; max-width: 100%;">
-                    <h1 class="grad-name" style="line-height: 1.1; font-size: clamp(2.2rem, 9vw, 3.8rem);">Nguyễn Thị Xuân Mai</h1>
-                  </div>
-
-                </div>
-                <div class="ornament" style="margin-top: 50px;">
-                  <svg viewBox="0 0 120 20"><path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none" stroke-width="1"/></svg>
-                </div>
-                
-                <div class="hero-quote" style="margin-top: 40px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; color: var(--gold-d); line-height: 1.6; text-align: left; padding-left: 15px; border-left: 2px solid var(--gold-d);">
-                  "Khép lại một chặng đường thanh xuân rực rỡ, mở ra một hành trình mới đầy hứa hẹn."
-                </div>
-                <div class="chips" style="margin-top: 30px;">
-                  <div class="chip" data-fact="major"><div class="chip-dot"></div>Tâm lý học</div>
-                  <div class="chip" data-fact="class"><div class="chip-dot"></div>Niên khoá 2022-2026</div>
-                </div>
-              </div>
-            </div>
-            <div class="page-curl"></div>
-          </div>
-
-          <!-- PAGE 2: INVITATION & EVENT DETAILS -->
-          <div class="page future" data-page="2" data-title="Lời Mời">
-            <div class="page-paper">
-              <div class="page-corner tl"></div>
-              <div class="page-corner tr"></div>
-              <div class="page-corner bl"></div>
-              <div class="page-corner br"></div>
-              <div class="page-content" style="align-items: flex-start; text-align: left; padding-top: 15px;">
-                <div class="guest-block" style="text-align: left; width: 100%;">
-                  <div class="guest-sal" style="font-size: 0.9rem;">Trân trọng kính mời</div>
-                  <div class="guest-nm" id="guest-name" style="font-size: 2.2rem; margin-top: -5px;">Quý Khách</div>
-                </div>
-                
-                <div class="hero-sub" style="margin-top: 15px; font-size: 0.95rem; text-align: left; line-height: 1.5;">
-                  Đến chung vui và ghi lại những khoảnh khắc đáng nhớ nhất trong Lễ Tốt nghiệp Cử nhân ngành Tâm lý học.
-                </div>
-                
-                <div class="hero-sub" style="margin-top: 15px; color: var(--gold-d); text-align: left; border-left: 2px solid var(--gold-d); padding-left: 16px; font-style: italic;">
-                  "Sự hiện diện của Quý vị là niềm vinh hạnh
-                  và là món quà quý giá nhất trong ngày lễ đặc biệt này."
-                </div>
-                
-                <!-- Compact Event Details -->
-                <div style="background: rgba(197, 160, 89, 0.05); border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 8px; padding: 12px; width: 100%; margin-top: 20px;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(197, 160, 89, 0.3); padding-bottom: 8px; margin-bottom: 8px;">
-                     <div>
-                       <div style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">Thời gian</div>
-                       <div style="font-size: 0.95rem; font-weight: 600; color: var(--text);">08:00 | 15/08/2026</div>
-                     </div>
-                     <div style="text-align: right;">
-                       <div style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">Địa điểm</div>
-                       <div style="font-size: 0.95rem; font-weight: 600; color: var(--text);">Hội trường A</div>
-                     </div>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-                    <div style="font-size: 0.8rem; color: var(--muted); line-height: 1.4; flex-grow: 1;">ĐH Sài Gòn, 273 An Dương Vương, Q.5</div>
-                    <a href="https://maps.google.com" target="_blank" class="map-link" style="font-size: 0.7rem; padding: 6px 10px; margin: 0; white-space: nowrap; flex-shrink: 0;">
-                      <svg viewBox="0 0 24 24" style="width: 12px; height: 12px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                      Bản đồ
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="page-curl"></div>
-          </div>
-
-          <!-- PAGE 3: COUNTDOWN -->
-          <div class="page future" data-page="3" data-title="Đếm Ngược">
-            <div class="page-paper">
-              <div class="page-corner tl"></div>
-              <div class="page-corner tr"></div>
-              <div class="page-corner bl"></div>
-              <div class="page-corner br"></div>
-              <div class="page-content">
-                <div class="eyebrow">
-                  <div class="ey-l"></div><div class="ey-txt">Đếm ngược</div><div class="ey-r"></div>
-                </div>
-                <h2 class="sec-h">Khoảnh khắc<br><em>Mong chờ</em></h2>
-                <div class="sep"><div class="sp-l"></div><div class="sp-d sm"></div><div class="sp-d"></div><div class="sp-d sm"></div><div class="sp-r"></div></div>
-                <div class="cd-row">
-                  <div class="cd-unit">
-                    <div class="cd-card"><span class="cd-num" id="cd-d">00</span></div>
-                    <div class="cd-lbl">Ngày</div>
-                  </div>
-                  <div class="cd-sep">:</div>
-                  <div class="cd-unit">
-                    <div class="cd-card"><span class="cd-num" id="cd-h">00</span></div>
-                    <div class="cd-lbl">Giờ</div>
-                  </div>
-                  <div class="cd-sep">:</div>
-                  <div class="cd-unit">
-                    <div class="cd-card"><span class="cd-num" id="cd-m">00</span></div>
-                    <div class="cd-lbl">Phút</div>
-                  </div>
-                  <div class="cd-sep">:</div>
-                  <div class="cd-unit">
-                    <div class="cd-card"><span class="cd-num" id="cd-s">00</span></div>
-                    <div class="cd-lbl">Giây</div>
-                  </div>
-                </div>
-                <div class="emotional-text" style="margin-top: 35px; text-align: center; color: var(--muted); font-family: 'Playfair Display', serif; font-style: italic; line-height: 1.8; font-size: 0.95rem; max-width: 80%;">
-                  "Một hành trình thanh xuân rực rỡ với biết bao nỗ lực, buồn vui và những kỷ niệm không thể nào quên sắp khép lại. Chỉ còn chút thời gian ngắn ngủi nữa thôi, chúng ta sẽ cùng nhau chứng kiến khoảnh khắc trưởng thành đáng tự hào này..."
-                </div>
-              </div>
-            </div>
-            <div class="page-curl"></div>
-          </div>
-
-
-
-
-
-          <!-- PAGE 4: SIGNATURE BOOK -->
-          <div class="page future" data-page="4" data-title="Sổ Ký Tên">
-            <div class="page-paper">
-              <div class="page-corner tl"></div>
-              <div class="page-corner tr"></div>
-              <div class="page-corner bl"></div>
-              <div class="page-corner br"></div>
-              <div class="page-content" style="padding: 0; position: absolute; inset: 0; min-height: unset;">
-                <div class="sig-hint" id="sig-hint">Chạm vào mặt giấy để ký tên (5s)</div>
-                <div class="sig-canvas" id="sig-canvas"></div>
-                <div class="sig-success-hint" id="sig-success-hint">Chữ ký đã được lưu. Vuốt để xem tiếp ➔</div>
-              </div>
-            </div>
-            <div class="page-curl"></div>
-          </div>
-
-          <!-- PAGE 5: CLOSING -->
-          <div class="page future" data-page="5" data-title="Lời Cảm Ơn">
-            <div class="page-paper">
-              <div class="page-corner tl"></div>
-              <div class="page-corner tr"></div>
-              <div class="page-corner bl"></div>
-              <div class="page-corner br"></div>
-              <div class="page-content">
-                <div class="ornament"><svg viewBox="0 0 120 20"><path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none" stroke-width="1"/></svg></div>
-                <div class="quote-txt">
-                  "Học vấn do người siêng năng đạt được,<br>
-                  tài sản do người tinh tế sở hữu,<br>
-                  quyền lợi do người dũng cảm nắm giữ,<br>
-                  thiên đường do người lương thiện xây dựng."
-                </div>
-                <div class="ornament" style="transform:scaleY(-1)"><svg viewBox="0 0 120 20"><path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none" stroke-width="1"/></svg></div>
-                <div class="sig-block">
-                  <div class="sig-from">Thân mời,</div>
-                  <div class="sig-name">Nguyễn Thị Xuân Mai</div>
-                </div>
-                <div class="final-greeting" style="text-align: center; font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); margin: 30px 0 20px; font-style: italic;">
-                  Hẹn sớm gặp lại bạn tại buổi lễ nhé!
-                </div>
-                <div class="footer-txt">&copy; 2026 Nguyễn Thị Xuân Mai. Lễ Tốt Nghiệp Cử Nhân.</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <!-- Page edges (stacked pages visible on right side) -->
-        <div class="page-edges" id="page-edges">
-          <div class="pe"></div><div class="pe"></div><div class="pe"></div><div class="pe"></div><div class="pe"></div>
+      <div class="env-caption">
+        <div class="env-cap-eyebrow" id="env-guest">Dành riêng cho Quý Khách</div>
+        <div class="env-cap-title">Thiệp mời Tốt nghiệp</div>
+        <div class="env-hint">
+          <svg viewBox="0 0 24 24" class="hint-icon">
+            <path d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z" />
+          </svg>
+          <span>Nhấn vào phong bì để mở</span>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- RIGHT SIDE INFO PANEL -->
-      <div class="side-panel right-panel" id="right-panel">
-        <div class="sp-inner">
-          <div class="sp-label" id="sp-next-label">Trang kế tiếp</div>
-          <div class="sp-title" id="sp-next-title"></div>
-          <div class="sp-arrow">›</div>
+  <!-- ═══════════════ MAIN FLIPBOOK ═══════════════ -->
+  <main id="main">
+    <div class="desk-surface">
+      <div class="book-layout">
+
+        <!-- LEFT SIDE INFO PANEL -->
+        <div class="side-panel left-panel" id="left-panel">
+          <div class="sp-inner">
+            <div class="sp-arrow">‹</div>
+            <div class="sp-label" id="sp-prev-label">Trang trước</div>
+            <div class="sp-title" id="sp-prev-title"></div>
+          </div>
+        </div>
+
+        <!-- BOOK WRAPPER -->
+        <div class="book-wrapper" id="book-wrapper">
+          <div class="book-spine"></div>
+
+          <!-- MAGICAL TRANSFORMATION: ENVELOPE & WINGS -->
+          <div class="magical-envelope" id="magical-envelope">
+            <div class="env-glow">
+              <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="envGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fff" stop-opacity="1" />
+                    <stop offset="100%" stop-color="#ffdf89" stop-opacity="0.2" />
+                  </linearGradient>
+                  <filter id="envGlow">
+                    <feGaussianBlur stdDeviation="6" result="coloredBlur" />
+                    <feMerge>
+                      <feMergeNode in="coloredBlur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <rect x="10" y="10" width="380" height="230" fill="rgba(255,255,255,0.05)" stroke="url(#envGrad)"
+                  stroke-width="4" rx="8" ry="8" filter="url(#envGlow)" />
+                <path d="M 10 10 L 200 130 L 390 10" fill="none" stroke="url(#envGrad)" stroke-width="4"
+                  filter="url(#envGlow)" />
+                <path d="M 10 240 L 150 140" fill="none" stroke="url(#envGrad)" stroke-width="4"
+                  filter="url(#envGlow)" />
+                <path d="M 390 240 L 250 140" fill="none" stroke="url(#envGrad)" stroke-width="4"
+                  filter="url(#envGlow)" />
+              </svg>
+            </div>
+
+            <div class="book-wings" id="book-wings">
+              <div class="wing wing-left">
+                <svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="wingGradL" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#fff" stop-opacity="0.9" />
+                      <stop offset="100%" stop-color="#ffdf89" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M 100 100 Q 50 30 10 10 Q 30 60 20 100 Q 50 80 15 140 Q 40 110 25 170 Q 50 130 100 100 Z"
+                    fill="url(#wingGradL)" filter="drop-shadow(0 0 12px rgba(255,223,137,0.8))" />
+                  <path d="M 100 100 Q 60 50 20 40 Q 40 80 30 120 Q 60 100 25 150 Q 50 120 100 100 Z" fill="#fff"
+                    opacity="0.6" />
+                </svg>
+              </div>
+              <div class="wing wing-right">
+                <svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="wingGradR" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#fff" stop-opacity="0.9" />
+                      <stop offset="100%" stop-color="#ffdf89" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M 0 100 Q 50 30 90 10 Q 70 60 80 100 Q 50 80 85 140 Q 60 110 75 170 Q 50 130 0 100 Z"
+                    fill="url(#wingGradR)" filter="drop-shadow(0 0 12px rgba(255,223,137,0.8))" />
+                  <path d="M 0 100 Q 40 50 80 40 Q 60 80 70 120 Q 40 100 75 150 Q 50 120 0 100 Z" fill="#fff"
+                    opacity="0.6" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="book" id="book">
+
+            <!-- PAGE 1: HERO / COVER (Graduate Name & Dust) -->
+            <div class="page current" data-page="1" data-title="Bìa Thiệp">
+              <div class="page-paper">
+                <div class="page-corner tl"></div>
+                <div class="page-corner tr"></div>
+                <div class="page-corner bl"></div>
+                <div class="page-corner br"></div>
+
+                <div class="page-content">
+                  <div class="hero-tag">Lễ Tốt Nghiệp Cử Nhân</div>
+                  <div class="name-block" style="margin-top: 40px; position:relative; z-index:30;">
+                    <div class="name-honor">Đại học Sài Gòn</div>
+                    <div class="grad-nm-wrap"
+                      style="position:relative; display:inline-block; margin-top:10px; max-width: 100%;">
+                      <h1 class="grad-name" style="line-height: 1.1; font-size: clamp(2.2rem, 9vw, 3.8rem);">Nguyễn Thị
+                        Xuân Mai</h1>
+                    </div>
+
+                  </div>
+                  <div class="ornament" style="margin-top: 50px;">
+                    <svg viewBox="0 0 120 20">
+                      <path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none"
+                        stroke-width="1" />
+                    </svg>
+                  </div>
+
+                  <div class="hero-quote"
+                    style="margin-top: 40px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; color: var(--gold-d); line-height: 1.6; text-align: left; padding-left: 15px; border-left: 2px solid var(--gold-d);">
+                    "Khép lại một chặng đường thanh xuân rực rỡ, mở ra một hành trình mới đầy hứa hẹn."
+                  </div>
+                  <div class="chips" style="margin-top: 30px;">
+                    <div class="chip" data-fact="major">
+                      <div class="chip-dot"></div>Tâm lý học
+                    </div>
+                    <div class="chip" data-fact="class">
+                      <div class="chip-dot"></div>2022-2026
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="page-curl"></div>
+            </div>
+
+            <!-- PAGE 2: INVITATION & EVENT DETAILS -->
+            <div class="page future" data-page="2" data-title="Lời Mời">
+              <div class="page-paper">
+                <div class="page-corner tl"></div>
+                <div class="page-corner tr"></div>
+                <div class="page-corner bl"></div>
+                <div class="page-corner br"></div>
+                <div class="page-content" style="align-items: flex-start; text-align: left; padding-top: 15px;">
+                  <div class="guest-block" style="text-align: left; width: 100%;">
+                    <div class="guest-sal" style="font-size: 0.9rem;">Trân trọng kính mời</div>
+                    <div class="guest-nm" id="guest-name" style="font-size: 2.2rem; margin-top: -5px;">Quý Khách</div>
+                  </div>
+
+                  <div class="hero-sub"
+                    style="margin-top: 15px; font-size: 0.95rem; text-align: left; line-height: 1.5;">
+                    Đến chung vui và ghi lại những khoảnh khắc đáng nhớ nhất trong Lễ Tốt nghiệp Cử nhân ngành Tâm lý
+                    học.
+                  </div>
+
+                  <div class="hero-sub"
+                    style="margin-top: 15px; color: var(--gold-d); text-align: left; border-left: 2px solid var(--gold-d); padding-left: 16px; font-style: italic;">
+                    "Sự hiện diện của Quý vị là niềm vinh hạnh
+                    và là món quà quý giá nhất trong ngày lễ đặc biệt này."
+                  </div>
+
+                  <!-- Compact Event Details -->
+                  <div
+                    style="background: rgba(197, 160, 89, 0.05); border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 8px; padding: 12px; width: 100%; margin-top: 20px;">
+                    <div
+                      style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(197, 160, 89, 0.3); padding-bottom: 8px; margin-bottom: 8px;">
+                      <div>
+                        <div
+                          style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">
+                          Thời gian</div>
+                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--text);">08:00 | 15/08/2026</div>
+                      </div>
+                      <div style="text-align: right;">
+                        <div
+                          style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">
+                          Địa điểm</div>
+                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--text);">Hội trường A</div>
+                      </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                      <div style="font-size: 0.8rem; color: var(--muted); line-height: 1.4; flex-grow: 1;">ĐH Sài Gòn,
+                        273 An Dương Vương, Q.5</div>
+                      <a href="https://maps.google.com" target="_blank" class="map-link"
+                        style="font-size: 0.7rem; padding: 6px 10px; margin: 0; white-space: nowrap; flex-shrink: 0;">
+                        <svg viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                          <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Bản đồ
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="page-curl"></div>
+            </div>
+
+            <!-- PAGE 3: COUNTDOWN -->
+            <div class="page future" data-page="3" data-title="Đếm Ngược">
+              <div class="page-paper">
+                <div class="page-corner tl"></div>
+                <div class="page-corner tr"></div>
+                <div class="page-corner bl"></div>
+                <div class="page-corner br"></div>
+                <div class="page-content">
+                  <div class="eyebrow">
+                    <div class="ey-l"></div>
+                    <div class="ey-txt">Đếm ngược</div>
+                    <div class="ey-r"></div>
+                  </div>
+                  <h2 class="sec-h">Khoảnh khắc<br><em>Mong chờ</em></h2>
+                  <div class="sep">
+                    <div class="sp-l"></div>
+                    <div class="sp-d sm"></div>
+                    <div class="sp-d"></div>
+                    <div class="sp-d sm"></div>
+                    <div class="sp-r"></div>
+                  </div>
+                  <div class="cd-row">
+                    <div class="cd-unit">
+                      <div class="cd-card"><span class="cd-num" id="cd-d">00</span></div>
+                      <div class="cd-lbl">Ngày</div>
+                    </div>
+                    <div class="cd-sep">:</div>
+                    <div class="cd-unit">
+                      <div class="cd-card"><span class="cd-num" id="cd-h">00</span></div>
+                      <div class="cd-lbl">Giờ</div>
+                    </div>
+                    <div class="cd-sep">:</div>
+                    <div class="cd-unit">
+                      <div class="cd-card"><span class="cd-num" id="cd-m">00</span></div>
+                      <div class="cd-lbl">Phút</div>
+                    </div>
+                    <div class="cd-sep">:</div>
+                    <div class="cd-unit">
+                      <div class="cd-card"><span class="cd-num" id="cd-s">00</span></div>
+                      <div class="cd-lbl">Giây</div>
+                    </div>
+                  </div>
+                  <div class="emotional-text"
+                    style="margin-top: 35px; text-align: center; color: var(--muted); font-family: 'Playfair Display', serif; font-style: italic; line-height: 1.8; font-size: 0.95rem; max-width: 80%;">
+                    "Một hành trình thanh xuân rực rỡ với biết bao nỗ lực, buồn vui và những kỷ niệm không thể nào quên
+                    sắp khép lại. Chỉ còn chút thời gian ngắn ngủi nữa thôi, chúng ta sẽ cùng nhau chứng kiến khoảnh
+                    khắc trưởng thành đáng tự hào này..."
+                  </div>
+                </div>
+              </div>
+              <div class="page-curl"></div>
+            </div>
+
+
+
+
+
+            <!-- PAGE 4: SIGNATURE BOOK -->
+            <div class="page future" data-page="4" data-title="Sổ Ký Tên">
+              <div class="page-paper">
+                <div class="page-corner tl"></div>
+                <div class="page-corner tr"></div>
+                <div class="page-corner bl"></div>
+                <div class="page-corner br"></div>
+                <div class="page-content" style="padding: 0; position: absolute; inset: 0; min-height: unset;">
+                  <div class="sig-hint" id="sig-hint">Chạm vào mặt giấy để ký tên (5s)</div>
+                  <div class="sig-canvas" id="sig-canvas"></div>
+                  <div class="sig-success-hint" id="sig-success-hint">Chữ ký đã được lưu. Vuốt để xem tiếp ➔</div>
+                </div>
+              </div>
+              <div class="page-curl"></div>
+            </div>
+
+            <!-- PAGE 5: CLOSING -->
+            <div class="page future" data-page="5" data-title="Lời Cảm Ơn">
+              <div class="page-paper">
+                <div class="page-corner tl"></div>
+                <div class="page-corner tr"></div>
+                <div class="page-corner bl"></div>
+                <div class="page-corner br"></div>
+                <div class="page-content">
+                  <div class="ornament"><svg viewBox="0 0 120 20">
+                      <path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none"
+                        stroke-width="1" />
+                    </svg></div>
+                  <div class="quote-txt">
+                    "Học vấn do người siêng năng đạt được,<br>
+                    tài sản do người tinh tế sở hữu,<br>
+                    quyền lợi do người dũng cảm nắm giữ,<br>
+                    thiên đường do người lương thiện xây dựng."
+                  </div>
+                  <div class="ornament" style="transform:scaleY(-1)"><svg viewBox="0 0 120 20">
+                      <path d="M0,10 C20,0 40,0 60,10 C80,20 100,20 120,10" stroke="currentColor" fill="none"
+                        stroke-width="1" />
+                    </svg></div>
+                  <div class="sig-block">
+                    <div class="sig-from">Thân mời,</div>
+                    <div class="sig-name">Nguyễn Thị Xuân Mai</div>
+                  </div>
+                  <div class="final-greeting"
+                    style="text-align: center; font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); margin: 30px 0 20px; font-style: italic;">
+                    Hẹn sớm gặp lại bạn tại buổi lễ nhé!
+                  </div>
+                  <div class="footer-txt">&copy; 2026 Nguyễn Thị Xuân Mai. Lễ Tốt Nghiệp Cử Nhân.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- Page edges (stacked pages visible on right side) -->
+          <div class="page-edges" id="page-edges">
+            <div class="pe"></div>
+            <div class="pe"></div>
+            <div class="pe"></div>
+            <div class="pe"></div>
+            <div class="pe"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE INFO PANEL -->
+        <div class="side-panel right-panel" id="right-panel">
+          <div class="sp-inner">
+            <div class="sp-label" id="sp-next-label">Trang kế tiếp</div>
+            <div class="sp-title" id="sp-next-title"></div>
+            <div class="sp-arrow">›</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast">Đã lưu thành công!</div>
+
+  <div class="fact-modal" id="fact-modal">
+    <div class="fact-box">
+      <div class="fact-badge">Thông tin</div>
+      <div class="fact-q" id="fact-q"></div>
+      <div class="fact-a" id="fact-a"></div>
+      <button class="fact-close" id="fact-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- GOODBYE MESSAGE -->
+  <div class="goodbye-msg" id="goodbye-msg">
+    <div class="gb-title">Trân trọng kính mời</div>
+  </div>
+
+  <!-- Signature Color Picker Modal -->
+  <div class="sig-modal" id="sig-modal">
+    <div class="sig-box">
+      <div class="sig-box-title" style="margin-bottom: 10px;">Lưu lại chữ ký của bạn</div>
+
+      <div style="text-align: left; font-size: 0.8rem; color: #666; margin-bottom: 5px; font-family: 'Lora', serif;">
+        Chọn màu mực:</div>
+      <div class="sig-colors" id="sig-colors" style="margin-bottom: 15px; justify-content: flex-start;">
+        <div class="sig-color active" style="background-color: #1a1a1a;" data-color="#1a1a1a"></div>
+        <div class="sig-color" style="background-color: #1b3b6f;" data-color="#1b3b6f"></div>
+        <div class="sig-color" style="background-color: #8c2727;" data-color="#8c2727"></div>
+        <div class="sig-color" style="background-color: #c5a059;" data-color="#c5a059"></div>
+      </div>
+
+      <div class="sig-draw-group" style="text-align: center; margin-bottom: 15px;">
+        <label
+          style="font-size: 0.8rem; color: #666; margin-bottom: 5px; display: block; font-family: 'Lora', serif; text-align: left;">Vẽ
+          chữ ký của bạn:</label>
+        <div
+          style="position: relative; border: 1px dashed #c5a059; border-radius: 4px; background: #faf9f5; overflow: hidden; touch-action: none;">
+          <canvas id="sig-draw-pad" width="280" height="220"
+            style="display: block; cursor: crosshair; touch-action: none; width: 100%; height: 220px;"></canvas>
+        </div>
+        <div style="text-align: right; margin-top: 5px;">
+          <button id="sig-btn-clear"
+            style="background: none; border: none; color: #999; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Xoá
+            vẽ lại</button>
         </div>
       </div>
 
-    </div>
-  </div>
-</main>
-
-<div class="toast" id="toast">Đã lưu thành công!</div>
-
-<div class="fact-modal" id="fact-modal">
-  <div class="fact-box">
-    <div class="fact-badge">Thông tin</div>
-    <div class="fact-q" id="fact-q"></div>
-    <div class="fact-a" id="fact-a"></div>
-    <button class="fact-close" id="fact-close">Đóng</button>
-  </div>
-</div>
-
-<!-- GOODBYE MESSAGE -->
-<div class="goodbye-msg" id="goodbye-msg">
-  <div class="gb-title">Trân trọng kính mời</div>
-</div>
-
-<!-- Signature Color Picker Modal -->
-<div class="sig-modal" id="sig-modal">
-  <div class="sig-box">
-    <div class="sig-box-title" style="margin-bottom: 10px;">Lưu lại chữ ký của bạn</div>
-    
-    <div style="text-align: left; font-size: 0.8rem; color: #666; margin-bottom: 5px; font-family: 'Lora', serif;">Chọn màu mực:</div>
-    <div class="sig-colors" id="sig-colors" style="margin-bottom: 15px; justify-content: flex-start;">
-      <div class="sig-color active" style="background-color: #1a1a1a;" data-color="#1a1a1a"></div>
-      <div class="sig-color" style="background-color: #1b3b6f;" data-color="#1b3b6f"></div>
-      <div class="sig-color" style="background-color: #8c2727;" data-color="#8c2727"></div>
-      <div class="sig-color" style="background-color: #c5a059;" data-color="#c5a059"></div>
-    </div>
-    
-    <div class="sig-draw-group" style="text-align: center; margin-bottom: 15px;">
-      <label style="font-size: 0.8rem; color: #666; margin-bottom: 5px; display: block; font-family: 'Lora', serif; text-align: left;">Vẽ chữ ký của bạn:</label>
-      <div style="position: relative; border: 1px dashed #c5a059; border-radius: 4px; background: #faf9f5; overflow: hidden; touch-action: none;">
-        <canvas id="sig-draw-pad" width="280" height="220" style="display: block; cursor: crosshair; touch-action: none; width: 100%; height: 220px;"></canvas>
+      <div class="sig-msg-group" style="text-align: left; margin-bottom: 15px;">
+        <label
+          style="font-size: 0.8rem; color: #666; margin-bottom: 5px; display: block; font-family: 'Lora', serif;">Lời
+          nhắn (tuỳ chọn):</label>
+        <textarea id="sig-message-field" placeholder="Gửi gắm vài lời chúc..."
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Cormorant Garamond', serif; outline: none; font-size: 1.05rem; user-select: auto; -webkit-user-select: auto; resize: none; height: 60px;"></textarea>
       </div>
-      <div style="text-align: right; margin-top: 5px;">
-        <button id="sig-btn-clear" style="background: none; border: none; color: #999; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Xoá vẽ lại</button>
-      </div>
-    </div>
-    
-    <div class="sig-msg-group" style="text-align: left; margin-bottom: 15px;">
-      <label style="font-size: 0.8rem; color: #666; margin-bottom: 5px; display: block; font-family: 'Lora', serif;">Lời nhắn (tuỳ chọn):</label>
-      <textarea id="sig-message-field" placeholder="Gửi gắm vài lời chúc..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Cormorant Garamond', serif; outline: none; font-size: 1.05rem; user-select: auto; -webkit-user-select: auto; resize: none; height: 60px;"></textarea>
-    </div>
-    
-    <button class="sig-btn" id="sig-btn-confirm">Ký tên</button>
-  </div>
-</div>
 
-<!-- Message Read Modal -->
-<div class="msg-read-modal" id="msg-read-modal">
-  <div class="msg-box">
-    <div class="msg-sig-display" id="msg-sig-display"></div>
-    <div class="msg-text-display" id="msg-text-display"></div>
-    <button class="msg-btn-close" id="msg-btn-close">Đóng</button>
+      <button class="sig-btn" id="sig-btn-confirm">Ký tên</button>
+    </div>
   </div>
-</div>
-<script src="js/invitation.js"></script>
+
+  <!-- Message Read Modal -->
+  <div class="msg-read-modal" id="msg-read-modal">
+    <div class="msg-box">
+      <div class="msg-sig-display" id="msg-sig-display"></div>
+      <div class="msg-text-display" id="msg-text-display"></div>
+      <button class="msg-btn-close" id="msg-btn-close">Đóng</button>
+    </div>
+  </div>
+  <script src="js/invitation.js"></script>
 </body>
+
 </html>
