@@ -736,8 +736,6 @@ function initSignatureBook() {
       const checkSigPage = () => {
         if (sigPage && sigPage.classList.contains('current') && !hasTriggered) {
           hasTriggered = true;
-          // Lock swiping while on signature page
-          swipeLocked = true;
           let countdown = 5;
           if (hint) {
             hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
@@ -878,6 +876,8 @@ function initSignatureBook() {
     currentX = ((e.clientX - rect.left) / rect.width) * 100;
     currentY = ((e.clientY - rect.top) / rect.height) * 100;
 
+    // Lock swiping while signature modal is open
+    swipeLocked = true;
     // Show color picker modal
     modal.classList.add('show');
   });
@@ -971,6 +971,8 @@ function initSignatureBook() {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.classList.remove('show');
+      // Unlock swiping when modal is dismissed
+      swipeLocked = false;
     }
   });
 
