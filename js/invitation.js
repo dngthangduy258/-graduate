@@ -1,6 +1,9 @@
 const $ = id => document.getElementById(id);
 const rnd = (min, max) => Math.random() * (max - min) + min;
 
+// Global flag: lock page swiping while on the signature page (before signing)
+let swipeLocked = false;
+
 /* ═══════════════════════════════════════════════════════════════
    URL PARAMS
    ═══════════════════════════════════════════════════════════════ */
@@ -325,12 +328,13 @@ function initFlipbook() {
   };
 
   // Side panel clicks
-  leftPanel?.addEventListener('click', goPrev);
-  rightPanel?.addEventListener('click', goNext);
+  leftPanel?.addEventListener('click', () => { if (!swipeLocked) goPrev(); });
+  rightPanel?.addEventListener('click', () => { if (!swipeLocked) goNext(); });
 
   // Keyboard
   window.addEventListener('keydown', (e) => {
     if (!$('main')?.classList.contains('show')) return;
+    if (swipeLocked) return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goNext(); }
     else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); goPrev(); }
   });
@@ -338,7 +342,7 @@ function initFlipbook() {
   // Mouse Wheel (with cooldown & scroll boundary detection)
   let wheelCooldown = false;
   window.addEventListener('wheel', (e) => {
-    if (!$('main')?.classList.contains('show') || isAnimating || wheelCooldown) return;
+    if (!$('main')?.classList.contains('show') || isAnimating || wheelCooldown || swipeLocked) return;
 
     const currPageEl = document.querySelector('.page.current');
     if (currPageEl) {
@@ -367,6 +371,8 @@ function initFlipbook() {
 
   window.addEventListener('touchstart', (e) => {
     if (!$('main')?.classList.contains('show') || isAnimating) return;
+    // Block swipe when signature page is locked
+    if (swipeLocked) return;
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
     isDragging = true;
@@ -730,6 +736,8 @@ function initSignatureBook() {
       const checkSigPage = () => {
         if (sigPage && sigPage.classList.contains('current') && !hasTriggered) {
           hasTriggered = true;
+          // Lock swiping while on signature page
+          swipeLocked = true;
           let countdown = 5;
           if (hint) {
             hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
@@ -934,6 +942,8 @@ function initSignatureBook() {
     
     modal.classList.remove('show');
     if (hint) hint.style.opacity = '0';
+    // Unlock swiping after successful signature
+    swipeLocked = false;
     const successHint = document.getElementById('sig-success-hint');
     if (successHint) successHint.classList.add('show');
     
