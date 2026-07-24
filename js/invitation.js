@@ -15,13 +15,13 @@ function initUrlParams() {
     if (n.includes('-')) {
       n = n.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
-    
+
     const e = $("guest-name");
     if (e) e.textContent = n;
-    
+
     const envGuest = $("env-guest");
     if (envGuest) envGuest.textContent = "Dành riêng cho " + n;
-    
+
     const rName = $("r-name");
     if (rName) rName.value = n;
   }
@@ -69,7 +69,7 @@ function initEnvelope() {
     if (card.classList.contains("opening")) return;
     if (rAF) cancelAnimationFrame(rAF);
     rAF = requestAnimationFrame(() => {
-      const shine = 50 + (dx * 150); 
+      const shine = 50 + (dx * 150);
       card.style.setProperty('--shine-pos', `${shine}%`);
       card.style.transform = `rotateX(${-dy * 8}deg) rotateY(${dx * 8}deg)`;
     });
@@ -120,16 +120,16 @@ function initEnvelope() {
     window.addEventListener("deviceorientation", (e) => {
       if (typeof e.gamma !== 'number' || typeof e.beta !== 'number') return;
       hasOrientation = true;
-      
-      let dx = e.gamma / 15; 
-      let dy = (e.beta - 45) / 15; 
+
+      let dx = e.gamma / 15;
+      let dy = (e.beta - 45) / 15;
       dx = Math.max(-2.5, Math.min(2.5, dx));
       dy = Math.max(-2.5, Math.min(2.5, dy));
-      
+
       if (card.classList.contains("opening")) return;
       if (orientRAF) cancelAnimationFrame(orientRAF);
       orientRAF = requestAnimationFrame(() => {
-        const shine = 50 + (dx * 40); 
+        const shine = 50 + (dx * 40);
         card.style.setProperty('--shine-pos', `${shine}%`);
         card.style.transform = `rotateX(${-dy * 15}deg) rotateY(${dx * 15}deg)`;
       });
@@ -140,12 +140,12 @@ function initEnvelope() {
       if (hasOrientation || card.classList.contains("opening")) return;
       const accel = e.accelerationIncludingGravity;
       if (!accel || typeof accel.x !== 'number') return;
-      
-      let dx = -(accel.x / 3); 
+
+      let dx = -(accel.x / 3);
       let dy = (accel.y / 3);
       dx = Math.max(-2.5, Math.min(2.5, dx));
       dy = Math.max(-2.5, Math.min(2.5, dy));
-      
+
       if (motionRAF) cancelAnimationFrame(motionRAF);
       motionRAF = requestAnimationFrame(() => {
         const shine = 50 + (dx * 40);
@@ -162,18 +162,18 @@ function initEnvelope() {
 function initAudio() {
   const bgm = $("bg-music"), btn = $("btn-music");
   if (!bgm || !btn) return;
-  
+
   bgm.volume = 0.1; // Giảm xuống 10% âm lượng
   let isPlaying = false;
 
   const toggle = () => {
     if (isPlaying) { bgm.pause(); btn.classList.add("off"); }
-    else { bgm.play().catch(() => {}); btn.classList.remove("off"); }
+    else { bgm.play().catch(() => { }); btn.classList.remove("off"); }
     isPlaying = !isPlaying;
   };
 
   btn.addEventListener("click", toggle);
-  
+
   // Thử tự động phát nhạc khi tải trang
   bgm.play().then(() => {
     isPlaying = true;
@@ -186,7 +186,7 @@ function initAudio() {
   // Chơi nhạc khi người dùng tương tác mở thiệp
   $("env-card")?.addEventListener("click", () => {
     if (!isPlaying) {
-      bgm.play().then(() => { isPlaying = true; btn.classList.remove("off"); }).catch(() => {});
+      bgm.play().then(() => { isPlaying = true; btn.classList.remove("off"); }).catch(() => { });
     }
   });
 }
@@ -293,28 +293,28 @@ function initFlipbook() {
 
   const goNext = () => {
     if (isAnimating) return;
-    
+
     if (curr >= total) {
       // Trigger closing animation on last page
       closeAndFlyAway();
       return;
     }
-    
+
     curr++;
     applyPageStates('forward');
   };
 
   const closeAndFlyAway = () => {
     if (document.body.classList.contains('book-closing')) return;
-    
+
     // 1. Close book
     document.body.classList.add('book-closing');
-    
+
     // Hide side panels
     if (leftPanel) leftPanel.style.display = 'none';
     if (rightPanel) rightPanel.style.display = 'none';
     if (pageEdges) pageEdges.style.display = 'none';
-    
+
     // 2. Magical transformation: Envelope appears and flies away (1.8s)
     setTimeout(() => {
       document.body.classList.add('envelope-flying');
@@ -384,7 +384,7 @@ function initFlipbook() {
     if (!isDragging || isAnimating) return;
     const dx = e.changedTouches[0].screenX - touchStartX;
     const dy = e.changedTouches[0].screenY - touchStartY;
-    
+
     // Ignore vertical scrolling if user is trying to scroll the page
     if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
       if (dragPage) dragPage.style.transform = '';
@@ -395,7 +395,7 @@ function initFlipbook() {
     // Determine direction once we move past a small threshold
     if (!dragDirection && Math.abs(dx) > 10) {
       dragDirection = dx < 0 ? 'next' : 'prev';
-      
+
       if (dragDirection === 'next') {
         if (curr < total) {
           dragPage = document.querySelector(`.page[data-page="${curr}"]`);
@@ -418,79 +418,79 @@ function initFlipbook() {
     }
 
     if (dragPage) {
-       const W = window.innerWidth || 400;
-       let clientX = e.changedTouches[0].clientX;
-       // Clamp between 0 and W
-       clientX = Math.max(0, Math.min(clientX, W));
-       
-       // Absolute tracking: right edge of screen (1) = 0deg, left edge (0) = -150deg
-       let progress = clientX / W;
-       let angle = -150 * (1 - progress);
-       
-       // Add slight curl effect
-       let rotateZ = 0;
-       if (dragDirection === 'next') {
-         rotateZ = -4 * Math.sin(progress * Math.PI);
-       } else if (dragDirection === 'prev') {
-         rotateZ = 4 * Math.sin(progress * Math.PI);
-       }
-       
-       dragPage.style.transform = `perspective(1200px) rotateY(${angle}deg) rotateZ(${rotateZ}deg)`;
+      const W = window.innerWidth || 400;
+      let clientX = e.changedTouches[0].clientX;
+      // Clamp between 0 and W
+      clientX = Math.max(0, Math.min(clientX, W));
+
+      // Absolute tracking: right edge of screen (1) = 0deg, left edge (0) = -150deg
+      let progress = clientX / W;
+      let angle = -150 * (1 - progress);
+
+      // Add slight curl effect
+      let rotateZ = 0;
+      if (dragDirection === 'next') {
+        rotateZ = -4 * Math.sin(progress * Math.PI);
+      } else if (dragDirection === 'prev') {
+        rotateZ = 4 * Math.sin(progress * Math.PI);
+      }
+
+      dragPage.style.transform = `perspective(1200px) rotateY(${angle}deg) rotateZ(${rotateZ}deg)`;
     }
   }, { passive: true });
 
   window.addEventListener('touchend', (e) => {
     if (!isDragging || isAnimating) return;
     isDragging = false;
-    
+
     const dx = e.changedTouches[0].screenX - touchStartX;
-    
+
     if (dragPage) {
-       const pageToClean = dragPage;
-       // Smoothly transition from the current drag angle to the final state
-       pageToClean.style.transition = 'transform 1.1s cubic-bezier(0.645, 0.045, 0.355, 1)';
-       
-       if (dragDirection === 'next') {
-         if (dx < -SWIPE_THRESHOLD) {
-           pageToClean.style.transform = 'perspective(1200px) rotateY(-180deg) rotateZ(0deg)';
-           if (curr >= total) {
-             closeAndFlyAway();
-           } else {
-             goNext();
-           }
-         } else {
-           // Cancel swipe, page falls back
-           pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
-           pageToClean.style.zIndex = '';
-         }
-       } else if (dragDirection === 'prev') {
-         if (dx > SWIPE_THRESHOLD) {
-           pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
-           goPrev();
-         } else {
-           // Cancel swipe, page falls forward
-           pageToClean.style.transform = 'perspective(1200px) rotateY(-180deg) rotateZ(0deg)';
-           pageToClean.classList.remove('current');
-           pageToClean.classList.add('past');
-           pageToClean.style.zIndex = '';
-         }
-       }
-       
-       // Clean up inline styles after animation finishes
-       setTimeout(() => {
-         pageToClean.style.transition = '';
-         pageToClean.style.transform = '';
-       }, 1150);
-       
+      const pageToClean = dragPage;
+      // Smoothly transition from the current drag angle to the final state
+      pageToClean.style.transition = 'transform 1.1s cubic-bezier(0.645, 0.045, 0.355, 1)';
+
+      if (dragDirection === 'next') {
+        if (dx < -SWIPE_THRESHOLD) {
+          pageToClean.style.transform = 'perspective(1200px) rotateY(-180deg) rotateZ(0deg)';
+          if (curr >= total) {
+            closeAndFlyAway();
+          } else {
+            goNext();
+          }
+        } else {
+          // Cancel swipe, page falls back
+          pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
+          pageToClean.style.zIndex = '';
+        }
+      } else if (dragDirection === 'prev') {
+        if (dx > SWIPE_THRESHOLD) {
+          pageToClean.style.transform = 'perspective(1200px) rotateY(0deg) rotateZ(0deg)';
+          goPrev();
+        } else {
+          // Cancel swipe, page falls forward
+          pageToClean.style.transform = 'perspective(1200px) rotateY(-180deg) rotateZ(0deg)';
+          pageToClean.classList.remove('current');
+          pageToClean.classList.add('past');
+          pageToClean.style.zIndex = '';
+        }
+      }
+
+      // Clean up inline styles after animation finishes
+      setTimeout(() => {
+        pageToClean.style.transition = '';
+        pageToClean.style.transform = '';
+      }, 1150);
+
     } else {
-       // Fallback for very quick swipes where touchmove didn't trigger logic
-       if (Math.abs(dx) > SWIPE_THRESHOLD) {
-         if (dx < 0) {
-           if (curr >= total) closeAndFlyAway();
-           else goNext();
-         }
-         else goPrev();
-       }
+      // Fallback for very quick swipes where touchmove didn't trigger logic
+      if (Math.abs(dx) > SWIPE_THRESHOLD) {
+        if (dx < 0) {
+          if (curr >= total) closeAndFlyAway();
+          else goNext();
+        }
+        else goPrev();
+      }
     }
   }, { passive: true });
 
@@ -502,7 +502,7 @@ function initFlipbook() {
    COUNTDOWN
    ═══════════════════════════════════════════════════════════════ */
 function initCountdown() {
-  const tg = new Date("2026-08-05T09:30:00").getTime();
+  const tg = new Date("2026-08-05T11:00:00").getTime();
   const els = { d: $("cd-d"), h: $("cd-h"), m: $("cd-m"), s: $("cd-s") };
   if (!els.d) return;
 
@@ -624,23 +624,23 @@ function initSignatureBook() {
   const hint = document.getElementById('sig-hint');
   const drawPad = document.getElementById('sig-draw-pad');
   const btnClear = document.getElementById('sig-btn-clear');
-  
+
   if (!canvas || !modal) return;
-  
+
   let currentX = 0;
   let currentY = 0;
   let selectedColor = '#1a1a1a';
   let isDrawing = false;
   let hasDrawn = false;
   let ctx = null;
-  
+
   if (drawPad) {
     ctx = drawPad.getContext('2d');
     ctx.lineWidth = 3;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.strokeStyle = selectedColor;
-    
+
     const getPos = (e) => {
       const rect = drawPad.getBoundingClientRect();
       const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
@@ -650,7 +650,7 @@ function initSignatureBook() {
         y: clientY - rect.top
       };
     };
-    
+
     const startDraw = (e) => {
       e.preventDefault();
       isDrawing = true;
@@ -659,7 +659,7 @@ function initSignatureBook() {
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
     };
-    
+
     const draw = (e) => {
       if (!isDrawing) return;
       e.preventDefault();
@@ -667,11 +667,11 @@ function initSignatureBook() {
       ctx.lineTo(pos.x, pos.y);
       ctx.stroke();
     };
-    
+
     const endDraw = () => {
       isDrawing = false;
     };
-    
+
     // Use pointer events for better support, fallback to touch/mouse
     if (window.PointerEvent) {
       drawPad.addEventListener('pointerdown', startDraw);
@@ -684,11 +684,11 @@ function initSignatureBook() {
       drawPad.addEventListener('mousemove', draw);
       drawPad.addEventListener('mouseup', endDraw);
       drawPad.addEventListener('mouseleave', endDraw);
-      drawPad.addEventListener('touchstart', startDraw, {passive: false});
-      drawPad.addEventListener('touchmove', draw, {passive: false});
+      drawPad.addEventListener('touchstart', startDraw, { passive: false });
+      drawPad.addEventListener('touchmove', draw, { passive: false });
       drawPad.addEventListener('touchend', endDraw);
     }
-    
+
     if (btnClear) {
       btnClear.addEventListener('click', () => {
         ctx.clearRect(0, 0, drawPad.width, drawPad.height);
@@ -696,7 +696,7 @@ function initSignatureBook() {
       });
     }
   }
-  
+
   const fontsList = [
     "'Dancing Script', cursive",
     "'Great Vibes', cursive",
@@ -705,9 +705,9 @@ function initSignatureBook() {
     "'Sacramento', cursive",
     "'Allura', cursive"
   ];
-  
 
-  
+
+
   // Load existing signatures from Backend (or localStorage fallback)
   const loadSignatures = async () => {
     try {
@@ -724,15 +724,15 @@ function initSignatureBook() {
         const saved = localStorage.getItem('guest_signatures');
         if (saved) sigs = JSON.parse(saved);
       }
-      
+
       if (sigs && sigs.length > 0) {
         canvas.classList.add('hide-sigs');
         sigs.forEach(s => renderSignature(s.x, s.y, s.color, s.name, s.rotation, false));
       }
-      
+
       const sigPage = canvas.closest('.page');
       let hasTriggered = false;
-      
+
       const checkSigPage = () => {
         if (sigPage && sigPage.classList.contains('current') && !hasTriggered) {
           hasTriggered = true;
@@ -743,7 +743,7 @@ function initSignatureBook() {
             hint.innerHTML = `Chạm vào mặt giấy để ký tên (${countdown}s)`;
             hint.style.opacity = '1';
           }
-          
+
           const interval = setInterval(() => {
             countdown--;
             if (countdown > 0) {
@@ -756,7 +756,7 @@ function initSignatureBook() {
           }, 1000);
         }
       };
-      
+
       if (sigPage) {
         const observer = new MutationObserver(checkSigPage);
         observer.observe(sigPage, { attributes: true, attributeFilter: ['class'] });
@@ -764,7 +764,7 @@ function initSignatureBook() {
       }
     } catch (e) { console.error(e); }
   };
-  
+
   const saveSignature = async (sig) => {
     try {
       // Optimistic UI save to localStorage
@@ -772,7 +772,7 @@ function initSignatureBook() {
       const sigs = saved ? JSON.parse(saved) : [];
       sigs.push(sig);
       localStorage.setItem('guest_signatures', JSON.stringify(sigs));
-      
+
       // Save to Backend
       fetch('/api/signatures', {
         method: 'POST',
@@ -781,7 +781,7 @@ function initSignatureBook() {
       }).catch(err => console.error("Failed to save to backend:", err));
     } catch (e) { console.error(e); }
   };
-  
+
   const renderSignature = (x, y, colorData, name, rotation, animate = true) => {
     let color = colorData;
     let font = "'Dancing Script', cursive";
@@ -797,29 +797,29 @@ function initSignatureBook() {
     wrapper.style.top = y + '%';
     wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
     wrapper.style.color = color;
-    
+
     let contentEl;
     let imgData = name;
     let message = '';
-    
+
     if (name && name.includes('|||')) {
       const parts = name.split('|||');
       imgData = parts[0];
       message = decodeURIComponent(parts[1] || '');
     }
-    
+
     if (imgData && imgData.startsWith('data:image')) {
       contentEl = document.createElement('img');
       contentEl.src = imgData;
       contentEl.className = 'sig-img';
-      contentEl.style.width = 'auto'; 
+      contentEl.style.width = 'auto';
       contentEl.style.height = 'auto';
       contentEl.onload = () => {
         contentEl.style.width = (contentEl.naturalWidth * 0.6) + 'px';
       };
       contentEl.style.pointerEvents = 'none';
       contentEl.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))';
-      
+
       if (message) {
         // Visual indicator that it has a message
         const badge = document.createElement('div');
@@ -835,12 +835,12 @@ function initSignatureBook() {
         badge.style.cursor = 'pointer';
         badge.style.pointerEvents = 'auto';
         badge.title = "Nhấp để xem lời nhắn";
-        
+
         // Add a small envelope icon inside the badge
         badge.innerHTML = '<svg viewBox="0 0 24 24" fill="white" style="width:12px; height:12px; display:block; margin:2px auto;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';
-        
+
         wrapper.appendChild(badge);
-        
+
         badge.addEventListener('click', (e) => {
           e.stopPropagation();
           const readModal = document.getElementById('msg-read-modal');
@@ -859,7 +859,7 @@ function initSignatureBook() {
       contentEl.textContent = imgData || 'Khách mời';
       contentEl.style.fontFamily = font;
     }
-    
+
     if (animate) {
       contentEl.style.animation = 'sigDraw 0.6s ease forwards';
     } else {
@@ -867,21 +867,21 @@ function initSignatureBook() {
       contentEl.style.transform = 'scale(1)';
       contentEl.style.animation = 'none';
     }
-    
+
     wrapper.appendChild(contentEl);
     canvas.appendChild(wrapper);
   };
-  
+
   canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     // Calculate percentage position
     currentX = ((e.clientX - rect.left) / rect.width) * 100;
     currentY = ((e.clientY - rect.top) / rect.height) * 100;
-    
+
     // Show color picker modal
     modal.classList.add('show');
   });
-  
+
   colors.forEach(c => {
     c.addEventListener('click', () => {
       colors.forEach(el => el.classList.remove('active'));
@@ -890,13 +890,13 @@ function initSignatureBook() {
       if (ctx) ctx.strokeStyle = selectedColor;
     });
   });
-  
+
   btnConfirm.addEventListener('click', () => {
     if (!hasDrawn || !drawPad) {
       alert('Vui lòng vẽ chữ ký của bạn trước khi lưu nhé!');
       return;
     }
-    
+
     // Trim canvas helper to crop whitespace
     const trimCanvas = (c) => {
       let ctx = c.getContext('2d'),
@@ -905,7 +905,7 @@ function initSignatureBook() {
         l = pixels.data.length,
         i, bound = { top: null, left: null, right: null, bottom: null },
         x, y;
-      
+
       for (i = 0; i < l; i += 4) {
         if (pixels.data[i + 3] !== 0) {
           x = (i / 4) % c.width;
@@ -919,36 +919,36 @@ function initSignatureBook() {
           else if (bound.bottom < y) bound.bottom = y;
         }
       }
-      
+
       if (bound.top === null) return c.toDataURL('image/png');
-      
+
       const pad = 10;
       const trimWidth = bound.right - bound.left + 1 + pad * 2;
       const trimHeight = bound.bottom - bound.top + 1 + pad * 2;
       copy.canvas.width = trimWidth;
       copy.canvas.height = trimHeight;
       copy.drawImage(c, bound.left - pad, bound.top - pad, trimWidth, trimHeight, 0, 0, trimWidth, trimHeight);
-      
+
       return copy.canvas.toDataURL('image/png');
     };
-    
+
     // Get cropped base64 image from canvas
     const imgData = trimCanvas(drawPad);
-    
+
     // Get message
     const msgField = document.getElementById('sig-message-field');
     const message = msgField ? msgField.value.trim() : '';
     const finalNameData = message ? (imgData + '|||' + encodeURIComponent(message)) : imgData;
-    
+
     modal.classList.remove('show');
     if (hint) hint.style.opacity = '0';
     // Unlock swiping after successful signature
     swipeLocked = false;
     const successHint = document.getElementById('sig-success-hint');
     if (successHint) successHint.classList.add('show');
-    
+
     const rotation = Math.random() * 30 - 15; // -15 to 15 degrees
-    
+
     const sig = {
       x: currentX,
       y: currentY,
@@ -956,24 +956,24 @@ function initSignatureBook() {
       name: finalNameData,
       rotation: rotation
     };
-    
+
     renderSignature(sig.x, sig.y, sig.color, sig.name, sig.rotation, true);
     saveSignature(sig);
-    
+
     // Reset canvas for next time
     if (ctx) {
       ctx.clearRect(0, 0, drawPad.width, drawPad.height);
       hasDrawn = false;
     }
   });
-  
+
   // Close modal if clicked outside box
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.classList.remove('show');
     }
   });
-  
+
   // Setup close for message read modal
   const readModal = document.getElementById('msg-read-modal');
   const btnCloseMsg = document.getElementById('msg-btn-close');
@@ -985,7 +985,7 @@ function initSignatureBook() {
       btnCloseMsg.addEventListener('click', () => readModal.classList.remove('show'));
     }
   }
-  
+
   loadSignatures();
 }
 
