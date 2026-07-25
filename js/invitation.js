@@ -5,25 +5,71 @@ const rnd = (min, max) => Math.random() * (max - min) + min;
 let swipeLocked = false;
 
 /* ═══════════════════════════════════════════════════════════════
-   URL PARAMS
+   URL PARAMS — phải khớp với admin.js
    ═══════════════════════════════════════════════════════════════ */
+const SALUTATIONS = {
+  "kinh-moi-thay":  { text: "Kính mời Thầy",  honorific: "Thầy" },
+  "kinh-moi-co":    { text: "Kính mời Cô",    honorific: "Cô" },
+  "kinh-moi-ong":   { text: "Kính mời Ông",   honorific: "Ông" },
+  "kinh-moi-ba":    { text: "Kính mời Bà",    honorific: "Bà" },
+  "kinh-moi-chu":   { text: "Kính mời Chú",   honorific: "Chú" },
+  "kinh-moi-bac":   { text: "Kính mời Bác",   honorific: "Bác" },
+  "kinh-moi-anh":   { text: "Kính mời Anh",   honorific: "Anh" },
+  "kinh-moi-chi":   { text: "Kính mời Chị",   honorific: "Chị" },
+  "moi-ban":        { text: "Mời bạn",        honorific: "bạn" },
+  "moi-anh":        { text: "Mời anh",        honorific: "Anh" },
+  "moi-em":         { text: "Mời em",         honorific: "Em" },
+  "moi-gia-dinh":   { text: "Mời gia đình",   honorific: "Gia đình" },
+  "moi-ban-than":   { text: "Mời người bạn thân của mình", honorific: "bạn" },
+  "moi-anh-chi":    { text: "Mời anh/chị",   honorific: "anh/chị" },
+};
+
+function parseGuestName(raw) {
+  if (!raw) return "";
+  let name = raw.trim();
+  // Chỉ chuyển slug ASCII (không dấu) sang Title Case — giữ nguyên tên có dấu từ URL
+  const isAsciiSlug = /^[a-z0-9-]+$/i.test(name) && name.includes("-");
+  if (isAsciiSlug) {
+    name = name.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  }
+  return name;
+}
+
 function initUrlParams() {
   const p = new URLSearchParams(window.location.search);
-  let n = p.get('guest') || p.get('n');
-  if (n) {
-    // Auto-format slug strings (e.g. "duong-thanh-duy" -> "Duong Thanh Duy")
-    if (n.includes('-')) {
-      n = n.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    }
+  const guestName = parseGuestName(p.get("guest") || p.get("n"));
+  const salutationSlug = p.get("salutation");
+  const customSalute = p.get("salute");
 
-    const e = $("guest-name");
-    if (e) e.textContent = n;
+  let salutationText = "Trân trọng kính mời";
+  let honorific = "Quý vị";
+
+  if (salutationSlug === "custom" && customSalute) {
+    salutationText = customSalute;
+    honorific = customSalute;
+  } else if (salutationSlug && SALUTATIONS[salutationSlug]) {
+    salutationText = SALUTATIONS[salutationSlug].text;
+    honorific = SALUTATIONS[salutationSlug].honorific;
+  }
+
+  const guestSal = $("guest-sal");
+  if (guestSal) guestSal.textContent = salutationText;
+
+  const envSal = $("env-salutation");
+  if (envSal) envSal.textContent = salutationText;
+
+  const honorificEl = $("guest-honorific");
+  if (honorificEl) honorificEl.textContent = honorific;
+
+  if (guestName) {
+    const guestEl = $("guest-name");
+    if (guestEl) guestEl.textContent = guestName;
 
     const envGuest = $("env-guest");
-    if (envGuest) envGuest.textContent = "Dành riêng cho " + n;
+    if (envGuest) envGuest.textContent = "Dành riêng cho " + guestName;
 
     const rName = $("r-name");
-    if (rName) rName.value = n;
+    if (rName) rName.value = guestName;
   }
 }
 
