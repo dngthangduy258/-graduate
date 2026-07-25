@@ -43,13 +43,16 @@ function initUrlParams() {
 
   let salutationText = "Trân trọng kính mời";
   let honorific = "Quý vị";
+  let closingHonorific = "bạn";
 
   if (salutationSlug === "custom" && customSalute) {
     salutationText = customSalute;
     honorific = customSalute;
+    closingHonorific = customSalute;
   } else if (salutationSlug && SALUTATIONS[salutationSlug]) {
     salutationText = SALUTATIONS[salutationSlug].text;
     honorific = SALUTATIONS[salutationSlug].honorific;
+    closingHonorific = honorific;
   }
 
   const guestSal = $("guest-sal");
@@ -60,6 +63,9 @@ function initUrlParams() {
 
   const honorificEl = $("guest-honorific");
   if (honorificEl) honorificEl.textContent = honorific;
+
+  const closingHonorificEl = $("guest-honorific-closing");
+  if (closingHonorificEl) closingHonorificEl.textContent = closingHonorific;
 
   if (guestName) {
     const guestEl = $("guest-name");

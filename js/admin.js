@@ -133,8 +133,10 @@ function renderGuests(filter = "") {
   if (filtered.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <span class="icon">📋</span>
-        <p>${filter ? "Không tìm thấy khách mời phù hợp" : "Chưa có khách mời nào. Thêm khách ở bên trái!"}</p>
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <p class="empty-text">${filter ? "Không tìm thấy khách mời phù hợp" : "Chưa có khách mời nào. Thêm khách ở bên trái!"}</p>
       </div>`;
     return;
   }

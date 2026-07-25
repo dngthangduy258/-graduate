@@ -87,11 +87,20 @@ body { font-family: 'Raleway', sans-serif; background: var(--bg); color: var(--t
 .stat-label { font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
 
 /* ── Layout ──────────────────────────────────── */
-.admin-layout { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: start; }
+.admin-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
 /* ── Responsive ──────────────────────────────── */
 @media (max-width: 960px) { 
   .admin-layout { grid-template-columns: 1fr; } 
-  .stats-row { grid-template-columns: repeat(2, 1fr); } 
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .panel-list {
+    max-height: none;
+    min-height: 360px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -118,14 +127,34 @@ body { font-family: 'Raleway', sans-serif; background: var(--bg); color: var(--t
 }
 
 /* ── Panel ───────────────────────────────────── */
-.panel { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.panel {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 0;
+}
+.panel-list {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 220px);
+  min-height: 420px;
+}
 .panel-head {
   padding: 18px 24px;
   border-bottom: 1px solid var(--border);
   background: rgba(255,255,255,0.02);
+  flex-shrink: 0;
 }
 .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--gold2); }
 .panel-body { padding: 24px; }
+.panel-body-scroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
 
 /* ── Form ────────────────────────────────────── */
 .form-group { margin-bottom: 16px; }
@@ -178,7 +207,14 @@ body { font-family: 'Raleway', sans-serif; background: var(--bg); color: var(--t
 .hint-list li::before { content: counter(hint) '.'; position: absolute; left: 0; color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.75rem; }
 
 /* ── Search & toolbar ────────────────────────── */
-.list-toolbar { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; }
+.list-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  align-items: center;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
 .search-box {
   flex: 1; padding: 10px 16px;
   background: rgba(255,255,255,0.03);
@@ -200,10 +236,34 @@ body { font-family: 'Raleway', sans-serif; background: var(--bg); color: var(--t
 .btn-sm:hover { border-color: var(--border2); color: var(--gold); }
 
 /* ── Guest List ──────────────────────────────── */
-.guest-list { display: flex; flex-direction: column; gap: 10px; max-height: 600px; overflow-y: auto; padding-right: 4px; }
-.guest-list::-webkit-scrollbar { width: 3px; }
-.guest-list::-webkit-scrollbar-track { background: transparent; }
-.guest-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.guest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200, 169, 110, 0.55) rgba(255, 255, 255, 0.05);
+}
+.guest-list::-webkit-scrollbar { width: 8px; }
+.guest-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+}
+.guest-list::-webkit-scrollbar-thumb {
+  background: rgba(200, 169, 110, 0.45);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.guest-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 169, 110, 0.7);
+  background-clip: padding-box;
+}
 
 /* Guest Card */
 .g-card {
@@ -213,6 +273,7 @@ body { font-family: 'Raleway', sans-serif; background: var(--bg); color: var(--t
   transition: border-color 0.3s, background 0.3s;
   position: relative; overflow: hidden;
   animation: slideIn 0.4s var(--ease);
+  flex-shrink: 0;
 }
 @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 .g-card:hover { border-color: rgba(200,169,110,0.2); background: rgba(200,169,110,0.02); }
