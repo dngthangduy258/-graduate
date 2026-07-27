@@ -1277,9 +1277,68 @@ body.cover-unlocked #cover-overlay #cover-padlock {
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none;
+}
+
+.map-transform-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   transition: transform 0.15s ease-out;
   transform-origin: center center;
+}
+.map-transform-content.is-dragging {
+  transition: none !important;
+}
+
+.custom-map-pin {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -100%);
   pointer-events: none;
+  z-index: 10;
+}
+.pin-pulse {
+  position: absolute;
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  background-color: rgba(255, 60, 60, 0.4);
+  border-radius: 50%;
+  transform: translateY(50%);
+  animation: mapPinPulse 1.5s infinite;
+}
+@keyframes mapPinPulse {
+  0% { transform: scale(1) translateY(50%); opacity: 1; }
+  100% { transform: scale(3) translateY(15%); opacity: 0; }
+}
+.pin-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #ff3c3c;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 2;
+  margin-bottom: 2px;
+}
+.pin-label {
+  background: rgba(22, 20, 16, 0.85);
+  color: #ffdf89;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  margin-top: 2px;
 }
 
 /* INSTANT 1:1 DRAGGING WITHOUT TRANSITION DELAY */

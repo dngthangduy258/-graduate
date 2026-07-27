@@ -1210,7 +1210,7 @@ function setupPanAndZoom(viewport, img, tagEl, isModal = false) {
 
 function initInlineMapZoomAndPan() {
   const inlineVp = document.getElementById('inline-map-viewport');
-  const inlineImg = document.getElementById('page-map-img');
+  const inlineContent = document.getElementById('inline-map-content');
   const tag = document.getElementById('inline-map-tag');
   const btnIn = document.getElementById('btn-inline-zoom-in');
   const btnOut = document.getElementById('btn-inline-zoom-out');
@@ -1220,14 +1220,14 @@ function initInlineMapZoomAndPan() {
   // Modal Lightbox elements
   const modal = document.getElementById('map-zoom-modal');
   const modalVp = document.getElementById('map-zoom-viewport');
-  const modalImg = document.getElementById('map-zoom-img');
+  const modalContent = document.getElementById('map-zoom-content');
   const btnClose = document.getElementById('map-zoom-close');
   const mzbIn = document.getElementById('mzb-zoom-in');
   const mzbOut = document.getElementById('mzb-zoom-out');
   const mzbReset = document.getElementById('mzb-reset');
 
-  const inlineController = setupPanAndZoom(inlineVp, inlineImg, tag, false);
-  const modalController = setupPanAndZoom(modalVp, modalImg, null, true);
+  const inlineController = setupPanAndZoom(inlineVp, inlineContent, tag, false);
+  const modalController = setupPanAndZoom(modalVp, modalContent, null, true);
 
   btnIn?.addEventListener('click', (e) => { e.stopPropagation(); inlineController?.changeScale(0.35); });
   btnOut?.addEventListener('click', (e) => { e.stopPropagation(); inlineController?.changeScale(-0.35); });
