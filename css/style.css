@@ -1322,17 +1322,14 @@ body.cover-unlocked #cover-overlay #cover-padlock {
 .pin-label {
   position: absolute;
   left: 15px; /* Offset to the right of the pulse */
-  top: -9px; /* Vertically center roughly with the pulse */
-  background: rgba(255, 255, 255, 0.95);
+  top: -7px; /* Vertically center roughly with the pulse */
+  background: transparent;
   color: #d11111;
   font-family: 'Inter', sans-serif;
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 3px 6px;
-  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 800;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  border: 1px solid rgba(209, 17, 17, 0.25);
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9), -1px -1px 2px rgba(255, 255, 255, 0.9), 1px -1px 2px rgba(255, 255, 255, 0.9), -1px 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 /* INSTANT 1:1 DRAGGING WITHOUT TRANSITION DELAY */
