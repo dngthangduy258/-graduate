@@ -1287,3 +1287,151 @@ body.cover-unlocked #cover-overlay #cover-padlock {
   text-align: center;
 }
 
+/* ═══════════════════════════════════════
+   SVG INTERACTIVE CAMPUS MAP STYLES
+   ═══════════════════════════════════════ */
+.campus-map-container {
+  overflow: hidden;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  background: #fdfbf7;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.campus-map-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 260px;
+}
+
+.campus-boundary {
+  fill: #faf8f2;
+  stroke: var(--ink);
+  stroke-width: 4;
+}
+
+.gate-opening {
+  fill: none;
+  stroke: #faf8f2;
+  stroke-width: 10;
+}
+
+.campus-area {
+  fill: rgba(197, 160, 89, 0.35);
+  stroke: var(--gold-d);
+  stroke-width: 2;
+  cursor: pointer;
+  transition: fill 0.2s ease, stroke-width 0.2s ease, transform 0.2s ease;
+}
+
+.campus-area:hover,
+.campus-area:focus {
+  fill: rgba(197, 160, 89, 0.65);
+  stroke: var(--gold-d);
+  stroke-width: 3.5;
+  outline: none;
+}
+
+.campus-area--selected {
+  fill: var(--gold-d) !important;
+  stroke: #8c2727 !important;
+  stroke-width: 4 !important;
+  filter: drop-shadow(0 2px 8px rgba(140, 39, 39, 0.4));
+}
+
+.campus-label {
+  fill: var(--ink);
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+}
+.map-group--selected .campus-label {
+  fill: #ffffff !important;
+}
+
+.campus-road {
+  fill: none;
+  stroke: rgba(197, 160, 89, 0.2);
+  stroke-width: 22;
+  stroke-linecap: round;
+}
+
+.route-arrow {
+  fill: var(--gold-d);
+}
+
+.road-label {
+  fill: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+  transform: rotate(-90deg);
+  transform-origin: 725px 310px;
+}
+
+.walkway {
+  fill: none;
+  stroke: rgba(197, 160, 89, 0.35);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 8 8;
+}
+
+.tree {
+  fill: #2e7d32;
+  stroke: #1b5e20;
+  stroke-width: 2;
+}
+
+.gate-point {
+  fill: #8c2727;
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+
+.gate-label {
+  fill: var(--ink);
+  font-family: 'Lora', serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.campus-map-info {
+  background: rgba(197, 160, 89, 0.08);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  border-left: 4px solid var(--gold-d);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: 'Lora', serif;
+  transition: all 0.3s ease;
+}
+
+.campus-map-info .area-type {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--gold-d);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.campus-map-info h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 2px 0 4px;
+}
+
+.campus-map-info p {
+  font-size: 0.8rem;
+  color: var(--ink-l);
+  line-height: 1.4;
+  margin: 0;
+}
+
+

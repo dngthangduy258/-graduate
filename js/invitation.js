@@ -1044,29 +1044,330 @@ function initSignatureBook() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MAP FULLSCREEN LIGHTBOX
+   SVG INTERACTIVE SGU CAMPUS MAP SYSTEM
    ═══════════════════════════════════════════════════════════════ */
-function initMapZoom() {
-  const mapCard = document.getElementById('page-map-card');
-  const modal = document.getElementById('map-zoom-modal');
-  const btnClose = document.getElementById('map-zoom-close');
+function initInteractiveSguMap() {
+  const areasGroup = document.getElementById('svg-areas-group');
+  const gatesGroup = document.getElementById('svg-gates-group');
+  const infoBox = document.getElementById('campus-map-info');
+  const chkRef = document.getElementById('chk-show-reference');
+  const refImg = document.getElementById('svg-ref-image');
 
-  if (!mapCard || !modal) return;
+  if (!areasGroup || !infoBox) return;
 
-  const openZoom = () => {
-    modal.classList.add('show');
-    swipeLocked = true;
+  const areas = [
+    {
+      id: "hoi-truong-a",
+      name: "Hội Trường A ★",
+      type: "rect",
+      x: 228,
+      y: 185,
+      width: 110,
+      height: 68,
+      badge: "🎓 Nơi Tổ Chức Lễ Tốt Nghiệp",
+      description: "Nơi cử hành Lễ Tốt nghiệp Cử nhân ngành Tâm lý học của Nguyễn Thị Xuân Mai (11:00 ngày 06/08/2026). Nằm tại Dãy A phía Cổng Nguyễn Trãi.",
+    },
+    {
+      id: "day-a",
+      name: "Dãy A",
+      type: "rect",
+      x: 170,
+      y: 85,
+      width: 510,
+      height: 58,
+      badge: "Khu Giảng Đường A",
+      description: "Khu phòng học chính và các phòng chức năng C.SA01, C.SA03, C.SA05 thuộc Dãy A.",
+    },
+    {
+      id: "vpk-my-thuat",
+      name: "VPK Mỹ thuật",
+      type: "rect",
+      x: 120,
+      y: 185,
+      width: 100,
+      height: 68,
+      badge: "Khoa Mỹ Thuật",
+      description: "Văn phòng Khoa Mỹ thuật & Khu triển lãm nghệ thuật.",
+    },
+    {
+      id: "thu-quan",
+      name: "Thư quán",
+      type: "rect",
+      x: 170,
+      y: 88,
+      width: 95,
+      height: 35,
+      badge: "Thư Quán SGU",
+      description: "Khu vực Thư quán và gian hàng giáo trình, quà lưu niệm SGU.",
+    },
+    {
+      id: "day-b",
+      name: "Dãy B",
+      type: "polygon",
+      points: "270,325 675,325 675,540 620,540 620,380 270,380",
+      labelX: 465,
+      labelY: 353,
+      badge: "Dãy Nhà B",
+      description: "Dãy B gồm khu tự học, các hội trường con và hệ thống phòng học hiện đại.",
+    },
+    {
+      id: "hoi-truong-b",
+      name: "Hội trường B",
+      type: "rect",
+      x: 270,
+      y: 325,
+      width: 68,
+      height: 58,
+      badge: "Hội Trường B",
+      description: "Hội trường B dành cho các hội thảo và hoạt động sinh viên.",
+    },
+    {
+      id: "khu-tu-hoc-b",
+      name: "Khu tự học",
+      type: "rect",
+      x: 270,
+      y: 390,
+      width: 68,
+      height: 58,
+      badge: "Góc Tự Học",
+      description: "Khu vực tự học thoáng mát, yên tĩnh dành cho sinh viên.",
+    },
+    {
+      id: "klf",
+      name: "KLF",
+      type: "rect",
+      x: 270,
+      y: 450,
+      width: 68,
+      height: 65,
+      badge: "Trung Tâm KLF",
+      description: "Khu vực trung tâm KLF và phòng thực hành.",
+    },
+    {
+      id: "can-tin",
+      name: "Căn tin",
+      type: "rect",
+      x: 620,
+      y: 380,
+      width: 55,
+      height: 160,
+      rotateLabel: true,
+      badge: "Căn Tin SGU",
+      description: "Khu vực Căn tin phục vụ ăn uống, nước giải khát cho sinh viên và khách tới thăm.",
+    },
+    {
+      id: "day-c",
+      name: "Dãy C",
+      type: "rect",
+      x: 270,
+      y: 540,
+      width: 405,
+      height: 58,
+      badge: "Dãy Nhà C",
+      description: "Dãy C nằm song song với Dãy B, gồm các giảng đường và Hội trường C.",
+    },
+    {
+      id: "hoi-truong-c",
+      name: "Hội trường C",
+      type: "rect",
+      x: 270,
+      y: 540,
+      width: 68,
+      height: 58,
+      badge: "Hội Trường C",
+      description: "Hội trường C phục vụ các buổi sinh hoạt chuyên đề.",
+    },
+    {
+      id: "day-d",
+      name: "Dãy D",
+      type: "rect",
+      x: 585,
+      y: 635,
+      width: 130,
+      height: 95,
+      badge: "Dãy Nhà D",
+      description: "Dãy D nằm gần khu vực Cổng 273 An Dương Vương.",
+    },
+    {
+      id: "khu-hieu-bo",
+      name: "Khu Hiệu bộ",
+      type: "rect",
+      x: 240,
+      y: 615,
+      width: 175,
+      height: 125,
+      badge: "Khu Hiệu Bộ",
+      description: "Khu Trung tâm Hành chính - Hiệu bộ Ban Giám hiệu Đại học Sài Gòn.",
+    },
+    {
+      id: "san-da-banh",
+      name: "Sân đá banh",
+      type: "rect",
+      x: 790,
+      y: 595,
+      width: 150,
+      height: 95,
+      badge: "Sân Bóng Đá",
+      description: "Sân bóng đá cỏ nhân tạo SGU.",
+    },
+    {
+      id: "san-bong-ro",
+      name: "Sân bóng rổ",
+      type: "rect",
+      x: 765,
+      y: 445,
+      width: 95,
+      height: 150,
+      rotateLabel: true,
+      badge: "Sân Thể Thao",
+      description: "Khu vực sân bóng rổ và bóng chuyền ngoài trời.",
+    },
+    {
+      id: "san-cau-long",
+      name: "Sân cầu lông",
+      type: "rect",
+      x: 860,
+      y: 445,
+      width: 80,
+      height: 150,
+      rotateLabel: true,
+      badge: "Sân Cầu Lông",
+      description: "Khu vực sân tập cầu lông.",
+    },
+    {
+      id: "khu-da-nang",
+      name: "Khu phức hợp đa năng",
+      type: "rect",
+      x: 760,
+      y: 85,
+      width: 180,
+      height: 150,
+      badge: "Khu Đa Năng",
+      description: "Khu phức hợp thể thao đa năng dành cho các giải đấu và sự kiện văn thể mỹ.",
+    }
+  ];
+
+  const gates = [
+    { id: "gate-2", name: "Cổng 2 Nguyễn Trãi", x: 120, y: 55 },
+    { id: "gate-4", name: "Cổng 4 Nguyễn Trãi", x: 470, y: 55 },
+    { id: "gate-6", name: "Cổng 6 Nguyễn Trãi (Vào Xe)", x: 790, y: 55 },
+    { id: "gate-273", name: "Cổng 273 AD Vượng (Đi Bộ)", x: 470, y: 790 },
+    { id: "gate-275", name: "Cổng 275 AD Vượng (Ra Xe)", x: 850, y: 790 },
+  ];
+
+  let selectedId = "hoi-truong-a";
+
+  const renderInfoBox = (area) => {
+    if (!area) return;
+    infoBox.innerHTML = `
+      <div class="area-type">${area.badge || 'Khu Vực Đã Chọn'}</div>
+      <h3>${area.name}</h3>
+      <p>${area.description}</p>
+      <div style="margin-top: 6px; text-align: right;">
+        <a href="https://www.google.com/maps/place/273+An+D%C6%B0%C6%A1ng+V%C6%B0%C6%A1ng,+Ch%E1%BB%A3+Qu%C3%A1n,+H%E1%BB%93+Ch%C3%AD+Minh,+Vietnam" target="_blank" style="font-size: 0.72rem; color: var(--gold-d); text-decoration: none; font-weight: 600;">
+          🗺️ Mở Google Maps Chỉ Đường ↗
+        </a>
+      </div>
+    `;
   };
-  const closeZoom = () => {
-    modal.classList.remove('show');
-    swipeLocked = false;
+
+  const selectArea = (areaId) => {
+    selectedId = areaId;
+    const targetArea = areas.find(a => a.id === areaId);
+
+    document.querySelectorAll('.map-area-g').forEach(g => {
+      if (g.getAttribute('data-id') === areaId) {
+        g.classList.add('map-group--selected');
+        const shape = g.querySelector('.campus-area');
+        if (shape) shape.classList.add('campus-area--selected');
+      } else {
+        g.classList.remove('map-group--selected');
+        const shape = g.querySelector('.campus-area');
+        if (shape) shape.classList.remove('campus-area--selected');
+      }
+    });
+
+    renderInfoBox(targetArea);
   };
 
-  mapCard.addEventListener('click', openZoom);
-  btnClose?.addEventListener('click', closeZoom);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeZoom();
+  // Render SVG Areas
+  areasGroup.innerHTML = '';
+  areas.forEach(area => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'map-area-g' + (area.id === selectedId ? ' map-group--selected' : ''));
+    g.setAttribute('data-id', area.id);
+
+    let shape;
+    let cx, cy;
+
+    if (area.type === 'polygon') {
+      shape = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      shape.setAttribute('points', area.points);
+      cx = area.labelX;
+      cy = area.labelY;
+    } else {
+      shape = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      shape.setAttribute('x', area.x);
+      shape.setAttribute('y', area.y);
+      shape.setAttribute('width', area.width);
+      shape.setAttribute('height', area.height);
+      shape.setAttribute('rx', '4');
+      cx = area.x + area.width / 2;
+      cy = area.y + area.height / 2;
+    }
+
+    shape.setAttribute('class', 'campus-area' + (area.id === selectedId ? ' campus-area--selected' : ''));
+    
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('class', 'campus-label');
+    text.setAttribute('x', cx);
+    text.setAttribute('y', cy);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    if (area.rotateLabel) {
+      text.setAttribute('transform', `rotate(-90 ${cx} ${cy})`);
+    }
+    text.textContent = area.name;
+
+    g.appendChild(shape);
+    g.appendChild(text);
+
+    g.addEventListener('click', () => selectArea(area.id));
+    areasGroup.appendChild(g);
   });
+
+  // Render SVG Gates
+  gatesGroup.innerHTML = '';
+  gates.forEach(gate => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', gate.x);
+    circle.setAttribute('cy', gate.y);
+    circle.setAttribute('r', '7');
+    circle.setAttribute('class', 'gate-point');
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', gate.x);
+    text.setAttribute('y', gate.y - 14);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('class', 'gate-label');
+    text.textContent = gate.name;
+
+    g.appendChild(circle);
+    g.appendChild(text);
+    gatesGroup.appendChild(g);
+  });
+
+  // Reference Image toggle
+  chkRef?.addEventListener('change', (e) => {
+    if (refImg) {
+      refImg.style.display = e.target.checked ? 'block' : 'none';
+    }
+  });
+
+  // Initial selection (Hội trường A)
+  selectArea('hoi-truong-a');
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1083,6 +1384,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initActions();
   initFacts();
   initSignatureBook();
-  initMapZoom();
+  initInteractiveSguMap();
 });
+
 
