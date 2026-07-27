@@ -1044,26 +1044,10 @@ function initSignatureBook() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   INLINE MAP ZOOM & DRAG/PAN SYSTEM (PAGE 3 & LIGHTBOX)
+   SMOOTH 2D MAP ZOOM & DRAG/PAN ENGINE (PAGE 3 & FULLSCREEN MODAL)
    ═══════════════════════════════════════════════════════════════ */
-function initInlineMapZoomAndPan() {
-  const viewport = document.getElementById('inline-map-viewport');
-  const img = document.getElementById('page-map-img');
-  const btnIn = document.getElementById('btn-inline-zoom-in');
-  const btnOut = document.getElementById('btn-inline-zoom-out');
-  const btnReset = document.getElementById('btn-inline-reset');
-  const btnFs = document.getElementById('btn-inline-fullscreen');
-  const tag = document.getElementById('inline-map-tag');
-
-  // Lightbox Modal elements
-  const modal = document.getElementById('map-zoom-modal');
-  const btnClose = document.getElementById('map-zoom-close');
-  const modalImg = document.getElementById('map-zoom-img');
-  const mzbIn = document.getElementById('mzb-zoom-in');
-  const mzbOut = document.getElementById('mzb-zoom-out');
-  const mzbReset = document.getElementById('mzb-reset');
-
-  if (!viewport || !img) return;
+function setupPanAndZoom(viewport, img, tagEl, isModal = false) {
+  if (!viewport || !img) return null;
 
   let scale = 1.0;
   let panX = 0;
@@ -1077,9 +1061,12 @@ function initInlineMapZoomAndPan() {
   const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
 
   const applyTransform = () => {
-    // Clamp Pan Offsets based on current scale
-    const maxPanX = (viewport.clientWidth * (scale - 1)) / 2 + 120;
-    const maxPanY = (viewport.clientHeight * (scale - 1)) / 2 + 90;
+    const vpW = viewport.clientWidth || 300;
+    const vpH = viewport.clientHeight || 200;
+
+    // Calculate dynamic pan boundaries based on viewport & scale
+    const maxPanX = Math.max(0, (vpW * (scale - 1)) / 2 + 220 * (scale - 1));
+    const maxPanY = Math.max(0, (vpH * (scale - 1)) / 2 + 180 * (scale - 1));
 
     if (scale <= 1.0) {
       panX = 0;
@@ -1089,24 +1076,42 @@ function initInlineMapZoomAndPan() {
       panY = clamp(panY, -maxPanY, maxPanY);
     }
 
+    if (isDragging) {
+      img.classList.add('is-dragging');
+    } else {
+      img.classList.remove('is-dragging');
+    }
+
     img.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
 
-    // Lock page swipe when zoomed or dragging
-    if (scale > 1.05 || isDragging) {
-      swipeLocked = true;
-      if (tag) tag.textContent = `🔎 Zoom ${Math.round(scale * 100)}% • Kéo rê để xem`;
-    } else {
-      swipeLocked = false;
-      if (tag) tag.textContent = `🖐️ Kéo rê & vuốt để xem • Bấm + / - để zoom`;
+    if (!isModal) {
+      if (scale > 1.05 || isDragging) {
+        swipeLocked = true;
+        if (tagEl) tagEl.textContent = `🔎 Zoom ${Math.round(scale * 100)}% • Kéo rê xem ảnh`;
+      } else {
+        swipeLocked = false;
+        if (tagEl) tagEl.textContent = `🖐️ Vuốt/Kéo rê xem ảnh • Phóng to tại chỗ`;
+      }
     }
   };
 
-  const changeScale = (delta) => {
-    scale = clamp(scale + delta, 1.0, 4.0);
+  const setScale = (newScale) => {
+    scale = clamp(newScale, 1.0, 4.0);
     if (scale === 1.0) {
       panX = 0;
       panY = 0;
     }
+    applyTransform();
+  };
+
+  const changeScale = (delta) => {
+    setScale(scale + delta);
+  };
+
+  const reset = () => {
+    scale = 1.0;
+    panX = 0;
+    panY = 0;
     applyTransform();
   };
 
@@ -1115,6 +1120,7 @@ function initInlineMapZoomAndPan() {
     e.stopPropagation();
     isDragging = true;
     viewport.classList.add('dragging');
+    img.classList.add('is-dragging');
     startX = e.clientX - panX;
     startY = e.clientY - panY;
   });
@@ -1131,6 +1137,7 @@ function initInlineMapZoomAndPan() {
     if (isDragging) {
       isDragging = false;
       viewport.classList.remove('dragging');
+      img.classList.remove('is-dragging');
       applyTransform();
     }
   });
@@ -1140,6 +1147,7 @@ function initInlineMapZoomAndPan() {
     e.stopPropagation();
     if (e.touches.length === 1) {
       isDragging = true;
+      img.classList.add('is-dragging');
       startX = e.touches[0].clientX - panX;
       startY = e.touches[0].clientY - panY;
     } else if (e.touches.length === 2) {
@@ -1176,11 +1184,12 @@ function initInlineMapZoomAndPan() {
     if (e.touches.length < 2) initialPinchDist = 0;
     if (e.touches.length === 0) {
       isDragging = false;
+      img.classList.remove('is-dragging');
       applyTransform();
     }
   });
 
-  // Mouse Wheel Zoom
+  // Wheel Zoom
   viewport.addEventListener('wheel', (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -1188,36 +1197,50 @@ function initInlineMapZoomAndPan() {
     changeScale(delta);
   }, { passive: false });
 
-  // Double Click / Double Tap toggle zoom
+  // Double Click / Double Tap
   viewport.addEventListener('dblclick', (e) => {
     e.stopPropagation();
     if (scale > 1.2) {
-      scale = 1.0;
-      panX = 0;
-      panY = 0;
+      reset();
     } else {
-      scale = 2.0;
+      setScale(2.0);
     }
-    applyTransform();
   });
 
-  // Inline Controls
-  btnIn?.addEventListener('click', (e) => { e.stopPropagation(); changeScale(0.35); });
-  btnOut?.addEventListener('click', (e) => { e.stopPropagation(); changeScale(-0.35); });
-  btnReset?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    scale = 1.0;
-    panX = 0;
-    panY = 0;
-    applyTransform();
-  });
+  return { changeScale, setScale, reset };
+}
 
-  // Fullscreen Modal Controls
+function initInlineMapZoomAndPan() {
+  const inlineVp = document.getElementById('inline-map-viewport');
+  const inlineImg = document.getElementById('page-map-img');
+  const tag = document.getElementById('inline-map-tag');
+  const btnIn = document.getElementById('btn-inline-zoom-in');
+  const btnOut = document.getElementById('btn-inline-zoom-out');
+  const btnReset = document.getElementById('btn-inline-reset');
+  const btnFs = document.getElementById('btn-inline-fullscreen');
+
+  // Modal Lightbox elements
+  const modal = document.getElementById('map-zoom-modal');
+  const modalVp = document.getElementById('map-zoom-viewport');
+  const modalImg = document.getElementById('map-zoom-img');
+  const btnClose = document.getElementById('map-zoom-close');
+  const mzbIn = document.getElementById('mzb-zoom-in');
+  const mzbOut = document.getElementById('mzb-zoom-out');
+  const mzbReset = document.getElementById('mzb-reset');
+
+  const inlineController = setupPanAndZoom(inlineVp, inlineImg, tag, false);
+  const modalController = setupPanAndZoom(modalVp, modalImg, null, true);
+
+  btnIn?.addEventListener('click', (e) => { e.stopPropagation(); inlineController?.changeScale(0.35); });
+  btnOut?.addEventListener('click', (e) => { e.stopPropagation(); inlineController?.changeScale(-0.35); });
+  btnReset?.addEventListener('click', (e) => { e.stopPropagation(); inlineController?.reset(); });
+
+  // Fullscreen Modal Open/Close
   const openModal = () => {
     if (!modal) return;
     modal.classList.add('show');
     swipeLocked = true;
-    if (modalImg) modalImg.style.transform = `scale(1.0)`;
+    modalController?.reset();
   };
 
   const closeModal = () => {
@@ -1229,20 +1252,12 @@ function initInlineMapZoomAndPan() {
   btnFs?.addEventListener('click', (e) => { e.stopPropagation(); openModal(); });
   btnClose?.addEventListener('click', closeModal);
   modal?.addEventListener('click', (e) => {
-    if (e.target === modal || e.target.classList.contains('map-zoom-viewport')) closeModal();
+    if (e.target === modal) closeModal();
   });
 
-  let modalScale = 1.0;
-  mzbIn?.addEventListener('click', () => {
-    if (modalScale < 3.5) { modalScale += 0.4; if (modalImg) modalImg.style.transform = `scale(${modalScale})`; }
-  });
-  mzbOut?.addEventListener('click', () => {
-    if (modalScale > 0.8) { modalScale -= 0.4; if (modalImg) modalImg.style.transform = `scale(${modalScale})`; }
-  });
-  mzbReset?.addEventListener('click', () => {
-    modalScale = 1.0;
-    if (modalImg) modalImg.style.transform = `scale(1.0)`;
-  });
+  mzbIn?.addEventListener('click', () => modalController?.changeScale(0.35));
+  mzbOut?.addEventListener('click', () => modalController?.changeScale(-0.35));
+  mzbReset?.addEventListener('click', () => modalController?.reset());
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1261,6 +1276,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSignatureBook();
   initInlineMapZoomAndPan();
 });
+
 
 
 
