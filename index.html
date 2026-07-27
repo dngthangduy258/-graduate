@@ -282,8 +282,40 @@
               <div class="page-curl"></div>
             </div>
 
-            <!-- PAGE 3: COUNTDOWN -->
-            <div class="page future" data-page="3" data-title="Đếm Ngược">
+            <!-- PAGE 3: CAMPUS MAP & DIRECTIONS -->
+            <div class="page future" data-page="3" data-title="Sơ Đồ Khuôn Viên">
+              <div class="page-paper">
+                <div class="page-corner tl"></div>
+                <div class="page-corner tr"></div>
+                <div class="page-corner bl"></div>
+                <div class="page-corner br"></div>
+                <div class="page-content" style="padding-top: 15px; align-items: flex-start; text-align: left;">
+                  <div class="eyebrow" style="margin-bottom: 8px;">
+                    <div class="ey-l"></div>
+                    <div class="ey-txt">Đại học Sài Gòn</div>
+                    <div class="ey-r"></div>
+                  </div>
+                  <h2 class="sec-h" style="font-size: 1.5rem; text-align: center; margin-bottom: 10px; width: 100%;">Sơ Đồ Khuôn Viên<br><em style="font-size: 0.95rem;">& Chỉ dẫn di chuyển</em></h2>
+
+                  <div class="page-map-card" id="page-map-card" title="Nhấn để xem sơ đồ phóng to">
+                    <img src="assets/sgu_campus_map.png" alt="Sơ đồ cơ sở chính ĐH Sài Gòn" class="page-map-img" id="page-map-img">
+                    <div class="page-map-zoom-tag">🔍 Chạm để xem phóng to</div>
+                  </div>
+
+                  <div class="page-map-guide" style="margin-top: 10px; width: 100%; font-size: 0.78rem; color: var(--text); line-height: 1.5; background: rgba(197, 160, 89, 0.06); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 6px; padding: 10px;">
+                    <div style="font-weight: 600; color: var(--gold-d); margin-bottom: 4px; font-family: 'Lora', serif;">🎓 Hội Trường A (Nơi Tổ Chức Lễ):</div>
+                    <div style="color: var(--muted); margin-bottom: 6px;">Nằm tại Dãy A (phía Cổng Nguyễn Trãi, kế bên phòng C.SA05).</div>
+                    <div style="font-weight: 600; color: var(--gold-d); margin-bottom: 2px; font-family: 'Lora', serif;">🚗 Hướng dẫn gửi xe & lối đi:</div>
+                    <div style="color: var(--muted);">• <strong>Gửi xe:</strong> Chạy vào <strong>Cổng số 6 Nguyễn Trãi</strong> ➔ Lấy xe ra ở <strong>Cổng 275 An Dương Vương</strong>.</div>
+                    <div style="color: var(--muted);">• <strong>Đi bộ / Taxi:</strong> Vào <strong>Cổng 273 An Dương Vương</strong>.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="page-curl"></div>
+            </div>
+
+            <!-- PAGE 4: COUNTDOWN -->
+            <div class="page future" data-page="4" data-title="Đếm Ngược">
               <div class="page-paper">
                 <div class="page-corner tl"></div>
                 <div class="page-corner tr"></div>
@@ -335,12 +367,8 @@
               <div class="page-curl"></div>
             </div>
 
-
-
-
-
-            <!-- PAGE 4: SIGNATURE BOOK -->
-            <div class="page future" data-page="4" data-title="Sổ Ký Tên">
+            <!-- PAGE 5: SIGNATURE BOOK -->
+            <div class="page future" data-page="5" data-title="Sổ Ký Tên">
               <div class="page-paper">
                 <div class="page-corner tl"></div>
                 <div class="page-corner tr"></div>
@@ -355,8 +383,8 @@
               <div class="page-curl"></div>
             </div>
 
-            <!-- PAGE 5: CLOSING -->
-            <div class="page future" data-page="5" data-title="Lời Cảm Ơn">
+            <!-- PAGE 6: CLOSING -->
+            <div class="page future" data-page="6" data-title="Lời Cảm Ơn">
               <div class="page-paper">
                 <div class="page-corner tl"></div>
                 <div class="page-corner tr"></div>
@@ -472,14 +500,15 @@
     </div>
   </div>
 
-  <!-- Message Read Modal -->
-  <div class="msg-read-modal" id="msg-read-modal">
-    <div class="msg-box">
-      <div class="msg-sig-display" id="msg-sig-display"></div>
-      <div class="msg-text-display" id="msg-text-display"></div>
-      <button class="msg-btn-close" id="msg-btn-close">Đóng</button>
+  <!-- Map Fullscreen Lightbox Modal -->
+  <div class="map-zoom-modal" id="map-zoom-modal">
+    <div class="map-zoom-content">
+      <button class="map-zoom-close" id="map-zoom-close" aria-label="Đóng">&times;</button>
+      <img src="assets/sgu_campus_map.png" alt="Sơ đồ cơ sở chính ĐH Sài Gòn" class="map-zoom-img">
+      <div class="map-zoom-caption">Sơ Đồ Cơ Sở Chính — Trường Đại Học Sài Gòn (SGU)</div>
     </div>
   </div>
+
   <script src="js/invitation.js"></script>
 </body>
 

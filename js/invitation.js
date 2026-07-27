@@ -1044,6 +1044,32 @@ function initSignatureBook() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   MAP FULLSCREEN LIGHTBOX
+   ═══════════════════════════════════════════════════════════════ */
+function initMapZoom() {
+  const mapCard = document.getElementById('page-map-card');
+  const modal = document.getElementById('map-zoom-modal');
+  const btnClose = document.getElementById('map-zoom-close');
+
+  if (!mapCard || !modal) return;
+
+  const openZoom = () => {
+    modal.classList.add('show');
+    swipeLocked = true;
+  };
+  const closeZoom = () => {
+    modal.classList.remove('show');
+    swipeLocked = false;
+  };
+
+  mapCard.addEventListener('click', openZoom);
+  btnClose?.addEventListener('click', closeZoom);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeZoom();
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
    BOOTSTRAP
    ═══════════════════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", () => {
@@ -1057,4 +1083,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initActions();
   initFacts();
   initSignatureBook();
+  initMapZoom();
 });
+
