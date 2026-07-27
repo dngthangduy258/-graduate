@@ -289,21 +289,26 @@
                 <div class="page-corner tr"></div>
                 <div class="page-corner bl"></div>
                 <div class="page-corner br"></div>
-                <div class="page-content" style="padding-top: 15px; align-items: flex-start; text-align: left;">
+                <div class="page-content" style="padding-top: 45px; align-items: flex-start; text-align: left;">
                   
-                  <div class="campus-map-header" style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <div class="campus-map-header" style="width: 100%; display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
                     <div>
-                      <div class="ey-txt" style="font-size: 0.65rem; color: var(--gold-d); text-transform: uppercase; letter-spacing: 0.15em;">Đại Học Sài Gòn — Cơ Sở 273 AD Vượng</div>
-                      <h2 class="sec-h" style="font-size: 1.35rem; margin: 0; text-align: left;">Sơ Đồ Khuôn Viên</h2>
+                      <div class="ey-txt" style="font-size: 0.62rem; color: var(--gold-d); text-transform: uppercase; letter-spacing: 0.12em;">Trường Đại Học Sài Gòn</div>
+                      <h2 class="sec-h" style="font-size: 1.25rem; margin: 0; text-align: left; line-height: 1.2;">Sơ Đồ Cơ Sở Chính<br><em style="font-size: 0.85rem; margin-top: 2px;">273 An Dương Vương, Q.5</em></h2>
                     </div>
-                    <label class="reference-toggle" style="font-size: 0.72rem; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 4px;">
-                      <input type="checkbox" id="chk-show-reference"> Ảnh tham chiếu
-                    </label>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                      <button id="btn-trigger-map-zoom" class="btn-map-zoom-trigger" type="button" title="Mở bản đồ phóng to toàn màn hình">
+                        🔍 Phóng to
+                      </button>
+                      <label class="reference-toggle" style="font-size: 0.68rem; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 3px;">
+                        <input type="checkbox" id="chk-show-reference"> Ảnh mờ
+                      </label>
+                    </div>
                   </div>
 
-                  <!-- SVG Campus Map Container -->
-                  <div class="campus-map-container" style="width: 100%; position: relative;">
-                    <svg class="campus-map-svg" viewBox="0 0 1100 850" role="img" id="campus-svg">
+                  <!-- SVG Campus Map Container (1024 x 634 ViewBox Calibrated) -->
+                  <div class="campus-map-container" style="width: 100%; position: relative; cursor: pointer;" title="Nhấn để chọn khu vực hoặc mở phóng to">
+                    <svg class="campus-map-svg" viewBox="0 0 1024 634" role="img" id="campus-svg">
                       <defs>
                         <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
                           <path d="M0,0 L8,4 L0,8 Z" class="route-arrow" fill="#c5a059" />
@@ -311,28 +316,22 @@
                       </defs>
 
                       <!-- Background reference image (toggled via checkbox) -->
-                      <image id="svg-ref-image" href="assets/sgu_campus_map.png" x="0" y="0" width="1100" height="850" preserveAspectRatio="xMidYMid meet" opacity="0.3" pointer-events="none" style="display: none;" />
+                      <image id="svg-ref-image" href="assets/sgu_campus_map.png" x="0" y="0" width="1024" height="634" preserveAspectRatio="xMidYMid meet" opacity="0.3" pointer-events="none" style="display: none;" />
 
-                      <!-- Outer Campus Boundary -->
-                      <rect x="105" y="65" width="850" height="700" rx="6" class="campus-boundary" />
+                      <!-- Outer Campus Boundaries -->
+                      <rect x="82" y="55" width="588" height="515" rx="4" class="campus-boundary" />
+                      <rect x="670" y="55" width="270" height="515" rx="4" class="campus-boundary" />
 
                       <!-- Gate Openings -->
-                      <path d="M145 65 H450" class="gate-opening" />
-                      <path d="M485 65 H710" class="gate-opening" />
-                      <path d="M750 65 H915" class="gate-opening" />
-                      <path d="M430 765 H530" class="gate-opening" />
-                      <path d="M815 765 H900" class="gate-opening" />
+                      <path d="M120 55 H200" class="gate-opening" />
+                      <path d="M300 55 H400" class="gate-opening" />
+                      <path d="M480 55 H560" class="gate-opening" />
+                      <path d="M300 570 H400" class="gate-opening" />
+                      <path d="M660 570 H760" class="gate-opening" />
 
                       <!-- Internal Roads & Walkways -->
-                      <path d="M720 85 V720" class="campus-road" marker-end="url(#arrow)" />
-                      <text x="725" y="310" class="road-label">KHU VỰC BÃI GIỮ XE</text>
-
-                      <path d="M340 290 H620" class="walkway" />
-                      <path d="M360 410 H590" class="walkway" />
-                      <path d="M360 480 H590" class="walkway" />
-
-                      <circle cx="515" cy="450" r="14" class="tree" />
-                      <circle cx="515" cy="510" r="14" class="tree" />
+                      <path d="M505 55 V570" class="campus-road" marker-end="url(#arrow)" />
+                      <text x="510" y="260" class="road-label">KHU VỰC BÃI GIỮ XE</text>
 
                       <!-- Dynamic Areas Group (Populated via JS) -->
                       <g id="svg-areas-group"></g>
@@ -544,6 +543,52 @@
       <button class="map-zoom-close" id="map-zoom-close" aria-label="Đóng">&times;</button>
       <img src="assets/sgu_campus_map.png" alt="Sơ đồ cơ sở chính ĐH Sài Gòn" class="map-zoom-img">
       <div class="map-zoom-caption">Sơ Đồ Cơ Sở Chính — Trường Đại Học Sài Gòn (SGU)</div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Interactive Map Zoom Modal -->
+  <div class="campus-zoom-modal" id="campus-zoom-modal">
+    <div class="cz-header">
+      <div class="cz-title">Sơ Đồ Cơ Sở Chính — Đại Học Sài Gòn</div>
+      <div class="cz-controls">
+        <button id="cz-btn-zoom-in" class="cz-btn" title="Phóng to">+</button>
+        <button id="cz-btn-zoom-out" class="cz-btn" title="Thu nhỏ">-</button>
+        <button id="cz-btn-reset" class="cz-btn" title="Đặt lại">🔄</button>
+        <label class="cz-ref-toggle">
+          <input type="checkbox" id="cz-chk-ref"> Ảnh mờ
+        </label>
+        <button id="cz-btn-close" class="cz-close" aria-label="Đóng">&times;</button>
+      </div>
+    </div>
+    
+    <div class="cz-viewport" id="cz-viewport">
+      <div class="cz-svg-container" id="cz-svg-container">
+        <!-- Cloned SVG Map will be dynamically rendered here -->
+        <svg class="campus-map-svg" viewBox="0 0 1024 634" role="img" id="cz-svg">
+          <defs>
+            <marker id="arrow-cz" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#c5a059" />
+            </marker>
+          </defs>
+          <image id="cz-ref-image" href="assets/sgu_campus_map.png" x="0" y="0" width="1024" height="634" preserveAspectRatio="xMidYMid meet" opacity="0.3" pointer-events="none" style="display: none;" />
+          <rect x="82" y="55" width="588" height="515" rx="4" class="campus-boundary" />
+          <rect x="670" y="55" width="270" height="515" rx="4" class="campus-boundary" />
+          <path d="M120 55 H200" class="gate-opening" />
+          <path d="M300 55 H400" class="gate-opening" />
+          <path d="M480 55 H560" class="gate-opening" />
+          <path d="M300 570 H400" class="gate-opening" />
+          <path d="M660 570 H760" class="gate-opening" />
+          <path d="M505 55 V570" class="campus-road" marker-end="url(#arrow-cz)" />
+          <text x="510" y="260" class="road-label">KHU VỰC BÃI GIỮ XE</text>
+          <g id="cz-svg-areas-group"></g>
+          <g id="cz-svg-gates-group"></g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Fullscreen Info Box at bottom -->
+    <div class="cz-info-bar" id="cz-info-bar">
+      <!-- Dynamically populated -->
     </div>
   </div>
 
