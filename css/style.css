@@ -1262,35 +1262,37 @@ body.cover-unlocked #cover-overlay #cover-padlock {
 
 .inline-map-viewport {
   width: 100%;
-  height: 195px;
+  height: 230px;
   overflow: hidden;
   position: relative;
   cursor: grab;
   touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fcfbf9;
 }
 .inline-map-viewport.dragging {
   cursor: grabbing;
 }
 
-.page-map-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
-}
-
 .map-transform-content {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
-  height: 100%;
+  height: auto;
   transition: transform 0.15s ease-out;
   transform-origin: center center;
 }
 .map-transform-content.is-dragging {
   transition: none !important;
+}
+
+.page-map-img,
+.map-zoom-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
 }
 
 .custom-map-pin {
