@@ -695,6 +695,33 @@ body.envelope-flying .goodbye-msg {
   transform-origin: center;
   transition: opacity 1s ease;
 }
+.sig-item.has-message {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.sig-item .sig-msg-badge {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  background: var(--gold);
+  border-radius: 999px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  z-index: 2;
+}
+.sig-item .sig-msg-badge svg {
+  width: 12px;
+  height: 12px;
+  fill: #fff;
+  display: block;
+}
 .hide-sigs .sig-item {
   opacity: 0 !important;
 }
@@ -770,6 +797,26 @@ body.envelope-flying .goodbye-msg {
   border: 1px solid var(--gold);
   width: 90%;
   max-width: 320px;
+  position: relative;
+}
+.sig-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  color: #666;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.sig-modal-close:hover {
+  background: rgba(0, 0, 0, 0.12);
+  color: #333;
 }
 .sig-box-title {
   font-size: 1.1rem;
@@ -799,7 +846,7 @@ body.envelope-flying .goodbye-msg {
   transform: scale(1.1);
 }
 .sig-btn {
-  width: 100%;
+  flex: 1;
   padding: 10px;
   background: var(--gold);
   color: #fff;
@@ -808,6 +855,19 @@ body.envelope-flying .goodbye-msg {
   font-size: 1rem;
   cursor: pointer;
   transition: 0.2s;
+}
+.sig-btn-cancel {
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+}
+.sig-btn-cancel:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: #333;
+}
+.sig-actions {
+  display: flex;
+  gap: 10px;
 }
 .sig-btn:hover {
   background: var(--gold-d);
@@ -1153,6 +1213,32 @@ body.cover-unlocked #cover-overlay #cover-padlock {
   transform: translateY(20px);
   transition: transform 0.3s;
   border: 1px solid var(--gold);
+  position: relative;
+}
+.msg-box-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--gold-d);
+  margin-bottom: 16px;
+}
+.msg-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  color: #666;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.msg-modal-close:hover {
+  background: rgba(0, 0, 0, 0.12);
+  color: #333;
 }
 .msg-read-modal.show .msg-box {
   transform: translateY(0);

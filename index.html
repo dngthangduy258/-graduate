@@ -490,6 +490,7 @@
   <!-- Signature Color Picker Modal -->
   <div class="sig-modal" id="sig-modal">
     <div class="sig-box">
+      <button class="sig-modal-close" id="sig-btn-close" type="button" aria-label="Đóng">&times;</button>
       <div class="sig-box-title" style="margin-bottom: 10px;">Lưu lại chữ ký của bạn</div>
 
       <div style="text-align: left; font-size: 0.8rem; color: #666; margin-bottom: 5px; font-family: 'Lora', serif;">
@@ -525,7 +526,21 @@
           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Cormorant Garamond', serif; outline: none; font-size: 1.05rem; user-select: auto; -webkit-user-select: auto; resize: none; height: 60px;"></textarea>
       </div>
 
-      <button class="sig-btn" id="sig-btn-confirm">Ký tên</button>
+      <div class="sig-actions">
+        <button class="sig-btn sig-btn-cancel" id="sig-btn-cancel" type="button">Huỷ</button>
+        <button class="sig-btn" id="sig-btn-confirm" type="button">Ký tên</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message Read Modal -->
+  <div class="msg-read-modal" id="msg-read-modal">
+    <div class="msg-box">
+      <button class="msg-modal-close" id="msg-modal-close" type="button" aria-label="Đóng">&times;</button>
+      <div class="msg-box-title">Lời nhắn kèm chữ ký</div>
+      <div class="msg-sig-display" id="msg-sig-display"></div>
+      <div class="msg-text-display" id="msg-text-display"></div>
+      <button class="msg-btn-close" id="msg-btn-close" type="button">Đóng</button>
     </div>
   </div>
 

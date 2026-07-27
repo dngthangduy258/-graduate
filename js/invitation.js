@@ -673,11 +673,38 @@ function initSignatureBook() {
   const modal = document.getElementById('sig-modal');
   const colors = document.querySelectorAll('.sig-color');
   const btnConfirm = document.getElementById('sig-btn-confirm');
+  const btnClose = document.getElementById('sig-btn-close');
+  const btnCancel = document.getElementById('sig-btn-cancel');
   const hint = document.getElementById('sig-hint');
   const drawPad = document.getElementById('sig-draw-pad');
   const btnClear = document.getElementById('sig-btn-clear');
+  const msgField = document.getElementById('sig-message-field');
 
   if (!canvas || !modal) return;
+
+  const resetDrawPad = () => {
+    if (ctx && drawPad) {
+      ctx.clearRect(0, 0, drawPad.width, drawPad.height);
+      hasDrawn = false;
+    }
+    if (msgField) msgField.value = '';
+  };
+
+  const closeSigModal = () => {
+    modal.classList.remove('show');
+    swipeLocked = false;
+    resetDrawPad();
+  };
+
+  const showMessageModal = (imgData, message) => {
+    const readModal = document.getElementById('msg-read-modal');
+    const sigDisplay = document.getElementById('msg-sig-display');
+    const textDisplay = document.getElementById('msg-text-display');
+    if (!readModal || !sigDisplay || !textDisplay) return;
+    sigDisplay.innerHTML = `<img src="${imgData}" alt="Chữ ký" style="max-width:200px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));">`;
+    textDisplay.textContent = message;
+    readModal.classList.add('show');
+  };
 
   let currentX = 0;
   let currentY = 0;
@@ -855,7 +882,11 @@ function initSignatureBook() {
     if (name && name.includes('|||')) {
       const parts = name.split('|||');
       imgData = parts[0];
-      message = decodeURIComponent(parts[1] || '');
+      try {
+        message = decodeURIComponent(parts[1] || '');
+      } catch {
+        message = parts[1] || '';
+      }
     }
 
     if (imgData && imgData.startsWith('data:image')) {
@@ -871,36 +902,17 @@ function initSignatureBook() {
       contentEl.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))';
 
       if (message) {
-        // Visual indicator that it has a message
+        wrapper.classList.add('has-message');
+        wrapper.title = 'Nhấn để xem lời nhắn';
+
         const badge = document.createElement('div');
-        badge.style.position = 'absolute';
-        badge.style.bottom = '-5px';
-        badge.style.right = '-5px';
-        badge.style.width = '20px';
-        badge.style.height = '20px';
-        badge.style.background = 'var(--gold)';
-        badge.style.borderRadius = '50%';
-        badge.style.border = '2px solid #fff';
-        badge.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
-        badge.style.cursor = 'pointer';
-        badge.style.pointerEvents = 'auto';
-        badge.title = "Nhấp để xem lời nhắn";
-
-        // Add a small envelope icon inside the badge
-        badge.innerHTML = '<svg viewBox="0 0 24 24" fill="white" style="width:12px; height:12px; display:block; margin:2px auto;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';
-
+        badge.className = 'sig-msg-badge';
+        badge.innerHTML = '<svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';
         wrapper.appendChild(badge);
 
-        badge.addEventListener('click', (e) => {
+        wrapper.addEventListener('click', (e) => {
           e.stopPropagation();
-          const readModal = document.getElementById('msg-read-modal');
-          const sigDisplay = document.getElementById('msg-sig-display');
-          const textDisplay = document.getElementById('msg-text-display');
-          if (readModal && sigDisplay && textDisplay) {
-            sigDisplay.innerHTML = `<img src="${imgData}" style="max-width:200px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));">`;
-            textDisplay.textContent = message;
-            readModal.classList.add('show');
-          }
+          showMessageModal(imgData, message);
         });
       }
     } else {
@@ -923,6 +935,8 @@ function initSignatureBook() {
   };
 
   canvas.addEventListener('click', (e) => {
+    if (e.target.closest('.sig-item.has-message')) return;
+
     const rect = canvas.getBoundingClientRect();
     // Calculate percentage position
     currentX = ((e.clientX - rect.left) / rect.width) * 100;
@@ -992,10 +1006,8 @@ function initSignatureBook() {
     const message = msgField ? msgField.value.trim() : '';
     const finalNameData = message ? (imgData + '|||' + encodeURIComponent(message)) : imgData;
 
-    modal.classList.remove('show');
+    closeSigModal();
     if (hint) hint.style.opacity = '0';
-    // Unlock swiping after successful signature
-    swipeLocked = false;
     const successHint = document.getElementById('sig-success-hint');
     if (successHint) successHint.classList.add('show');
 
@@ -1011,33 +1023,28 @@ function initSignatureBook() {
 
     renderSignature(sig.x, sig.y, sig.color, sig.name, sig.rotation, true);
     saveSignature(sig);
-
-    // Reset canvas for next time
-    if (ctx) {
-      ctx.clearRect(0, 0, drawPad.width, drawPad.height);
-      hasDrawn = false;
-    }
   });
+
+  btnClose?.addEventListener('click', closeSigModal);
+  btnCancel?.addEventListener('click', closeSigModal);
 
   // Close modal if clicked outside box
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('show');
-      // Unlock swiping when modal is dismissed
-      swipeLocked = false;
-    }
+    if (e.target === modal) closeSigModal();
   });
 
   // Setup close for message read modal
   const readModal = document.getElementById('msg-read-modal');
   const btnCloseMsg = document.getElementById('msg-btn-close');
+  const btnCloseMsgX = document.getElementById('msg-modal-close');
+  const closeMessageModal = () => readModal?.classList.remove('show');
+
   if (readModal) {
     readModal.addEventListener('click', (e) => {
-      if (e.target === readModal) readModal.classList.remove('show');
+      if (e.target === readModal) closeMessageModal();
     });
-    if (btnCloseMsg) {
-      btnCloseMsg.addEventListener('click', () => readModal.classList.remove('show'));
-    }
+    btnCloseMsg?.addEventListener('click', closeMessageModal);
+    btnCloseMsgX?.addEventListener('click', closeMessageModal);
   }
 
   loadSignatures();
