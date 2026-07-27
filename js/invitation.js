@@ -1044,68 +1044,204 @@ function initSignatureBook() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SGU CAMPUS MAP LIGHTBOX & SMOOTH ZOOM SYSTEM
+   INLINE MAP ZOOM & DRAG/PAN SYSTEM (PAGE 3 & LIGHTBOX)
    ═══════════════════════════════════════════════════════════════ */
-function initMapLightbox() {
-  const mapCard = document.getElementById('page-map-card');
+function initInlineMapZoomAndPan() {
+  const viewport = document.getElementById('inline-map-viewport');
+  const img = document.getElementById('page-map-img');
+  const btnIn = document.getElementById('btn-inline-zoom-in');
+  const btnOut = document.getElementById('btn-inline-zoom-out');
+  const btnReset = document.getElementById('btn-inline-reset');
+  const btnFs = document.getElementById('btn-inline-fullscreen');
+  const tag = document.getElementById('inline-map-tag');
+
+  // Lightbox Modal elements
   const modal = document.getElementById('map-zoom-modal');
   const btnClose = document.getElementById('map-zoom-close');
-  const img = document.getElementById('map-zoom-img');
-  const btnIn = document.getElementById('mzb-zoom-in');
-  const btnOut = document.getElementById('mzb-zoom-out');
-  const btnReset = document.getElementById('mzb-reset');
+  const modalImg = document.getElementById('map-zoom-img');
+  const mzbIn = document.getElementById('mzb-zoom-in');
+  const mzbOut = document.getElementById('mzb-zoom-out');
+  const mzbReset = document.getElementById('mzb-reset');
 
-  if (!mapCard || !modal) return;
+  if (!viewport || !img) return;
 
-  let zoomScale = 1.0;
+  let scale = 1.0;
+  let panX = 0;
+  let panY = 0;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let initialPinchDist = 0;
+  let initialPinchScale = 1.0;
 
-  const updateTransform = () => {
-    if (img) img.style.transform = `scale(${zoomScale})`;
+  const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+
+  const applyTransform = () => {
+    // Clamp Pan Offsets based on current scale
+    const maxPanX = (viewport.clientWidth * (scale - 1)) / 2 + 120;
+    const maxPanY = (viewport.clientHeight * (scale - 1)) / 2 + 90;
+
+    if (scale <= 1.0) {
+      panX = 0;
+      panY = 0;
+    } else {
+      panX = clamp(panX, -maxPanX, maxPanX);
+      panY = clamp(panY, -maxPanY, maxPanY);
+    }
+
+    img.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+
+    // Lock page swipe when zoomed or dragging
+    if (scale > 1.05 || isDragging) {
+      swipeLocked = true;
+      if (tag) tag.textContent = `🔎 Zoom ${Math.round(scale * 100)}% • Kéo rê để xem`;
+    } else {
+      swipeLocked = false;
+      if (tag) tag.textContent = `🖐️ Kéo rê & vuốt để xem • Bấm + / - để zoom`;
+    }
   };
 
-  const openLightbox = () => {
+  const changeScale = (delta) => {
+    scale = clamp(scale + delta, 1.0, 4.0);
+    if (scale === 1.0) {
+      panX = 0;
+      panY = 0;
+    }
+    applyTransform();
+  };
+
+  // Mouse Drag Events
+  viewport.addEventListener('mousedown', (e) => {
+    e.stopPropagation();
+    isDragging = true;
+    viewport.classList.add('dragging');
+    startX = e.clientX - panX;
+    startY = e.clientY - panY;
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    panX = e.clientX - startX;
+    panY = e.clientY - startY;
+    applyTransform();
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      viewport.classList.remove('dragging');
+      applyTransform();
+    }
+  });
+
+  // Touch Drag & Pinch Zoom Events
+  viewport.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+    if (e.touches.length === 1) {
+      isDragging = true;
+      startX = e.touches[0].clientX - panX;
+      startY = e.touches[0].clientY - panY;
+    } else if (e.touches.length === 2) {
+      isDragging = false;
+      initialPinchDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      initialPinchScale = scale;
+    }
+  }, { passive: false });
+
+  viewport.addEventListener('touchmove', (e) => {
+    e.stopPropagation();
+    if (e.touches.length === 1 && isDragging) {
+      if (e.cancelable) e.preventDefault();
+      panX = e.touches[0].clientX - startX;
+      panY = e.touches[0].clientY - startY;
+      applyTransform();
+    } else if (e.touches.length === 2) {
+      if (e.cancelable) e.preventDefault();
+      const currentDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      if (initialPinchDist > 0) {
+        scale = clamp(initialPinchScale * (currentDist / initialPinchDist), 1.0, 4.0);
+        applyTransform();
+      }
+    }
+  }, { passive: false });
+
+  viewport.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) initialPinchDist = 0;
+    if (e.touches.length === 0) {
+      isDragging = false;
+      applyTransform();
+    }
+  });
+
+  // Mouse Wheel Zoom
+  viewport.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const delta = e.deltaY < 0 ? 0.25 : -0.25;
+    changeScale(delta);
+  }, { passive: false });
+
+  // Double Click / Double Tap toggle zoom
+  viewport.addEventListener('dblclick', (e) => {
+    e.stopPropagation();
+    if (scale > 1.2) {
+      scale = 1.0;
+      panX = 0;
+      panY = 0;
+    } else {
+      scale = 2.0;
+    }
+    applyTransform();
+  });
+
+  // Inline Controls
+  btnIn?.addEventListener('click', (e) => { e.stopPropagation(); changeScale(0.35); });
+  btnOut?.addEventListener('click', (e) => { e.stopPropagation(); changeScale(-0.35); });
+  btnReset?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    scale = 1.0;
+    panX = 0;
+    panY = 0;
+    applyTransform();
+  });
+
+  // Fullscreen Modal Controls
+  const openModal = () => {
+    if (!modal) return;
     modal.classList.add('show');
     swipeLocked = true;
-    zoomScale = 1.0;
-    updateTransform();
+    if (modalImg) modalImg.style.transform = `scale(1.0)`;
   };
 
-  const closeLightbox = () => {
+  const closeModal = () => {
+    if (!modal) return;
     modal.classList.remove('show');
     swipeLocked = false;
   };
 
-  mapCard.addEventListener('click', openLightbox);
-  btnClose?.addEventListener('click', closeLightbox);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal || e.target.classList.contains('map-zoom-viewport')) {
-      closeLightbox();
-    }
+  btnFs?.addEventListener('click', (e) => { e.stopPropagation(); openModal(); });
+  btnClose?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.classList.contains('map-zoom-viewport')) closeModal();
   });
 
-  btnIn?.addEventListener('click', () => {
-    if (zoomScale < 3.0) {
-      zoomScale += 0.35;
-      updateTransform();
-    }
+  let modalScale = 1.0;
+  mzbIn?.addEventListener('click', () => {
+    if (modalScale < 3.5) { modalScale += 0.4; if (modalImg) modalImg.style.transform = `scale(${modalScale})`; }
   });
-
-  btnOut?.addEventListener('click', () => {
-    if (zoomScale > 0.8) {
-      zoomScale -= 0.35;
-      updateTransform();
-    }
+  mzbOut?.addEventListener('click', () => {
+    if (modalScale > 0.8) { modalScale -= 0.4; if (modalImg) modalImg.style.transform = `scale(${modalScale})`; }
   });
-
-  btnReset?.addEventListener('click', () => {
-    zoomScale = 1.0;
-    updateTransform();
-  });
-
-  // Double tap to toggle 1.8x zoom on image
-  img?.addEventListener('dblclick', () => {
-    zoomScale = zoomScale === 1.0 ? 1.8 : 1.0;
-    updateTransform();
+  mzbReset?.addEventListener('click', () => {
+    modalScale = 1.0;
+    if (modalImg) modalImg.style.transform = `scale(1.0)`;
   });
 }
 
@@ -1123,8 +1259,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initActions();
   initFacts();
   initSignatureBook();
-  initMapLightbox();
+  initInlineMapZoomAndPan();
 });
+
 
 
 

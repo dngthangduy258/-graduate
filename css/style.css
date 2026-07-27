@@ -1200,19 +1200,65 @@ body.cover-unlocked #cover-overlay #cover-padlock {
   border: 1px solid var(--gold);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   background: #ffffff;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .page-map-card:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(197, 160, 89, 0.25);
 }
+
+.inline-map-controls {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.imc-btn {
+  background: rgba(12, 10, 6, 0.82);
+  border: 1px solid rgba(255, 223, 137, 0.4);
+  color: #ffdf89;
+  border-radius: 12px;
+  padding: 3px 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+}
+.imc-btn:hover {
+  background: var(--gold-d);
+  color: #fff;
+}
+.imc-fs {
+  font-size: 0.64rem;
+  padding: 3px 7px;
+}
+
+.inline-map-viewport {
+  width: 100%;
+  height: 185px;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+}
+.inline-map-viewport.dragging {
+  cursor: grabbing;
+}
+
 .page-map-img {
   width: 100%;
-  height: auto;
-  max-height: 185px;
+  height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.1s ease-out;
+  transform-origin: center center;
+  pointer-events: none;
 }
 .page-map-zoom-tag {
   position: absolute;
@@ -1221,12 +1267,13 @@ body.cover-unlocked #cover-overlay #cover-padlock {
   background: rgba(12, 10, 6, 0.8);
   color: #ffdf89;
   font-family: 'Lora', serif;
-  font-size: 0.65rem;
-  padding: 4px 9px;
-  border-radius: 12px;
+  font-size: 0.62rem;
+  padding: 3px 8px;
+  border-radius: 10px;
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 223, 137, 0.4);
   pointer-events: none;
+  z-index: 10;
 }
 
 /* 1-CLICK NAVIGATION BUTTONS */
