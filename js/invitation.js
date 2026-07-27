@@ -1083,14 +1083,6 @@ function setupPanAndZoom(viewport, img, tagEl, isModal = false) {
     }
 
     img.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
-
-    if (!isModal) {
-      if (scale > 1.05 || isDragging) {
-        swipeLocked = true;
-      } else {
-        swipeLocked = false;
-      }
-    }
   };
 
   const setScale = (newScale) => {
