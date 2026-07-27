@@ -554,7 +554,7 @@ function initFlipbook() {
    COUNTDOWN
    ═══════════════════════════════════════════════════════════════ */
 function initCountdown() {
-  const tg = new Date("2026-08-05T11:00:00").getTime();
+  const tg = new Date("2026-08-06T11:00:00").getTime();
   const els = { d: $("cd-d"), h: $("cd-h"), m: $("cd-m"), s: $("cd-s") };
   if (!els.d) return;
 
