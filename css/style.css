@@ -1319,18 +1319,7 @@ body.cover-unlocked #cover-overlay #cover-padlock {
   100% { transform: scale(3.5); opacity: 0; }
 }
 
-.pin-label {
-  position: absolute;
-  left: 15px; /* Offset to the right of the pulse */
-  top: -7px; /* Vertically center roughly with the pulse */
-  background: transparent;
-  color: #d11111;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 800;
-  white-space: nowrap;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9), -1px -1px 2px rgba(255, 255, 255, 0.9), 1px -1px 2px rgba(255, 255, 255, 0.9), -1px 1px 2px rgba(255, 255, 255, 0.9);
-}
+
 
 /* INSTANT 1:1 DRAGGING WITHOUT TRANSITION DELAY */
 .page-map-img.is-dragging,
