@@ -1087,10 +1087,8 @@ function setupPanAndZoom(viewport, img, tagEl, isModal = false) {
     if (!isModal) {
       if (scale > 1.05 || isDragging) {
         swipeLocked = true;
-        if (tagEl) tagEl.textContent = `🔎 Zoom ${Math.round(scale * 100)}% • Kéo rê xem ảnh`;
       } else {
         swipeLocked = false;
-        if (tagEl) tagEl.textContent = `🖐️ Vuốt/Kéo rê xem ảnh • Phóng to tại chỗ`;
       }
     }
   };

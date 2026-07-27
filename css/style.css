@@ -1415,6 +1415,14 @@ body.cover-unlocked #cover-overlay #cover-padlock {
   background: var(--gold);
   color: #1a1a1a;
 }
+.mzb-reset-btn {
+  width: auto !important;
+  border-radius: 12px !important;
+  padding: 0 10px !important;
+  font-size: 0.72rem !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+}
 .map-zoom-close {
   background: none;
   border: none;
